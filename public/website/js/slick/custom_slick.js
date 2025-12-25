@@ -6,6 +6,7 @@ $('.category-slider').slick({
     infinite: true,
     slidesToShow: 8,
     slidesToScroll: 1,
+    rtl: $('html').attr('lang') == 'ar' ? true : false,
     responsive: [{
             breakpoint: 1745,
             settings: {
@@ -49,6 +50,7 @@ $('.category-slider-2').slick({
     infinite: true,
     slidesToShow: 7,
     slidesToScroll: 1,
+    rtl: $('html').attr('lang') == 'ar' ? true : false,
     responsive: [{
             breakpoint: 1745,
             settings: {
@@ -100,6 +102,7 @@ $('.category-slider-2').slick({
 $('.product-category-1').slick({
     arrows: true,
     infinite: true,
+    rtl: $('html').attr('lang') == 'ar' ? true : false,
     slidesToShow: 1,
     slidesToScroll: 1,
 });
@@ -109,6 +112,7 @@ $('.menu-slider').slick({
     infinite: true,
     slidesToShow: 1,
     slidesToScroll: 1,
+    rtl: $('html').attr('lang') == 'ar' ? true : false,
     autoplay: true,
     autoplaySpeed: 2000,
 });
@@ -117,6 +121,7 @@ $('.slider-1').slick({
     arrows: false,
     infinite: true,
     slidesToShow: 1,
+    rtl: $('html').attr('lang') == 'ar' ? true : false,
     slidesToScroll: 1,
     dots: true,
 });
@@ -127,6 +132,7 @@ $('.slider-2-landing').slick({
     infinite: true,
     slidesToShow: 2,
     slidesToScroll: 1,
+    rtl: $('html').attr('lang') == 'ar' ? true : false,
     autoplay: true,
     autoplaySpeed: 2000,
     centerMode: true,
@@ -203,6 +209,7 @@ $('.slider-bank-3').slick({
     infinite: true,
     slidesToScroll: 1,
     slidesToShow: 3,
+    rtl: $('html').attr('lang') == 'ar' ? true : false,
     arrows: true,
     responsive: [{
             breakpoint: 1652,
@@ -227,7 +234,7 @@ $('.slider-3-product').slick({
     centerMode: true,
     centerPadding: '160px',
     dots: true,
-    arrows: false,
+    rtl: $('html').attr('lang') == 'ar' ? true : false,
     autoplay: true,
     autoplaySpeed: 2500,
     responsive: [{
@@ -271,6 +278,7 @@ $('.slider-3_1').slick({
     infinite: true,
     slidesToScroll: 1,
     slidesToShow: 3,
+    rtl: $('html').attr('lang') == 'ar' ? true : false,
     arrows: false,
     responsive: [{
             breakpoint: 1262,
@@ -300,6 +308,7 @@ $('.slider-3_2').slick({
     slidesToScroll: 1,
     slidesToShow: 3,
     arrows: false,
+    rtl: $('html').attr('lang') == 'ar' ? true : false,
     responsive: [{
             breakpoint: 1535,
             settings: {
@@ -342,6 +351,7 @@ $('.slider-3_2').slick({
 $('.slider-3_3').slick({
     infinite: true,
     slidesToScroll: 1,
+    rtl: $('html').attr('lang') == 'ar' ? true : false,
     slidesToShow: 3,
     arrows: false,
     responsive: [{
@@ -374,6 +384,7 @@ $('.slider-3-blog').slick({
     slidesToScroll: 1,
     autoplay: false,
     autoplaySpeed: 2500,
+    rtl: $('html').attr('lang') == 'ar' ? true : false,
     responsive: [{
             breakpoint: 1550,
             settings: {
@@ -407,6 +418,7 @@ $('.slider-4-blog').slick({
     infinite: true,
     slidesToShow: 4,
     slidesToScroll: 1,
+    rtl: $('html').attr('lang') == 'ar' ? true : false,
     autoplay: true,
     autoplaySpeed: 2000,
     responsive: [{
@@ -440,6 +452,7 @@ $('.slider-4').slick({
     slidesToShow: 4,
     slidesToScroll: 1,
     autoplay: true,
+    rtl: $('html').attr('lang') == 'ar' ? true : false,
     autoplaySpeed: 2000,
     responsive: [{
             breakpoint: 1690,
@@ -469,6 +482,7 @@ $('.slider-4-1').slick({
     infinite: true,
     slidesToShow: 4,
     slidesToScroll: 1,
+    rtl: $('html').attr('lang') == 'ar' ? true : false,
     responsive: [{
             breakpoint: 1510,
             settings: {
@@ -498,6 +512,7 @@ $('.slider-4-2').slick({
     infinite: true,
     slidesToShow: 4,
     slidesToScroll: 1,
+    rtl: $('html').attr('lang') == 'ar' ? true : false,
     responsive: [{
             breakpoint: 992,
             settings: {
@@ -533,6 +548,7 @@ $('.slider-4-half').slick({
     infinite: true,
     slidesToShow: 3,
     slidesToScroll: 1,
+    rtl: $('html').attr('lang') == 'ar' ? true : false,
     centerMode: true,
     centerPadding: '200px',
     dots: true,
@@ -586,6 +602,7 @@ $('.slider-4-banner').slick({
     infinite: true,
     slidesToShow: 4,
     slidesToScroll: 1,
+    rtl: $('html').attr('lang') == 'ar' ? true : false,
     autoplay: true,
     autoplaySpeed: 2000,
     responsive: [{
@@ -614,6 +631,7 @@ $('.slider-5').slick({
     infinite: true,
     slidesToScroll: 1,
     slidesToShow: 5,
+    rtl: $('html').attr('lang') == 'ar' ? true : false,
     arrows: false,
     responsive: [{
             breakpoint: 1500,
@@ -649,6 +667,7 @@ $('.slider-5_1').slick({
     centerMode: true,
     dots: true,
     arrows: false,
+    rtl: $('html').attr('lang') == 'ar' ? true : false,
     autoplay: true,
     autoplaySpeed: 2500,
     responsive: [{
@@ -680,6 +699,7 @@ $('.slider-5_2').slick({
     infinite: true,
     slidesToScroll: 1,
     slidesToShow: 5,
+    rtl: $('html').attr('lang') == 'ar' ? true : false,
     arrows: false,
     responsive: [{
             breakpoint: 1776,
@@ -719,6 +739,7 @@ $('.slider-6').slick({
     infinite: true,
     slidesToShow: 6,
     slidesToScroll: 1,
+    rtl: $('html').attr('lang') == 'ar' ? true : false,
     responsive: [{
             breakpoint: 1560,
             settings: {
@@ -752,6 +773,7 @@ $('.slider-6_1').slick({
     arrows: false,
     infinite: true,
     slidesToShow: 6,
+    rtl: $('html').attr('lang') == 'ar' ? true : false,
     slidesToScroll: 1,
     dots: true,
     responsive: [{
@@ -787,6 +809,7 @@ $('.slider-6_2').slick({
     arrows: false,
     infinite: true,
     slidesToShow: 6,
+    rtl: $('html').attr('lang') == 'ar' ? true : false,
     slidesToScroll: 1,
     autoplay: true,
     mobile: true,
@@ -823,6 +846,7 @@ $('.slider-9').slick({
     infinite: true,
     slidesToShow: 9,
     slidesToScroll: 1,
+    rtl: $('html').attr('lang') == 'ar' ? true : false,
     responsive: [{
             breakpoint: 1630,
             settings: {
@@ -875,6 +899,7 @@ $('.product-modal').slick({
     slidesToScroll: 1,
     arrows: false,
     fade: true,
+    rtl: $('html').attr('lang') == 'ar' ? true : false,
     asNavFor: '.left-slider-modal'
 });
 
@@ -884,6 +909,7 @@ $('.left-slider-modal').slick({
     asNavFor: '.product-modal',
     vertical: true,
     dots: false,
+    rtl: $('html').attr('lang') == 'ar' ? true : false,
     focusOnSelect: true,
     responsive: [{
             breakpoint: 1200,
@@ -907,6 +933,7 @@ $('.product-main').slick({
     slidesToScroll: 1,
     arrows: false,
     fade: true,
+    rtl: $('html').attr('lang') == 'ar' ? true : false,
     asNavFor: '.left-slider-image'
 });
 
@@ -917,6 +944,7 @@ $('.left-slider-image').slick({
     dots: false,
     focusOnSelect: true,
     // vertical: false,
+    rtl: $('html').attr('lang') == 'ar' ? true : false,
     responsive: [{
             breakpoint: 1400,
             settings: {
@@ -947,6 +975,7 @@ $('.left-slider-image').slick({
 $('.product-main-2').slick({
     slidesToShow: 1,
     slidesToScroll: 1,
+    rtl: $('html').attr('lang') == 'ar' ? true : false,
     arrows: false,
     fade: true,
     asNavFor: '.left-slider-image-2'
@@ -959,6 +988,7 @@ $('.left-slider-image-2').slick({
     dots: false,
     focusOnSelect: true,
     vertical: true,
+    rtl: $('html').attr('lang') == 'ar' ? true : false,
     responsive: [{
             breakpoint: 1400,
             settings: {
@@ -990,6 +1020,7 @@ $('.product-main-1').slick({
     slidesToShow: 1,
     slidesToScroll: 1,
     arrows: false,
+    rtl: $('html').attr('lang') == 'ar' ? true : false,
     fade: true,
     asNavFor: '.bottom-slider-image'
 });
@@ -1002,6 +1033,7 @@ $('.vertical-product').slick({
     dots: false,
     vertical: true,
     focusOnSelect: true,
+    rtl: $('html').attr('lang') == 'ar' ? true : false,
     responsive: [{
             breakpoint: 1400,
             settings: {
@@ -1037,6 +1069,7 @@ $('.bottom-slider-image').slick({
     asNavFor: '.product-main-1',
     dots: false,
     focusOnSelect: true,
+    rtl: $('html').attr('lang') == 'ar' ? true : false,
     responsive: [{
             breakpoint: 1400,
             settings: {
@@ -1070,6 +1103,7 @@ $('.slider-user').slick({
     slidesToShow: 4,
     slidesToScroll: 1,
     dots: true,
+    rtl: $('html').attr('lang') == 'ar' ? true : false,
     responsive: [{
             breakpoint: 1690,
             settings: {
@@ -1100,6 +1134,7 @@ $('.search-product').slick({
     slidesToShow: 6,
     slidesToScroll: 1,
     dots: true,
+    rtl: $('html').attr('lang') == 'ar' ? true : false,
     responsive: [{
             breakpoint: 1408,
             settings: {
@@ -1134,6 +1169,7 @@ $('.three-slider-1').slick({
     infinite: true,
     slidesToShow: 3,
     slidesToScroll: 1,
+    rtl: $('html').attr('lang') == 'ar' ? true : false,
     responsive: [{
             breakpoint: 1450,
             settings: {
@@ -1154,6 +1190,7 @@ $('.three-slider').slick({
     arrows: true,
     infinite: true,
     slidesToShow: 3,
+    rtl: $('html').attr('lang') == 'ar' ? true : false,
     slidesToScroll: 1,
     responsive: [{
             breakpoint: 1300,
@@ -1175,6 +1212,7 @@ $('.category-slider-1').slick({
     arrows: true,
     infinite: true,
     slidesToShow: 8,
+    rtl: $('html').attr('lang') == 'ar' ? true : false,
     slidesToScroll: 1,
     responsive: [{
             breakpoint: 1661,
@@ -1218,6 +1256,7 @@ $('.category-slider-1').slick({
 $('.slider-7_1').slick({
     arrows: true,
     infinite: true,
+    rtl: $('html').attr('lang') == 'ar' ? true : false,
     slidesToShow: 7,
     slidesToScroll: 1,
     responsive: [{
@@ -1258,6 +1297,7 @@ $('.slider-7_1').slick({
 $('.top-selling-slider').slick({
     arrows: true,
     infinite: true,
+    rtl: $('html').attr('lang') == 'ar' ? true : false,
     slidesToShow: 1,
     slidesToScroll: 1,
 });
@@ -1268,6 +1308,7 @@ $('.product-box-slider-2').slick({
     slidesToShow: 5,
     slidesToScroll: 1,
     pauseOnHover: true,
+    rtl: $('html').attr('lang') == 'ar' ? true : false,
     responsive: [{
             breakpoint: 1630,
             settings: {
@@ -1307,6 +1348,7 @@ $('.product-box-slider').slick({
     slidesToShow: 5,
     slidesToScroll: 1,
     pauseOnHover: true,
+    rtl: $('html').attr('lang') == 'ar' ? true : false,
     responsive: [{
             breakpoint: 1680,
             settings: {
@@ -1344,6 +1386,7 @@ $('.best-selling-slider').slick({
     infinite: true,
     slidesToShow: 3,
     slidesToScroll: 1,
+    rtl: $('html').attr('lang') == 'ar' ? true : false,
     responsive: [{
             breakpoint: 1495,
             settings: {
@@ -1385,6 +1428,7 @@ $('.notification-slider').slick({
     variableWidth: false,
     autoplay: true,
     autoplaySpeed: 2500,
+    rtl: $('html').attr('lang') == 'ar' ? true : false,
     arrows: false,
 });
 
@@ -1396,6 +1440,7 @@ $('.banner-slider').slick({
     autoplay: true,
     autoplaySpeed: 2500,
     dots: false,
+    rtl: $('html').attr('lang') == 'ar' ? true : false,
     responsive: [{
             breakpoint: 1387,
             settings: {
@@ -1433,4 +1478,5 @@ $('.studio-rent-slider').slick({
     autoplay: true,
     autoplaySpeed: 3000,
     adaptiveHeight: true,
+    rtl: $('html').attr('lang') == 'ar' ? true : false,
 });

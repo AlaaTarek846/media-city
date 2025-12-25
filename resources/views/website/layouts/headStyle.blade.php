@@ -21,5 +21,9 @@
     <link rel="stylesheet" type="text/css" href="{{asset('website/css/vendors/slick/slick.css')}}">
     <link rel="stylesheet" type="text/css" href="{{asset('website/css/vendors/slick/slick-theme.css')}}">
     <link rel="stylesheet" type="text/css" href="{{asset('website/css/bulk-style.css')}}">
-    <link id="color-link" rel="stylesheet" type="text/css" href="{{asset('website/css/style.css')}}">
+    @if (app()->getLocale() == 'ar')
+        <link id="color-link" rel="stylesheet" type="text/css" href="{{asset('website/css/style-rtl.css')}}">
+    @else
+        <link id="color-link" rel="stylesheet" type="text/css" href="{{asset('website/css/style.css')}}">
+    @endif
 </head>
