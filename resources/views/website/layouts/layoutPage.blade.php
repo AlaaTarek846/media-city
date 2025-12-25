@@ -1,20 +1,20 @@
 
 <!DOCTYPE html>
-<html lang="{{app()->getLocale()}}">
+<html lang="{{app()->getLocale()}}" dir="{{ app()->getLocale() == 'en' ? 'ltr' : 'rtl' }}">
 
 @include('website.layouts.headStyle')
 
 <body class="theme-color-2 bg-effect">
 
 <!-- Loader Start -->
-<!-- <div class="fullpage-loader">
+<div class="fullpage-loader">
     <span></span>
     <span></span>
     <span></span>
     <span></span>
     <span></span>
     <span></span>
-</div> -->
+</div>
 <!-- Loader End -->
 
 @include('website.layouts.header')
