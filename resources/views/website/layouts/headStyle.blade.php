@@ -1,43 +1,25 @@
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    {{-- add meta language --}}
-    <meta name="language" content="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <title>{{env("APP_NAME")}} | @yield('pageTitle')</title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="apple-touch-icon" href="apple-touch-icon.png">
-    <!-- Place favicon.ico in the root directory -->
-    <link rel="icon" type="image/png" href="/website/images/favicon.png">
-
-  <!--font-->
-  <link rel="preconnect" href="https://fonts.googleapis.com/">
-  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&amp;display=swap"
-    rel="stylesheet">
-
-    <link href="/website/css/sweetalert2.min.css" rel="stylesheet">
-    <link href="/website/js/ajax/libs/jqueryui/1.12.1/jquery-ui.css" type="text/css" rel="stylesheet"
-    media="all">
-    <link rel="stylesheet" type="text/css" href="/website/css/price_range_style.css">
-
-    @if (app()->getLocale() == 'ar')
-            <link href="/website/css/rtl.min.css" rel="stylesheet">
-        @else
-            <!-- Plugins-->
-            <!-- Link Swiper's CSS -->
-            <link rel="stylesheet" href="/website/plugins/swiper/css/swiper-bundle.min.css">
-
-             <!--Bootstrap files-->
-           <link href="/website/css/bootstrap.min.css" rel="stylesheet">
-           <link rel="stylesheet" href="/website/css/bootstrap-icons.min.css">
-           <!--main style sheet-->
-           <link href="/website/sass/style.css" rel="stylesheet">
-
-    @endif
-
-
-    @stack("headStyle")
-
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="MediaCity">
+    <meta name="keywords" content="MediaCity">
+    <meta name="author" content="MediaCity">
+    <link rel="icon" href="{{asset('website/images/logo.png')}}" type="image/x-icon">
+    <title>MediaCity</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700;800;900&display=swap"
+          rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+    <link id="rtl-link" rel="stylesheet" type="text/css" href="{{asset('website/css/vendors/bootstrap.css')}}">
+    <link rel="stylesheet" href="{{asset('website/css/animate.min.css')}}" >
+    <link rel="stylesheet" type="text/css" href="{{asset('website/css/vendors/font-awesome.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('website/css/vendors/feather-icon.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('website/css/vendors/slick/slick.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('website/css/vendors/slick/slick-theme.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('website/css/bulk-style.css')}}">
+    <link id="color-link" rel="stylesheet" type="text/css" href="{{asset('website/css/style.css')}}">
 </head>
