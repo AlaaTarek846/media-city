@@ -2,72 +2,147 @@
 @section('pageTitle',__('messages.Blog'))
 
 @section('body')
-    @include('website.layouts.breadcrump', ['currentPage' => __('messages.Blog')])
-
-	  <!--start main content-->
-  <main class="main-content">
-
-
-    <section class="py-5">
-      <div class="container px-3">
-        <div class="row row-cols-1 row-cols-lg-3 g-4 g-lg-5">
-        @foreach ($news as $blog)
-          <div class="col">
-            <div class="blog-post">
-              <div class="grid-posts-img">
-                <img src="{{ $blog->image }}" class="img-fluid rounded-3" alt="">
-              </div>
-
-              <div class="post-content mt-4">
-                <div class="mb-3">
-                  <a href="/blog-details/{{$blog->id}}-{{$blog->slug}}">
-                    <h3 class="grid-posts-title fw-semibold">{{$blog->current_translation?->title}}</h3>
-                  </a>
+    <!-- Breadcrumb Section Start -->
+    <section class="breadscrumb-section pt-0">
+        <div class="container-fluid-lg">
+            <div class="row">
+                <div class="col-12">
+                    <div class="breadscrumb-contain">
+                        <h2>Blog List</h2>
+                        <nav>
+                            <ol class="breadcrumb mb-0">
+                                <li class="breadcrumb-item">
+                                    <a href="{{route('web.home')}}">
+                                        <i class="fa-solid fa-house"></i>
+                                    </a>
+                                </li>
+                                <li class="breadcrumb-item active" aria-current="page">Blog List</li>
+                            </ol>
+                        </nav>
+                    </div>
                 </div>
-                <p class="post-short-desc mb-0">{{$blog->current_translation?->description}}</p>
-              </div>
             </div>
-          </div>
-        @endforeach
-
-        </div><!--end row-->
-
-
-        <!--pagination-->
-
-         <div class="page-pagination d-flex justify-content-center">
-            <nav class="mt-4">
-            <ul class="pagination">
-                {{-- Previous Page Link --}}
-                <li class="page-item {{ $news->onFirstPage() ? 'disabled' : '' }}">
-                    <a class="page-link" href="{{ $news->previousPageUrl() ?? 'javascript:;' }}" aria-label="Previous">
-                        <i class="bi bi-chevron-double-left"></i>
-                    </a>
-                </li>
-
-                {{-- Pagination Elements --}}
-                @foreach ($news->links()->elements[0] as $page => $url)
-                    @if ($page == $news->currentPage())
-                        <li class="page-item active"><a class="page-link" href="javascript:;">{{ $page }}</a></li>
-                    @else
-                        <li class="page-item"><a class="page-link" href="{{ $url }}">{{ $page }}</a></li>
-                    @endif
-                @endforeach
-
-                {{-- Next Page Link --}}
-                <li class="page-item {{ $news->hasMorePages() ? '' : 'disabled' }}">
-                    <a class="page-link" href="{{ $news->nextPageUrl() ?? 'javascript:;' }}" aria-label="Next">
-                        <i class="bi bi-chevron-double-right"></i>
-                    </a>
-                </li>
-            </ul>
-            </nav>
         </div>
-        <!--end pagination-->
-
-      </div>
     </section>
+    <!-- Breadcrumb Section End -->
 
-  </main>
-  <!--end main content-->
+    <!-- Blog Section Start -->
+    <section class="blog-section section-b-space">
+        <div class="container-fluid-lg">
+            <div class="row g-4">
+                <div class="col-xxl-12 col-xl-12 col-lg-12 order-lg-2">
+                    <div class="row g-4">
+                        <div class="col-12">
+                            <div class="blog-box blog-list wow fadeInUp">
+                                <div class="blog-image">
+                                    <img src="{{asset('website/images/veg-3/home/19.jpg')}}" class="blur-up lazyload" alt="">
+                                </div>
+
+                                <div class="blog-contain blog-contain-2">
+                                    <div class="blog-label">
+                                        <span class="time"><i data-feather="clock"></i> <span>25 Feg, 2022</span></span>
+
+                                    </div>
+                                    <a href="{{route('blog-details','test')}}">
+                                        <h3>
+                                            Sony Alpha a7 IV Mirrorless Digital Camera
+                                        </h3>
+                                    </a>
+                                    <p>
+                                        Sony Alpha a7 IV Mirrorless Digital Camera
+                                        Sony Alpha a7 IV Mirrorless Digital Camera
+                                        Sony Alpha a7 IV Mirrorless Digital Camera
+                                        Sony Alpha a7 IV Mirrorless Digital Camera
+                                    </p>
+                                    <button  onclick="location.href='{{ route('blog-details', 'test') }}'"  class="blog-button">Read
+                                        More <i class="fa-solid fa-right-long"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="blog-box blog-list wow fadeInUp">
+                                <div class="blog-image">
+                                    <img src="{{asset('website/images/veg-3/home/19.jpg')}}" class="blur-up lazyload" alt="">
+                                </div>
+
+                                <div class="blog-contain blog-contain-2">
+                                    <div class="blog-label">
+                                        <span class="time"><i data-feather="clock"></i> <span>25 Feg, 2022</span></span>
+
+                                    </div>
+                                    <a href="{{route('blog-details','test')}}">
+                                        <h3>
+                                            Sony Alpha a7 IV Mirrorless Digital Camera
+                                        </h3>
+                                    </a>
+                                    <p>
+                                        Sony Alpha a7 IV Mirrorless Digital Camera
+                                        Sony Alpha a7 IV Mirrorless Digital Camera
+                                        Sony Alpha a7 IV Mirrorless Digital Camera
+                                        Sony Alpha a7 IV Mirrorless Digital Camera
+                                    </p>
+                                    <button onclick="location.href='{{ route('blog-details', 'test') }}'" class="blog-button">Read
+                                        More <i class="fa-solid fa-right-long"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="blog-box blog-list wow fadeInUp">
+                                <div class="blog-image">
+                                    <img src="{{asset('website/images/veg-3/home/19.jpg')}}" class="blur-up lazyload" alt="">
+                                </div>
+
+                                <div class="blog-contain blog-contain-2">
+                                    <div class="blog-label">
+                                        <span class="time"><i data-feather="clock"></i> <span>25 Feg, 2022</span></span>
+
+                                    </div>
+                                    <a href="{{route('blog-details','test')}}">
+                                        <h3>
+                                            Sony Alpha a7 IV Mirrorless Digital Camera
+                                        </h3>
+                                    </a>
+                                    <p>
+                                        Sony Alpha a7 IV Mirrorless Digital Camera
+                                        Sony Alpha a7 IV Mirrorless Digital Camera
+                                        Sony Alpha a7 IV Mirrorless Digital Camera
+                                        Sony Alpha a7 IV Mirrorless Digital Camera
+                                    </p>
+                                    <button onclick="location.href='{{ route('blog-details', 'test') }}'" class="blog-button">Read
+                                        More <i class="fa-solid fa-right-long"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <nav class="custome-pagination">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item disabled">
+                                <a class="page-link" href="javascript:void(0)" tabindex="-1">
+                                    <i class="fa-solid fa-angles-left"></i>
+                                </a>
+                            </li>
+                            <li class="page-item active">
+                                <a class="page-link" href="javascript:void(0)">1</a>
+                            </li>
+                            <li class="page-item" aria-current="page">
+                                <a class="page-link" href="javascript:void(0)">2</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="javascript:void(0)">3</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="javascript:void(0)">
+                                    <i class="fa-solid fa-angles-right"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Blog Section End -->
 @endsection
