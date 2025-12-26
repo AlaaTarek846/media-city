@@ -40,16 +40,16 @@
                             <div class="dropdown theme-form-select">
                                 <button class="btn dropdown-toggle" type="button" id="select-language"
                                         data-bs-toggle="dropdown" aria-expanded="false">
-                                    <img src="{{asset('website/images/country/united-states.png')}}"
+                                    <img src="{{ app()->getLocale() == 'ar' ? asset('website/images/country/Arabia.png') : asset('website/images/country/united-states.png')}}"
                                          class="img-fluid blur-up lazyload" alt="">
-                                    <span>English</span>
+                                    <span>{{ app()->getLocale() == 'en' ? __('messages.English') : __('messages.Arabic') }}</span>
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="select-language">
                                     <li>
-                                        <a class="dropdown-item" href="javascript:void(0)" id="english">
-                                            <img src="{{asset('website/images/country/Arabia.png')}}"
+                                        <a class="dropdown-item" href="{{ route('change.language',app()->getLocale() == 'ar'? 'en' : 'ar') }}" id="english">
+                                            <img src="{{ app()->getLocale() == 'en' ? asset('website/images/country/Arabia.png') : asset('website/images/country/united-states.png')}}"
                                                  class="img-fluid blur-up lazyload" alt="">
-                                            <span>العربية </span>
+                                            <span>{{ app()->getLocale() == 'ar' ? __('messages.English') : __('messages.Arabic') }} </span>
                                         </a>
                                     </li>
                                 </ul>

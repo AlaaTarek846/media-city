@@ -2,10 +2,13 @@
 
 <?php
 
+use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\Web\HomePageController;
 use App\Http\Controllers\Web\RegisterController;
 use App\Http\Middleware\ChangeLangForWeb;
 use Illuminate\Support\Facades\Route;
+
+Route::get('change-language/{locale}', [LanguageController::class, 'changeLanguage'])->name('change.language');
 
 // Dashboard admin
 Route::group(['middleware' => [ChangeLangForWeb::class]], function () {
@@ -33,7 +36,6 @@ Route::group(['middleware' => [ChangeLangForWeb::class]], function () {
 
     Route::get('/', [HomePageController::class, 'index'])->name('web.home');
     Route::post('/newsletter', [HomePageController::class, 'newsletter'])->name('web.newsletter');
-    Route::get('/change-language/{lang}', [HomePageController::class, 'changeLanguage']);
     Route::get('/show-product/{id}', [HomePageController::class, 'showProduct']);
     Route::delete('/cart-destroy/{id}', [HomePageController::class, 'removeItemFromCart'])->name('cart.destroy');
 
