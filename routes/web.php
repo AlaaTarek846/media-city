@@ -24,6 +24,7 @@ Route::group(['middleware' => [ChangeLangForWeb::class]], function () {
     Route::get('/login', [RegisterController::class, 'login'])->middleware('guest:user');
     Route::get('/register', [RegisterController::class, 'index'])->middleware('guest:user');
     Route::post('/logout', [RegisterController::class, 'logout'])->middleware('auth:user')->name('web.logout');
+    Route::get('/forgot', [RegisterController::class, 'forgot']);
 
     Route::get('/profile', [RegisterController::class, 'profile'])->middleware('auth:user')->name('web.profile');
     Route::get('/account-orders', [HomePageController::class, 'accountOrders'])->middleware('auth:user');
@@ -36,17 +37,21 @@ Route::group(['middleware' => [ChangeLangForWeb::class]], function () {
     Route::get('/show-product/{id}', [HomePageController::class, 'showProduct']);
     Route::delete('/cart-destroy/{id}', [HomePageController::class, 'removeItemFromCart'])->name('cart.destroy');
 
-    Route::get('/blog', [HomePageController::class, 'blog']);
-    Route::get('/blog-details/{news}-{slug?}', [HomePageController::class, 'blogDetails']);
+    Route::get('/blogs', [HomePageController::class, 'blog'])->name('blog');
+    Route::get('/blog-details/{slug}', [HomePageController::class, 'blogDetails'])->name('blog-details');
 
-    Route::get('/contact', [HomePageController::class, 'contact']);
-    Route::get('/about-us', [HomePageController::class, 'aboutUs']);
+    Route::get('/best-seller', [HomePageController::class, 'bestSeller'])->name('best-seller');
+
+    Route::get('/contact', [HomePageController::class, 'contact'])->name('contact');
+    Route::get('/about-us', [HomePageController::class, 'aboutUs'])->name('about-us');
     Route::get('/shopping-cart', [HomePageController::class, 'shoppingCart'])->middleware('auth:user');
     Route::get('/checkout', [HomePageController::class, 'checkout'])->middleware('auth:user');
-    Route::get('/wishlist', [HomePageController::class, 'wishlist'])->middleware('auth:user');
+//    Route::get('/wishlist', [HomePageController::class, 'wishlist'])->middleware('auth:user');
+    Route::get('/wishlist', [HomePageController::class, 'wishlist'])->name('wishlist');
     Route::get('/checkout-thankyou', [HomePageController::class, 'checkoutThankyou'])->middleware('auth:user');
-    Route::get('/product-detail/{id}', [HomePageController::class, 'productDetail']);
-    Route::get('/shop', [HomePageController::class, 'shop']);
+    Route::get('/product-detail/{id}', [HomePageController::class, 'productDetail'])->name('productDetail');
+    Route::get('/shop', [HomePageController::class, 'shop'])->name('shop');
+    Route::get('/renting', [HomePageController::class, 'renting'])->name('renting');
 
     Route::get('/category', [HomePageController::class, 'category']);
 

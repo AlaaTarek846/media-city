@@ -162,9 +162,9 @@ class HomePageController extends Controller
 
     public function wishlist()
     {
-        $user = auth('user')->user();
-        $favorites = $user->favorites()->with(['variants', 'translation'])->get();
-        return view('website.wishlist', compact('favorites'));
+//        $user = auth('user')->user();
+//        $favorites = $user->favorites()->with(['variants', 'translation'])->get();
+        return view('website.wishlist');
     }
 
     public function shoppingCart()
@@ -491,22 +491,22 @@ class HomePageController extends Controller
         return view('website.blog',compact('news'));
     }
 
-    public function blogDetails(News $news,$slug){
-        $mightLikeThis = News::inRandomOrder()->take(3)->get();
-        return view('website.blog-details',compact('news','mightLikeThis'));
+    public function blogDetails($slug){
+
+        return view('website.blog-details');
     }
 
 
      public function updateProfile(ProfileRequest $request){
-       
+
         $user = auth('user')->user();
         if($user){
-            $data = $request->validated();         
-            
+            $data = $request->validated();
+
             if($request->password)
                 $data['password'] = bcrypt($request->password);
-    
-            $user->update(collect($data)->filter()->toArray());          
+
+            $user->update(collect($data)->filter()->toArray());
         }
         return responseJson($user,__('messages.Created Successfully'),200);
     }
@@ -559,6 +559,14 @@ class HomePageController extends Controller
             session()->put('lang',$lang);
         }
         return redirect()->back();
+    }
+    public function bestSeller()
+    {
+        return view('website.best-seller');
+    }
+   public function renting()
+    {
+        return view('website.renting');
     }
 
 

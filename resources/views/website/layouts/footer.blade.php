@@ -4,8 +4,8 @@
         <div class="main-footer">
             <div class="row g-md-4 gy-sm-5 gy-2">
                 <div class="col-xxl-3 col-xl-4 col-sm-6">
-                    <a href="index.html" class="foot-logo">
-                        <img src="../assets/images/logo/3.png" class="img-fluid" alt="">
+                    <a href="{{route('web.home')}}" class="foot-logo">
+                        <img src="{{asset('website/images/logo/3.png')}}" class="img-fluid" alt="">
                     </a>
 
                     <ul class="social-icon">
@@ -45,11 +45,11 @@
                     </div>
                     <ul class="footer-list footer-contact mb-sm-0 mb-3">
                         <li>
-                            <a href="about-us.html" class="footer-contain-2">
+                            <a href="{{route('about-us')}}" class="footer-contain-2">
                                 <i class="fas fa-angle-right"></i>About Us</a>
                         </li>
                         <li>
-                            <a href="contact-us.html" class="footer-contain-2">
+                            <a href="{{route('contact')}}" class="footer-contain-2">
                                 <i class="fas fa-angle-right"></i>Contact Us</a>
                         </li>
                         <li>
@@ -57,11 +57,11 @@
                                 <i class="fas fa-angle-right"></i>Terms & Coditions</a>
                         </li>
                         <li>
-                            <a href="Renting.html" class="footer-contain-2">
+                            <a href="{{route('renting')}}" class="footer-contain-2">
                                 <i class="fas fa-angle-right"></i>Renting</a>
                         </li>
                         <li>
-                            <a href="blog-list.html" class="footer-contain-2">
+                            <a href="{{route('blog')}}" class="footer-contain-2">
                                 <i class="fas fa-angle-right"></i>Latest Blog</a>
                         </li>
                     </ul>
@@ -149,19 +149,19 @@
             <div class="right-footer">
                 <ul class="payment-box">
                     <li>
-                        <img src="../assets/images/icon/paymant/visa.png" alt="">
+                        <img src="{{asset('website/images/icon/paymant/visa.png')}}" alt="">
                     </li>
                     <li>
-                        <img src="../assets/images/icon/paymant/discover.png" alt="">
+                        <img src="{{asset('website/images/icon/paymant/discover.png')}}" alt="">
                     </li>
                     <li>
-                        <img src="../assets/images/icon/paymant/american.png" alt="">
+                        <img src="{{asset('website/images/icon/paymant/american.png')}}" alt="">
                     </li>
                     <li>
-                        <img src="../assets/images/icon/paymant/master-card.png" alt="">
+                        <img src="{{asset('website/images/icon/paymant/master-card.png')}}" alt="">
                     </li>
                     <li>
-                        <img src="../assets/images/icon/paymant/giro-pay.png" alt="">
+                        <img src="{{asset('website/images/icon/paymant/giro-pay.png')}}" alt="">
                     </li>
                 </ul>
             </div>
@@ -183,7 +183,7 @@
                 <div class="row g-sm-4 g-2">
                     <div class="col-lg-6">
                         <div class="slider-image">
-                            <img src="../assets/images/veg-3/home/17.jpg" class="img-fluid blur-up lazyload" alt="">
+                            <img src="{{asset('website/images/veg-3/home/17.jpg')}}" class="img-fluid blur-up lazyload" alt="">
                         </div>
                     </div>
 
@@ -276,7 +276,7 @@
                     <!-- Image (left on large screens) -->
                     <div class="col-lg-6 order-lg-1">
                         <div class="slider-image text-center">
-                            <img src="../assets/images/veg-3/home/16.jpg" class="img-fluid rounded-2"
+                            <img src="{{asset('website/images/veg-3/home/16.jpg')}}" class="img-fluid rounded-2"
                                  alt="Product image">
                         </div>
                     </div>
@@ -414,11 +414,11 @@
                     <ul class="deal-offer-list">
                         <li class="list-1">
                             <div class="deal-offer-contain">
-                                <a href="shop-list.html" class="deal-image">
-                                    <img src="../assets/images/veg-3/home/15.jpg" class="blur-up lazyload" alt="">
+                                <a href="{{route('shop')}}" class="deal-image">
+                                    <img src="{{asset('website/images/veg-3/home/15.jpg')}}" class="blur-up lazyload" alt="">
                                 </a>
 
-                                <a href="shop-list.html" class="deal-contain">
+                                <a href="{{route('shop')}}" class="deal-contain">
                                     <h5>Canon EOS C300 Mark III Digital Cinema Camera (EF Lens Mount)</h5>
                                     <h6>EGP 52.57 <del>57.62</del> </h6>
                                 </a>
@@ -427,11 +427,11 @@
 
                         <li class="list-2">
                             <div class="deal-offer-contain">
-                                <a href="shop-list.html" class="deal-image">
-                                    <img src="../assets/images/veg-3/home/16.jpg" class="blur-up lazyload" alt="">
+                                <a href="{{route('shop')}}" class="deal-image">
+                                    <img src="{{asset('website/images/veg-3/home/16.jpg')}}" class="blur-up lazyload" alt="">
                                 </a>
 
-                                <a href="shop-list.html" class="deal-contain">
+                                <a href="{{route('shop')}}" class="deal-contain">
                                     <h5>Canon EOS C300 Mark III Digital Cinema Camera (EF Lens Mount)</h5>
                                     <h6>EGP 52.57 <del>57.62</del></h6>
                                 </a>
@@ -440,11 +440,11 @@
 
                         <li class="list-3">
                             <div class="deal-offer-contain">
-                                <a href="shop-list.html" class="deal-image">
-                                    <img src="../assets/images/veg-3/home/17.jpg" class="blur-up lazyload" alt="">
+                                <a href="{{route('shop')}}" class="deal-image">
+                                    <img src="{{asset('website/images/veg-3/home/17.jpg')}}" class="blur-up lazyload" alt="">
                                 </a>
 
-                                <a href="shop-list.html" class="deal-contain">
+                                <a href="{{route('shop')}}" class="deal-contain">
                                     <h5>Canon EOS C300 Mark III Digital Cinema Camera (EF Lens Mount)</h5>
                                     <h6>EGP 52.57 <del>57.62</del> </h6>
                                 </a>
@@ -453,11 +453,11 @@
 
                         <li class="list-1">
                             <div class="deal-offer-contain">
-                                <a href="shop-list.html" class="deal-image">
-                                    <img src="../assets/images/veg-3/home/19.jpg" class="blur-up lazyload" alt="">
+                                <a href="{{route('shop')}}" class="deal-image">
+                                    <img src="{{asset('website/images/veg-3/home/19.jpg')}}" class="blur-up lazyload" alt="">
                                 </a>
 
-                                <a href="shop-list.html" class="deal-contain">
+                                <a href="{{route('shop')}}" class="deal-contain">
                                     <h5>Canon EOS C300 Mark III Digital Cinema Camera (EF Lens Mount)</h5>
                                     <h6>EGP 52.57 <del>57.62</del> </h6>
                                 </a>
@@ -489,10 +489,10 @@
     </h6>
     <ul class="items-image">
         <li>
-            <img src="../assets/images/veg-3/home/1.png" alt="">
+            <img src="{{asset('website/images/veg-3/home/1.png')}}" alt="">
         </li>
         <li>
-            <img src="../assets/images/veg-3/home/2.png" alt="">
+            <img src="{{asset('website/images/veg-3/home/2.png')}}" alt="">
         </li>
         <li>+3</li>
     </ul>

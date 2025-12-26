@@ -84,6 +84,13 @@ class RegisterController extends Controller
         return responseJson(null,__('messages.Invalid Credentials'),400);
 
     }
+    public function forgot()
+    {
+        return view('website.forgot');
+    }
+
+
+
 
 }
 

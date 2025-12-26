@@ -25,7 +25,7 @@
                             <div>
                                 <div class="timer-notification">
                                     <h6>Something you love is now on sale!
-                                        <a href="shop-list.html" class="text-white">Buy Now
+                                        <a href="{{route('shop')}}" class="text-white">Buy Now
                                             !</a>
                                     </h6>
                                 </div>
@@ -72,7 +72,7 @@
                                     <i class="iconly-Category icli theme-color"></i>
                                 </span>
                         </button>
-                        <a href="index.html" class="web-logo nav-logo">
+                        <a href="{{route('web.home')}}" class="web-logo nav-logo">
                             <img src="{{asset('website/images/logo/3.png')}}" class="img-fluid blur-up lazyload" alt="">
                         </a>
 
@@ -141,7 +141,7 @@
                                     </div>
                                 </li>
                                 <li class="right-side">
-                                    <a href="contact-us.html" class="delivery-login-box">
+                                    <a href="{{route('contact')}}" class="delivery-login-box">
                                         <div class="delivery-icon">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                  viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -159,7 +159,7 @@
                                     </a>
                                 </li>
                                 <li class="right-side">
-                                    <a href="wishlist.html" class="btn p-0 position-relative header-wishlist">
+                                    <a href="{{route('wishlist')}}" class="btn p-0 position-relative header-wishlist">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                              viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                              stroke-linecap="round" stroke-linejoin="round"
@@ -192,13 +192,13 @@
                                             <ul class="cart-list">
                                                 <li class="product-box-contain">
                                                     <div class="drop-cart">
-                                                        <a href="product-left-thumbnail.html" class="drop-image">
+                                                        <a href="{{route('productDetail',1)}}" class="drop-image">
                                                             <img src="{{asset('website/images/veg-3/home/18.jpg')}}"
                                                                  class="blur-up lazyloaded" alt="">
                                                         </a>
 
                                                         <div class="drop-contain">
-                                                            <a href="product-left-thumbnail.html">
+                                                            <a href="{{route('productDetail',1)}}">
                                                                 <h5>Fantasy Crunchy Choco Chip Cookies</h5>
                                                             </a>
                                                             <h6><span>1 x</span> EGP80.58</h6>
@@ -211,13 +211,13 @@
 
                                                 <li class="product-box-contain">
                                                     <div class="drop-cart">
-                                                        <a href="product-left-thumbnail.html" class="drop-image">
+                                                        <a href="{{route('productDetail',1)}}" class="drop-image">
                                                             <img src="{{asset('website/images/veg-3/home/19.jpg')}}"
                                                                  class="blur-up lazyloaded" alt="">
                                                         </a>
 
                                                         <div class="drop-contain">
-                                                            <a href="product-left-thumbnail.html">
+                                                            <a href="{{route('productDetail',1)}}">
                                                                 <h5>Peanut Butter Bite Premium Butter Cookies 600 g
                                                                 </h5>
                                                             </a>
@@ -264,15 +264,15 @@
                                         <ul class="user-box-name">
                                             <li class="product-box-contain">
                                                 <i></i>
-                                                <a href="login.html">Log In</a>
+                                                <a href="{{url('login')}}">Log In</a>
                                             </li>
 
                                             <li class="product-box-contain">
-                                                <a href="sign-up.html">Register</a>
+                                                <a href="{{url('register')}}">Register</a>
                                             </li>
 
                                             <li class="product-box-contain">
-                                                <a href="forgot.html">Forgot Password</a>
+                                                <a href="{{url('forgot')}}">Forgot Password</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -304,7 +304,7 @@
 
                             <ul class="category-list">
                                 <li class="onhover-category-list">
-                                    <a href="shop-list.html" class="category-name">
+                                    <a href="{{route('shop')}}" class="category-name">
                                         <img src="{{asset('website/svg/1/Cinema-camera.png')}}" alt="">
                                         <h6>Cameras</h6>
                                         <i class="fa-solid fa-angle-right"></i>
@@ -317,25 +317,25 @@
                                             </div>
                                             <ul>
                                                 <li>
-                                                    <a href="shop-list.html">Cinema Camera</a>
+                                                    <a href="{{route('shop')}}">Cinema Camera</a>
                                                 </li>
                                                 <li>
-                                                    <a href="shop-list.html">DCLR & Mirrorless</a>
+                                                    <a href="{{route('shop')}}">DCLR & Mirrorless</a>
                                                 </li>
                                                 <li>
-                                                    <a href="shop-list.html">Action Cameras</a>
+                                                    <a href="{{route('shop')}}">Action Cameras</a>
                                                 </li>
                                                 <li>
-                                                    <a href="shop-list.html">Blogs</a>
+                                                    <a href="{{route('blog')}}">Blogs</a>
                                                 </li>
                                                 <li>
-                                                    <a href="shop-list.html">Beans & Okra</a>
+                                                    <a href="{{route('shop')}}">Beans & Okra</a>
                                                 </li>
                                                 <li>
-                                                    <a href="shop-list.html">Cabbage & Cauliflower</a>
+                                                    <a href="{{route('shop')}}">Cabbage & Cauliflower</a>
                                                 </li>
                                                 <li>
-                                                    <a href="shop-list.html">Specialty</a>
+                                                    <a href="{{route('shop')}}">Specialty</a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -363,7 +363,7 @@
                                 </li>
 
                                 <li class="onhover-category-list">
-                                    <a href="shop-list.html" class="category-name">
+                                    <a href="{{route('shop')}}" class="category-name">
                                         <img src="{{asset('website/svg/1/lenses.png')}}" alt="">
                                         <h6>Lenses</h6>
                                         <i class="fa-solid fa-angle-right"></i>
@@ -376,32 +376,32 @@
                                             </div>
                                             <ul>
                                                 <li>
-                                                    <a href="shop-list.html">Soda & Cocktail Mix</a>
+                                                    <a href="{{route('shop')}}">Soda & Cocktail Mix</a>
                                                 </li>
                                                 <li>
-                                                    <a href="shop-list.html">Soda & Cocktail Mix</a>
+                                                    <a href="{{route('shop')}}">Soda & Cocktail Mix</a>
                                                 </li>
                                                 <li>
-                                                    <a href="shop-list.html">Sports & Energy Drinks</a>
+                                                    <a href="{{route('shop')}}">Sports & Energy Drinks</a>
                                                 </li>
                                                 <li>
-                                                    <a href="shop-list.html">Non Alcoholic Drinks</a>
+                                                    <a href="{{route('shop')}}">Non Alcoholic Drinks</a>
                                                 </li>
                                                 <li>
-                                                    <a href="shop-list.html">Packaged Water</a>
+                                                    <a href="{{route('shop')}}">Packaged Water</a>
                                                 </li>
                                                 <li>
-                                                    <a href="shop-list.html">Spring Water</a>
+                                                    <a href="{{route('shop')}}">Spring Water</a>
                                                 </li>
                                                 <li>
-                                                    <a href="shop-list.html">Flavoured Water</a>
+                                                    <a href="{{route('shop')}}">Flavoured Water</a>
                                                 </li>
                                             </ul>
                                         </div>
                                     </div>
                                 </li>
                                 <li class="onhover-category-list">
-                                    <a href="shop-list.html" class="category-name">
+                                    <a href="{{route('shop')}}" class="category-name">
                                         <img src="{{asset('website/svg/1/mic.png')}}" alt="">
                                         <h6>Sound</h6>
                                         <i class="fa-solid fa-angle-right"></i>
@@ -414,25 +414,25 @@
                                             </div>
                                             <ul>
                                                 <li>
-                                                    <a href="shop-list.html">Cinema Camera</a>
+                                                    <a href="{{route('shop')}}">Cinema Camera</a>
                                                 </li>
                                                 <li>
-                                                    <a href="shop-list.html">DCLR & Mirrorless</a>
+                                                    <a href="{{route('shop')}}">DCLR & Mirrorless</a>
                                                 </li>
                                                 <li>
-                                                    <a href="shop-list.html">Action Cameras</a>
+                                                    <a href="{{route('shop')}}">Action Cameras</a>
                                                 </li>
                                                 <li>
-                                                    <a href="shop-list.html">Blogs</a>
+                                                    <a href="{{route('blog')}}">Blogs</a>
                                                 </li>
                                                 <li>
-                                                    <a href="shop-list.html">Beans & Okra</a>
+                                                    <a href="{{route('shop')}}">Beans & Okra</a>
                                                 </li>
                                                 <li>
-                                                    <a href="shop-list.html">Cabbage & Cauliflower</a>
+                                                    <a href="{{route('shop')}}">Cabbage & Cauliflower</a>
                                                 </li>
                                                 <li>
-                                                    <a href="shop-list.html">Specialty</a>
+                                                    <a href="{{route('shop')}}">Specialty</a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -460,7 +460,7 @@
                                 </li>
 
                                 <li class="onhover-category-list">
-                                    <a href="shop-list.html" class="category-name">
+                                    <a href="{{route('shop')}}" class="category-name">
                                         <img src="{{asset('website/svg/1/tripod.png')}}" alt="">
                                         <h6>Camera Accessories</h6>
                                         <i class="fa-solid fa-angle-right"></i>
@@ -473,25 +473,25 @@
                                             </div>
                                             <ul>
                                                 <li>
-                                                    <a href="shop-list.html">Cinema Camera</a>
+                                                    <a href="{{route('shop')}}">Cinema Camera</a>
                                                 </li>
                                                 <li>
-                                                    <a href="shop-list.html">DCLR & Mirrorless</a>
+                                                    <a href="{{route('shop')}}">DCLR & Mirrorless</a>
                                                 </li>
                                                 <li>
-                                                    <a href="shop-list.html">Action Cameras</a>
+                                                    <a href="{{route('shop')}}">Action Cameras</a>
                                                 </li>
                                                 <li>
-                                                    <a href="shop-list.html">Blogs</a>
+                                                    <a href="{{route('blog')}}">Blogs</a>
                                                 </li>
                                                 <li>
-                                                    <a href="shop-list.html">Beans & Okra</a>
+                                                    <a href="{{route('shop')}}">Beans & Okra</a>
                                                 </li>
                                                 <li>
-                                                    <a href="shop-list.html">Cabbage & Cauliflower</a>
+                                                    <a href="{{route('shop')}}">Cabbage & Cauliflower</a>
                                                 </li>
                                                 <li>
-                                                    <a href="shop-list.html">Specialty</a>
+                                                    <a href="{{route('shop')}}">Specialty</a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -519,7 +519,7 @@
                                 </li>
 
                                 <li class="onhover-category-list">
-                                    <a href="shop-list.html" class="category-name">
+                                    <a href="{{route('shop')}}" class="category-name">
                                         <img src="{{asset('website/svg/1/illumination.png')}}" alt="">
                                         <h6>Lighting</h6>
                                         <i class="fa-solid fa-angle-right"></i>
@@ -532,25 +532,25 @@
                                             </div>
                                             <ul>
                                                 <li>
-                                                    <a href="shop-list.html">Cinema Camera</a>
+                                                    <a href="{{route('shop')}}">Cinema Camera</a>
                                                 </li>
                                                 <li>
-                                                    <a href="shop-list.html">DCLR & Mirrorless</a>
+                                                    <a href="{{route('shop')}}">DCLR & Mirrorless</a>
                                                 </li>
                                                 <li>
-                                                    <a href="shop-list.html">Action Cameras</a>
+                                                    <a href="{{route('shop')}}">Action Cameras</a>
                                                 </li>
                                                 <li>
-                                                    <a href="shop-list.html">Blogs</a>
+                                                    <a href="{{route('blog')}}">Blogs</a>
                                                 </li>
                                                 <li>
-                                                    <a href="shop-list.html">Beans & Okra</a>
+                                                    <a href="{{route('shop')}}">Beans & Okra</a>
                                                 </li>
                                                 <li>
-                                                    <a href="shop-list.html">Cabbage & Cauliflower</a>
+                                                    <a href="{{route('shop')}}">Cabbage & Cauliflower</a>
                                                 </li>
                                                 <li>
-                                                    <a href="shop-list.html">Specialty</a>
+                                                    <a href="{{route('shop')}}">Specialty</a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -578,7 +578,7 @@
                                 </li>
 
                                 <li class="onhover-category-list">
-                                    <a href="shop-list.html" class="category-name">
+                                    <a href="{{route('shop')}}" class="category-name">
                                         <img src="{{asset('website/svg/1/illumination.png')}}" alt="">
                                         <h6>Lighting Accessories</h6>
                                         <i class="fa-solid fa-angle-right"></i>
@@ -591,25 +591,25 @@
                                             </div>
                                             <ul>
                                                 <li>
-                                                    <a href="shop-list.html">Cinema Camera</a>
+                                                    <a href="{{route('shop')}}">Cinema Camera</a>
                                                 </li>
                                                 <li>
-                                                    <a href="shop-list.html">DCLR & Mirrorless</a>
+                                                    <a href="{{route('shop')}}">DCLR & Mirrorless</a>
                                                 </li>
                                                 <li>
-                                                    <a href="shop-list.html">Action Cameras</a>
+                                                    <a href="{{route('shop')}}">Action Cameras</a>
                                                 </li>
                                                 <li>
-                                                    <a href="shop-list.html">Blogs</a>
+                                                    <a href="{{route('blog')}}">Blogs</a>
                                                 </li>
                                                 <li>
-                                                    <a href="shop-list.html">Beans & Okra</a>
+                                                    <a href="{{route('shop')}}">Beans & Okra</a>
                                                 </li>
                                                 <li>
-                                                    <a href="shop-list.html">Cabbage & Cauliflower</a>
+                                                    <a href="{{route('shop')}}">Cabbage & Cauliflower</a>
                                                 </li>
                                                 <li>
-                                                    <a href="shop-list.html">Specialty</a>
+                                                    <a href="{{route('shop')}}">Specialty</a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -652,19 +652,19 @@
                                         <a class="nav-link ps-xl-2 ps-0" href="javascript:void(0)">Home</a>
                                     </li> -->
                                     <li class="nav-item">
-                                        <a class="nav-link ps-xl-2 ps-0" href="renting.html">Our Items</a>
+                                        <a class="nav-link ps-xl-2 ps-0" href="{{route('renting')}}">Our Items</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link ps-xl-2 ps-0" href="Best-Seller.html">Best Seller </a>
+                                        <a class="nav-link ps-xl-2 ps-0" href="{{route('best-seller')}}">Best Seller </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link ps-xl-2 ps-0" href="about-us.html">About Us</a>
+                                        <a class="nav-link ps-xl-2 ps-0" href="{{route('about-us')}}">About Us</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link ps-xl-2 ps-0" href="blog-list.html">Blogs</a>
+                                        <a class="nav-link ps-xl-2 ps-0" href="{{route('blog')}}">Blogs</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link ps-xl-2 ps-0" href="contact-us.html">Contact Us</a>
+                                        <a class="nav-link ps-xl-2 ps-0" href="{{route('contact')}}">Contact Us</a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link ps-xl-2 ps-0" href="user-dashboard.html">User
@@ -699,7 +699,7 @@
 <div class="mobile-menu d-md-none d-block mobile-cart">
     <ul>
         <li class="active">
-            <a href="index.html">
+            <a href="{{route('web.home')}}">
                 <i class="iconly-Home icli"></i>
                 <span>Home</span>
             </a>
@@ -720,7 +720,7 @@
         </li>
 
         <li>
-            <a href="wishlist.html" class="notifi-wishlist">
+            <a href="{{route('wishlist')}}" class="notifi-wishlist">
                 <i class="iconly-Heart icli"></i>
                 <span>My Wish</span>
             </a>

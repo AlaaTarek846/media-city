@@ -1,61 +1,7 @@
 @extends('website.layouts.layoutPage')
-@section('pageTitle',__('messages.Shop'))
-@push("headStyle")
-    @vite(['resources/js/single-components.js'])
-@endpush
+@section('pageTitle',__('messages.Blog Details'))
+
 @section('body')
-
-    <!-- Poster Section Start -->
-    <section>
-        <div class="container-fluid-lg">
-            <div class="row">
-                <div class="col-12">
-                    <div class="slider-1 slider-animate product-wrapper no-arrow">
-                        <div>
-                            <div class="banner-contain-2 hover-effect">
-                                <img src="{{asset('website/images/veg-3/home-bg.png')}}" class="bg-img rounded-3 blur-up lazyload" alt="">
-                                <div
-                                    class="banner-detail p-center-right position-relative shop-banner ms-auto banner-small">
-                                    <div>
-                                        <h2> Cameras, sony sony sony sony</h2>
-                                        <h3>Save upto 50%</h3>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="banner-contain-2 hover-effect">
-                                <img src="{{asset('website/images/veg-3/home-bg.png')}}" class="bg-img rounded-3 blur-up lazyload" alt="">
-                                <div
-                                    class="banner-detail p-center-right position-relative shop-banner ms-auto banner-small">
-                                    <div>
-                                        <h2> Cameras, sony sony sony sony</h2>
-                                        <h3>Save upto 50%</h3>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="banner-contain-2 hover-effect">
-                                <img src="{{asset('website/images/veg-3/home-bg.png')}}" class="bg-img rounded-3 blur-up lazyload" alt="">
-                                <div
-                                    class="banner-detail p-center-right position-relative shop-banner ms-auto banner-small">
-                                    <div>
-                                        <h2> Cameras, sony sony sony sony</h2>
-                                        <h3>Save upto 50%</h3>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- Poster Section End -->
 
     <!-- Shop Section Start -->
     <section class="section-b-space shop-section">
@@ -68,15 +14,13 @@
                                 <h3><i class="fa-solid fa-arrow-left"></i> Back</h3>
                             </div>
 
-
-
                             <div class="accordion custome-accordion" id="accordionExample">
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="headingOne">
                                         <button class="accordion-button" type="button" data-bs-toggle="collapse"
                                                 data-bs-target="#collapseOne" aria-expanded="true"
                                                 aria-controls="collapseOne">
-                                            <span>Sub Items</span>
+                                            <span>Categories</span>
                                         </button>
                                     </h2>
                                     <div id="collapseOne" class="accordion-collapse collapse show"
@@ -194,7 +138,6 @@
                                     </div>
                                 </div>
 
-
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="headingThree">
                                         <button class="accordion-button collapsed" type="button"
@@ -212,6 +155,7 @@
                                         </div>
                                     </div>
                                 </div>
+
 
                             </div>
                         </div>
@@ -603,9 +547,4 @@
         </div>
     </section>
     <!-- Shop Section End -->
-
-@push('scripts')
-@endpush
 @endsection
-
-
