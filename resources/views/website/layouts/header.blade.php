@@ -667,8 +667,12 @@
                                         <a class="nav-link ps-xl-2 ps-0" href="{{route('contact')}}">Contact Us</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link ps-xl-2 ps-0" href="user-dashboard.html">User
-                                            Dashboard</a>
+                                        <a
+                                            class="nav-link ps-xl-2 ps-0"
+                                            href="{{ route('userDashboard') }}"
+                                        >
+                                            User Dashboard
+                                        </a>
                                     </li>
                                 </ul>
                             </div>

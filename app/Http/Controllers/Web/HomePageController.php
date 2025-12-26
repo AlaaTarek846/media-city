@@ -3,13 +3,9 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Website\AddAddressRequest;
 use App\Http\Requests\Website\ContactUsRequest;
 use App\Http\Requests\Website\CouponRequest;
 use App\Http\Requests\Website\ProceedToCheckoutRequest;
-use App\Http\Requests\Website\MakeOrderRequest;
-use App\Http\Requests\Website\ProfileRequest;
-use App\Http\Requests\Website\ReviewRequest;
 use App\Models\AboutUs;
 use App\Models\Banner;
 use App\Models\Brand;
@@ -17,7 +13,6 @@ use App\Models\Category;
 use App\Models\ContactMessage;
 use App\Models\ContactUs;
 use App\Models\News;
-use App\Models\Newsletter;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\ShopByInstagram;
@@ -25,15 +20,10 @@ use App\Models\Team;
 use App\Models\Vision;
 use App\Models\Cart;
 use App\Models\DiscountCoupon;
-use App\Models\Order;
-use App\Models\ProductAttribute;
 use App\Models\ProductAttributeValue;
 use App\Models\ReturnPolicy;
-use App\Models\Review;
 use App\Models\Setting;
 use App\Models\ShippingInformation;
-use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class HomePageController extends Controller
@@ -169,16 +159,16 @@ class HomePageController extends Controller
 
     public function shoppingCart()
     {
-        $user = auth('user')->user();
-        $cartItems = $user->carts()->with(['productVariant', 'productVariant.product','productVariant.product.translation'])->get();
-        return view('website.shopping-cart', compact('cartItems'));
+//        $user = auth('user')->user();
+//        $cartItems = $user->carts()->with(['productVariant', 'productVariant.product','productVariant.product.translation'])->get();
+        return view('website.shopping-cart');
     }
 
     public function checkout()
     {
-        $user = auth('user')->user();
-        $cartItems = $user->carts()->with(['productVariant', 'productVariant.product','productVariant.product.translation'])->get();
-        return view('website.checkout', compact('cartItems'));
+//        $user = auth('user')->user();
+//        $cartItems = $user->carts()->with(['productVariant', 'productVariant.product','productVariant.product.translation'])->get();
+        return view('website.checkout');
     }
 
     public function proceedToCheckout(ProceedToCheckoutRequest $request)
@@ -251,81 +241,6 @@ class HomePageController extends Controller
         ], __('messages.Coupon applied successfully'), 200);
     }
 
-    public function getUserAddresses()
-    {
-        $user = auth('user')->user();
-        $addresses = $user->addresses()->with(['country.translation', 'area.translation'])->get();
-        return responseJson($addresses, __('messages.User addresses retrieved successfully'), 200);
-    }
-
-    public function addAddress(AddAddressRequest $request)
-    {
-        $data = $request->validated();
-        $user = auth('user')->user();
-        $address = $user->addresses()->create($data);
-        if ($data['is_primary']) {
-            $user->addresses()->where('id', '!=', $address->id)->update(['is_primary' => 0]);
-        }
-        return responseJson($address, __('messages.Address added successfully'), 201);
-    }
-
-    public function editAddress(AddAddressRequest $request, $id)
-    {
-        $data = $request->validated();
-        $user = auth('user')->user();
-        $address = $user->addresses()->findOrFail($id);
-        $address->update($data);
-        if ($data['is_primary']) {
-            $user->addresses()->where('id', '!=', $address->id)->update(['is_primary' => 0]);
-        }
-        return responseJson($address, __('messages.Address updated successfully'), 200);
-    }
-
-    public function removeAddress($id)
-    {
-        $user = auth('user')->user();
-        $address = $user->addresses()->findOrFail($id);
-        $address->delete();
-        return responseJson('', __('messages.Address removed successfully'), 200);
-    }
-    public function removeItemFromShoppingCart($id)
-    {
-        $user = auth('user')->user();
-        $cartItem = $user->carts()->findOrFail($id);
-        $cartItem->delete();
-        return responseJson('', __('messages.Item removed from cart successfully'), 200);
-    }
-
-    public function makeOrder(MakeOrderRequest $request)
-    {
-        $data = $request->validated();
-        $user = auth('user')->user();
-
-        // Create the order
-        $order = $user->orders()->create($data);
-
-        foreach ($user->carts as $cartItem) {
-            $order->orderItems()->create([
-                'product_variant_id' => $cartItem->product_variant_id,
-                'product_id' => $cartItem->product_id,
-                'quantity' => $cartItem->quantity,
-                'price' => $cartItem->price,
-                'discount' => ($cartItem->productVariant->price_before_discount - $cartItem->price) * $cartItem->quantity,
-                'total' => $cartItem->price * $cartItem->quantity,
-            ]);
-        }
-
-        //update quantity in product
-        foreach ($user->carts as $cartItem) {
-            $cartItem->productVariant->decrement('quantity', $cartItem->quantity);
-        }
-
-        // Clear the user's cart
-        $user->carts()->delete();
-
-        return responseJson($order, __('messages.Order created successfully'), 201);
-    }
-
     public function checkoutThankyou(Request $request)
     {
         $order = auth('user')->user()->orders()->where('order_number', $request->order_number)->firstOrFail();
@@ -365,44 +280,9 @@ class HomePageController extends Controller
         return view('website.product-detail', compact('product', 'products', 'return_policy', 'shipping_information', 'rating_percentage'));
     }
 
-    public function addReview(ReviewRequest $request)
+    public function rentDetail($id)
     {
-        $data = $request->validated();
-        $data['user_id'] = auth('user')->id();
-
-        if (Review::where('user_id', $data['user_id'])->where('product_id', $data['product_id'])->exists()) {
-            return responseJson('', __('messages.You have already reviewed this product'), 400);
-        }
-
-        //check if user buy this product
-        if (!Order::where('user_id', $data['user_id'])->whereHas('orderItems', function ($query) use ($data) {
-            $query->where('product_id', $data['product_id']);
-        })->exists()) {
-            return responseJson('', __('messages.You have not purchased this product'), 400);
-        }
-
-        Review::create($data);
-
-        return responseJson('', __('messages.Review added successfully'), 201);
-    }
-
-    public function toggleReviewLike(Request $request, $id)
-    {
-        $review = Review::findOrFail($id);
-        $user = auth('user')->user();
-
-       $reviewLike = $review->reviewLikes()->where('user_id', $user->id)->first();
-
-        if($reviewLike)
-        {
-            $reviewLike->delete();
-            return responseJson('', __('messages.Review disliked successfully'), 200);
-        }else{
-            $review->reviewLikes()->create(['user_id' => $user->id]);
-             return responseJson('', __('messages.Review liked successfully'), 200);
-        }
-
-        return responseJson('', __('messages.Review like toggled successfully'), 200);
+        return view('website.rent-detail');
     }
 
     public function aboutUs(Request $request)
@@ -486,6 +366,7 @@ class HomePageController extends Controller
 
         return view('website.shop',compact('categories','maxPrice','minPrice','attributes','brands','products','productData'));
     }
+
      public function blog(){
         $news = News::latest()->paginate(20);
         return view('website.blog',compact('news'));
@@ -496,51 +377,9 @@ class HomePageController extends Controller
         return view('website.blog-details');
     }
 
-
-     public function updateProfile(ProfileRequest $request){
-
-        $user = auth('user')->user();
-        if($user){
-            $data = $request->validated();
-
-            if($request->password)
-                $data['password'] = bcrypt($request->password);
-
-            $user->update(collect($data)->filter()->toArray());
-        }
-        return responseJson($user,__('messages.Created Successfully'),200);
-    }
-
-    public function accountOrders(){
-        $orders = auth('user')->user()->orders()->latest()->get();
-        return view('website.account-orders',compact('orders'));
-    }
-
-    public function accountWishlist(){
-        $user = auth('user')->user();
-        $favorites = $user->favorites()->with(['variants', 'translation'])->get();
-        return view('website.account-wishlist',compact('favorites'));
-    }
-
     public function accountAddresses(){
         return view('website.account-addresses');
     }
-
-    public function newsletter(Request $request){
-        $request->validate([
-            'email' => 'required|email|unique:newsletters,email',
-            'name' => 'required|string|max:255',
-        ]);
-        if(Newsletter::where('email',$request->email)->exists()){
-            return redirect()->back()->with('error',__('messages.Email already subscribed'));
-        }
-        Newsletter::create([
-            'email' => $request->email,
-            'name' => $request->name,
-        ]);
-        return redirect()->back()->with('success',__('messages.Thanks for subscribing to our newsletter'));
-    }
-
 
     public function contact(){
         $contactUs = ContactUs::first();
@@ -552,14 +391,6 @@ class HomePageController extends Controller
         return responseJson('',__('messages.Thanks for contacting us, we will get back to you soon'),200);
     }
 
-    public function changeLanguage($lang){
-        if(in_array($lang,['ar','en'])){
-            app()->setLocale($lang);
-            Carbon::setLocale($lang);
-            session()->put('lang',$lang);
-        }
-        return redirect()->back();
-    }
     public function bestSeller()
     {
         return view('website.best-seller');
@@ -567,6 +398,11 @@ class HomePageController extends Controller
    public function renting()
     {
         return view('website.renting');
+    }
+
+    public function userDashboard()
+    {
+        return view('website.user-dashboard');
     }
 
 
