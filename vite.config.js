@@ -11,7 +11,6 @@ export default defineConfig(({ mode }) => {
                 input: [
                     "resources/css/app.css",
                     "resources/js/app.js",
-                    "resources/js/single-components.js",
                 ],
                 refresh: true,
             }),
