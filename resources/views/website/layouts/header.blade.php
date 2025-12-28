@@ -61,7 +61,7 @@
             </div>
         </div>
     </div>
-    <div class="top-nav top-header sticky-header sticky-header-3">
+    <div class="top-nav top-header sticky-header sticky-header-3 py-2">
         <div class="container-fluid-lg">
             <div class="row">
                 <div class="col-12">
@@ -667,8 +667,12 @@
                                         <a class="nav-link ps-xl-2 ps-0" href="{{route('contact')}}">Contact Us</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link ps-xl-2 ps-0" href="user-dashboard.html">User
-                                            Dashboard</a>
+                                        <a
+                                            class="nav-link ps-xl-2 ps-0"
+                                            href="{{ route('userDashboard') }}"
+                                        >
+                                            User Dashboard
+                                        </a>
                                     </li>
                                 </ul>
                             </div>

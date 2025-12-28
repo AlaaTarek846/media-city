@@ -30,12 +30,8 @@ Route::group(['middleware' => [ChangeLangForWeb::class]], function () {
     Route::get('/forgot', [RegisterController::class, 'forgot']);
 
     Route::get('/profile', [RegisterController::class, 'profile'])->middleware('auth:user')->name('web.profile');
-    Route::get('/account-orders', [HomePageController::class, 'accountOrders'])->middleware('auth:user');
-    Route::get('/account-wishlist', [HomePageController::class, 'accountWishlist'])->middleware('auth:user');
-    Route::get('/account-addresses', [HomePageController::class, 'accountAddresses'])->middleware('auth:user');
 
     Route::get('/', [HomePageController::class, 'index'])->name('web.home');
-    Route::post('/newsletter', [HomePageController::class, 'newsletter'])->name('web.newsletter');
     Route::get('/show-product/{id}', [HomePageController::class, 'showProduct']);
     Route::delete('/cart-destroy/{id}', [HomePageController::class, 'removeItemFromCart'])->name('cart.destroy');
 
@@ -46,18 +42,23 @@ Route::group(['middleware' => [ChangeLangForWeb::class]], function () {
 
     Route::get('/contact', [HomePageController::class, 'contact'])->name('contact');
     Route::get('/about-us', [HomePageController::class, 'aboutUs'])->name('about-us');
-    Route::get('/shopping-cart', [HomePageController::class, 'shoppingCart'])->middleware('auth:user');
-    Route::get('/checkout', [HomePageController::class, 'checkout'])->middleware('auth:user');
+    Route::get('/shopping-cart', [HomePageController::class, 'shoppingCart']);
+//        ->middleware('auth:user');
+    Route::get('/checkout', [HomePageController::class, 'checkout']);
+//        ->middleware('auth:user');
 //    Route::get('/wishlist', [HomePageController::class, 'wishlist'])->middleware('auth:user');
     Route::get('/wishlist', [HomePageController::class, 'wishlist'])->name('wishlist');
     Route::get('/checkout-thankyou', [HomePageController::class, 'checkoutThankyou'])->middleware('auth:user');
     Route::get('/product-detail/{id}', [HomePageController::class, 'productDetail'])->name('productDetail');
+    Route::get('/rent-retail/{id}', [HomePageController::class, 'rentDetail'])->name('rentDetail');
     Route::get('/shop', [HomePageController::class, 'shop'])->name('shop');
     Route::get('/renting', [HomePageController::class, 'renting'])->name('renting');
 
     Route::get('/category', [HomePageController::class, 'category']);
 
     Route::get('/shipping-details', [HomePageController::class, 'shippingDetails']);
+
+    Route::get('/user-dashboard', [HomePageController::class, 'userDashboard'])->name('userDashboard');
 
     Route::get('{any}', [HomePageController::class, 'index'])->where('any', '^(?!api\/).*$');
 
