@@ -35,6 +35,7 @@ import discountCoupon from "./adminRoute/discountCoupon.js";
 import returnPolicy from "./adminRoute/returnPolicy.js";
 import shippingInformation from "./adminRoute/shippingInformation.js";
 import order from "./adminRoute/order.js";
+import department from "./adminRoute/department.js";
 
 
 
@@ -95,6 +96,7 @@ const routes = [
             ...returnPolicy,
             ...shippingInformation,
             ...order,
+            ...department,
 
         ]
     },

@@ -12,6 +12,7 @@ use App\Http\Controllers\Dashboard\ContactMessageController;
 use App\Http\Controllers\Dashboard\ContactUsController;
 use App\Http\Controllers\Dashboard\CountryController;
 use App\Http\Controllers\Dashboard\DashboardStatisticsController;
+use App\Http\Controllers\Dashboard\DepartmentController;
 use App\Http\Controllers\Dashboard\DiscountCouponController;
 use App\Http\Controllers\Dashboard\FrequentlyAskedQuestionController;
 use App\Http\Controllers\Dashboard\HistoryController;
@@ -135,6 +136,10 @@ Route::group(['prefix' => 'dashboard', 'middleware' => [ChangeLang::class]], fun
         // Category
         Route::get('categories-dropdown',[CategoryController::class,'dropdown']);
         Route::apiResource('category', CategoryController::class);
+
+        // Department
+        Route::get('departments-dropdown',[DepartmentController::class,'dropdown']);
+        Route::apiResource('departments', DepartmentController::class);
 
         // JoinUs
         Route::apiResource('join-us', JoinUsController::class);
