@@ -5,6 +5,7 @@
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\Web\HomePageController;
 use App\Http\Controllers\Web\RegisterController;
+use App\Http\Middleware\AuthMiddleware;
 use App\Http\Middleware\ChangeLangForWeb;
 use Illuminate\Support\Facades\Route;
 
@@ -24,10 +25,10 @@ Route::group(['middleware' => [ChangeLangForWeb::class]], function () {
         })->where('any', '^(?!api\/).*$');
 
     });
-    Route::get('/login', [RegisterController::class, 'login'])->middleware('guest:user');
-    Route::get('/register', [RegisterController::class, 'index'])->middleware('guest:user');
+    Route::get('/login', [RegisterController::class, 'login'])->middleware('guest:user')->name('web.login');
+    Route::get('/register', [RegisterController::class, 'index'])->middleware('guest:user')->name('web.register');
     Route::post('/logout', [RegisterController::class, 'logout'])->middleware('auth:user')->name('web.logout');
-    Route::get('/forgot', [RegisterController::class, 'forgot']);
+    Route::get('/forgot', [RegisterController::class, 'forgot'])->name('web.forgot');
 
     Route::get('/profile', [RegisterController::class, 'profile'])->middleware('auth:user')->name('web.profile');
 
@@ -58,7 +59,7 @@ Route::group(['middleware' => [ChangeLangForWeb::class]], function () {
 
     Route::get('/shipping-details', [HomePageController::class, 'shippingDetails']);
 
-    Route::get('/user-dashboard', [HomePageController::class, 'userDashboard'])->name('userDashboard');
+    Route::get('/user-dashboard', [HomePageController::class, 'userDashboard'])->name('userDashboard')->middleware(AuthMiddleware::class);
 
     Route::get('{any}', [HomePageController::class, 'index'])->where('any', '^(?!api\/).*$');
 

@@ -2,21 +2,28 @@
 
 namespace App\Models;
 
+use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
-use Modules\Rest\Models\RestDish;
 
 class LanguageTranslation extends Model
 {
-    use HasFactory;
+    use HasFactory,Sluggable;
 
     protected $table = 'sys_language_translations';
 
     /**
      * The attributes that are mass assignable.
     */
-    protected $fillable = ['model_id' , 'model_type', 'locale','title','description'];
+    protected $fillable = ['model_id' , 'model_type', 'locale','title','slug','description','keywords'];
+
+    /**
+     * The attributes that should be cast.
+     */
+    protected $casts = [
+        'keywords' => 'array',
+    ];
 
     /**
      * Example
@@ -32,6 +39,15 @@ class LanguageTranslation extends Model
     public function model(): MorphTo
     {
         return $this->morphTo();
+    }
+
+    public function sluggable(): array
+    {
+        return [
+            'slug' => [
+                'source' => 'title'
+            ]
+        ];
     }
 
 }

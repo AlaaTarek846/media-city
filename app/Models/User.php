@@ -8,10 +8,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use HasFactory,SoftDeletes , TranslationsTrait,SearchFilterTrait;
+    use HasFactory, SoftDeletes, TranslationsTrait, SearchFilterTrait, Notifiable;
 
     protected $guarded = [
         'id'
@@ -48,6 +49,41 @@ class User extends Authenticatable
     public function reviewLikes()
     {
         return $this->hasMany(ReviewLike::class);
+    }
+
+    /**
+     * Get the person profile for this user (if user_type is 'person')
+     */
+    public function personProfile()
+    {
+        return $this->hasOne(PersonProfile::class);
+    }
+
+    /**
+     * Get the company profile for this user (if user_type is 'company')
+     */
+    public function companyProfile()
+    {
+        return $this->hasOne(CompanyProfile::class);
+    }
+
+    /**
+     * Get the studio profile for this user (if user_type is 'studio')
+     */
+    public function studioProfile()
+    {
+        return $this->hasOne(StudioProfile::class);
+    }
+
+    /**
+     * Send the password reset notification.
+     * 
+     * Override default notification to customize reset link URL
+     * Uses custom notification to send reset link with proper route
+     */
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new \App\Notifications\ResetPasswordNotification($token));
     }
 
 }

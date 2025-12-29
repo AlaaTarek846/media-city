@@ -1,0 +1,48 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
+
+/**
+ * ArticleTag Model
+ * 
+ * نموذج Tags للمقالات
+ */
+class ArticleTag extends Model
+{
+    use HasFactory;
+
+    protected $fillable = ['name', 'slug'];
+
+    /**
+     * Boot method to auto-generate slug
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($tag) {
+            if (empty($tag->slug)) {
+                $tag->slug = Str::slug($tag->name);
+            }
+        });
+
+        static::updating(function ($tag) {
+            if ($tag->isDirty('name') && empty($tag->slug)) {
+                $tag->slug = Str::slug($tag->name);
+            }
+        });
+    }
+
+    /**
+     * Relationship with Articles
+     */
+    public function articles()
+    {
+        return $this->belongsToMany(Article::class, 'article_article_tag', 'tag_id', 'article_id')
+            ->withTimestamps();
+    }
+}

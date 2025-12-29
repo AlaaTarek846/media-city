@@ -71,8 +71,7 @@
 <!-- script js -->
 <script src="{{asset('website/js/script.js')}}"></script>
 
-
-
+@stack("headScript")
 
 </body>
 

@@ -189,31 +189,38 @@
                         </router-link>
                     </li>
 
-                    <li class="slide has-sub" v-show="(permission.includes('about us read') || permission.includes('vision read') || permission.includes('team read'))"
-                        :class="[$route.name == 'aboutUs' || $route.name == 'vision' || $route.name == 'team' ? 'active open': '']"
-                    >
-                        <a href="javascript:void(0);" class="side-menu__item"
-                        :class="[$route.name == 'aboutUs' || $route.name == 'vision' || $route.name == 'team' ? 'active': '']"
-                        >
+                    <li class="slide" v-show="permission.includes('about us read')">
+                        <router-link :to="{name:'aboutUs'}" class="side-menu__item">
                             <i class="bx bx-info-circle side-menu__icon"></i>
                             <span class="side-menu__label">{{$t('global.aboutUs')}}</span>
+                        </router-link>
+                    </li>
+
+                    <li class="slide has-sub" v-show="(permission.includes('article read') || permission.includes('articleCategory read')|| permission.includes('articleClient read') )"
+                        :class="[$route.name == 'article' || $route.name == 'articleCategory'|| $route.name == 'articleClient' ? 'active open': '']"
+                    >
+                        <a href="javascript:void(0);" class="side-menu__item"
+                           :class="[$route.name == 'article' || $route.name == 'articleCategory' || $route.name == 'articleClient' ? 'active': '']"
+                        >
+                            <i class="bx bx-info-circle side-menu__icon"></i>
+                            <span class="side-menu__label">{{$t('global.articles')}}</span>
                             <i class="fe fe-chevron-right side-menu__angle"></i>
                         </a>
                         <ul class="slide-menu child1"
                         >
                             <li class="slide side-menu__label1">
-                                <a href="javascript:void(0)">{{$t('global.aboutUs')}}</a>
+                                <a href="javascript:void(0)">{{$t('global.articles')}}</a>
                             </li>
-                            <li class="slide" v-if="permission.includes('about us read')">
-                                <router-link :to="{name:'aboutUs'}" class="side-menu__item">{{$t('global.aboutUs')}}</router-link>
+                            <li class="slide" v-if="permission.includes('articleCategory read')">
+                                <router-link :to="{name:'articleCategory'}" class="side-menu__item">{{$t('global.category')}}</router-link>
                             </li>
-                            <li class="slide" v-if="permission.includes('vision read')">
-                                <router-link :to="{name:'vision'}" class="side-menu__item">{{$t('global.vision')}}</router-link>
-                            </li>
-                            <li class="slide" v-if="permission.includes('team read')">
-                                <router-link :to="{name:'team'}" class="side-menu__item">{{$t('global.teams')}}</router-link>
+                            <li class="slide" v-if="permission.includes('article read')">
+                                <router-link :to="{ name:'article' }" class="side-menu__item">{{ $t('global.articles') }}</router-link>
                             </li>
 
+                            <li class="slide" v-if="permission.includes('articleClient read')">
+                                <router-link :to="{ name:'articleClient' }" class="side-menu__item">{{ $t('global.articleClient') }}</router-link>
+                            </li>
                         </ul>
                     </li>
 

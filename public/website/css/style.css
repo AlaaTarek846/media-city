@@ -8126,7 +8126,7 @@ header .onhover-category-list .onhover-category-box {
     padding: 20px 25px;
     border-radius: 5px;
     width: 520px;
-    height: 100%;
+    height: unset;
     overflow: auto;
     display: grid;
     grid-template-columns: auto auto;
@@ -18230,7 +18230,7 @@ header .offcanvas-backdrop {
     opacity: 0;
     -webkit-transition: all 0.3s ease-in-out;
     transition: all 0.3s ease-in-out;
-    max-width: 100px !important; 
+    max-width: 100px !important;
 }
 
 @media (max-width: 480px) {

@@ -5,6 +5,7 @@ namespace Database\Seeders;
 
 use App\Models\Vision;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Schema;
 
 class VisionSeeder extends Seeder
 {
@@ -13,6 +14,10 @@ class VisionSeeder extends Seeder
      */
     public function run(): void
     {
+        // Check if Vision model exists and table exists
+        if (!Schema::hasTable('visions')) {
+            return;
+        }
 
         Vision::truncate();
 

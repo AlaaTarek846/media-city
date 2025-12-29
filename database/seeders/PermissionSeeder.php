@@ -131,6 +131,17 @@ class PermissionSeeder extends Seeder
             ['name' => 'shipping information read'  ,  'category' => 'Setting'],
             ['name' => 'shipping information edit'  ,  'category' => 'Setting'],
 
+            // Article Permissions
+            ['name' => 'article read',  'category' => 'Article'],
+            ['name' => 'article create',  'category' => 'Article'],
+            ['name' => 'article edit',  'category' => 'Article'],
+            ['name' => 'article delete',  'category' => 'Article'],
+
+            // Article Category Permissions
+            ['name' => 'articleCategory read',  'category' => 'Article Category'],
+            ['name' => 'articleCategory create',  'category' => 'Article Category'],
+            ['name' => 'articleCategory edit',  'category' => 'Article Category'],
+            ['name' => 'articleCategory delete',  'category' => 'Article Category'],
 
         ];
 

@@ -12,5 +12,10 @@ class ContactUs extends Model
 
     protected $guarded = ['id'];
 
+    public function getAddressAttribute($value)
+    {
+        return app()->getLocale() === 'ar' ? $this->address_ar : $this->address_en;
+    }
+
     protected $table = "contact_us";
 }

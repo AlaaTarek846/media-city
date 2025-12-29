@@ -5,6 +5,7 @@
     <meta name="description" content="MediaCity">
     <meta name="keywords" content="MediaCity">
     <meta name="author" content="MediaCity">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" href="{{asset('website/images/logo.png')}}" type="image/x-icon">
     <title>MediaCity</title>
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -26,4 +27,6 @@
     @else
         <link id="color-link" rel="stylesheet" type="text/css" href="{{asset('website/css/style.css')}}">
     @endif
+
+    @stack("headStyle")
 </head>
