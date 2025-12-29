@@ -28,6 +28,7 @@ return new class extends Migration
             $table->string('locale' , 10);
             $table->string('title');
             $table->longText('description')->nullable();
+            $table->longText('slug')->nullable();
             $table->unique(['model_id' , 'model_type' ,'locale']);
             $table->timestamps();
         });

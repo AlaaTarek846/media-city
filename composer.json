@@ -10,6 +10,7 @@
     "require": {
         "php": "^8.2",
         "carlos-meneses/laravel-mpdf": "^2.1",
+        "cviebrock/eloquent-sluggable": "^11.0",
         "intervention/image": "^3.9",
         "james-heinrich/getid3": "^1.9",
         "laravel/framework": "^11.9",
@@ -39,7 +40,8 @@
             "Modules\\": "Modules/"
         },
         "files": [
-            "app/Helpers/generalHelper.php"
+            "app/Helpers/generalHelper.php",
+            "app/Helpers/SlugHelper.php"
         ]
     },
     "autoload-dev": {

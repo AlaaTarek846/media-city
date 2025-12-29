@@ -31,6 +31,11 @@ class Address extends Model
         return $this->belongsTo(Country::class);
     }
 
+    /**
+     * Get the area that owns this address
+     * 
+     * Relationship: Address belongs to Area
+     */
     public function area()
     {
         return $this->belongsTo(Area::class);

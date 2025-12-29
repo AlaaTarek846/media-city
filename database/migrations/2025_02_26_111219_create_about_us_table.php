@@ -13,7 +13,10 @@ return new class extends Migration
     {
         Schema::create('about_us', function (Blueprint $table) {
             $table->id();
-            $table->string('image')->nullable();
+            // إضافة عمود للصورة الأولى (الصورة الكبيرة)
+            $table->string('image_1')->nullable();
+            // إضافة عمود للصورة الثانية (الصورة الصغيرة)
+            $table->string('image_2')->nullable();
             $table->timestamps();
         });
     }

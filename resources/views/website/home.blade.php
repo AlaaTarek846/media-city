@@ -3,6 +3,47 @@
 @push("headStyle")
     @vite(['resources/js/single-components.js'])
 @endpush
+@push("headScript")
+    <script>
+        (function() {
+            // Check if user just registered, logged in, or reset password
+            var urlParams = new URLSearchParams(window.location.search);
+            var message = '';
+            
+            if (urlParams.get('registered') === 'success') {
+                message = '{{ __("messages.Registration successful") }}';
+            } else if (urlParams.get('logged') === 'success') {
+                message = '{{ __("messages.Logged in Successfully") }}';
+            } else if (urlParams.get('password_reset') === 'success') {
+                message = '{{ __("messages.Password reset successful") }}';
+            }
+            
+            if (message) {
+                // Create success message
+                var messageDiv = document.createElement('div');
+                messageDiv.className = 'alert alert-success alert-dismissible fade show';
+                messageDiv.setAttribute('role', 'alert');
+                messageDiv.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 9999; min-width: 300px; max-width: 500px;';
+                messageDiv.innerHTML = '<strong>{{ __("messages.Success") }}!</strong> ' + message + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
+                
+                document.body.appendChild(messageDiv);
+                
+                // Auto remove after 5 seconds
+                setTimeout(function() {
+                    if (messageDiv.parentNode) {
+                        messageDiv.classList.remove('show');
+                        setTimeout(function() {
+                            messageDiv.remove();
+                        }, 300);
+                    }
+                }, 5000);
+                
+                // Clean URL
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+        })();
+    </script>
+@endpush
 @section('body')
 
     <!-- home section start -->

@@ -1,5 +1,20 @@
 @extends('website.layouts.layoutPage')
-@section('pageTitle',__('messages.About the club'))
+@php
+    $translation = $aboutUs->translation ?? null;
+    $pageTitle = $translation->title ?? __('messages.About the club');
+@endphp
+@section('pageTitle', $pageTitle)
+
+@push('headStyle')
+    {{-- SEO Meta Tags --}}
+    @if($translation)
+        <meta name="description" content="{{ getExcerpt($translation->description ?? '', 160) }}">
+        @if($translation->keywords)
+            <meta name="keywords" content="{{ is_array($translation->keywords) ? implode(', ', $translation->keywords) : $translation->keywords }}">
+        @endif
+        <link rel="canonical" href="{{ route('about-us') }}">
+    @endif
+@endpush
 
 @section('body')
     <!-- Breadcrumb Section Start -->
@@ -8,7 +23,7 @@
             <div class="row">
                 <div class="col-12">
                     <div class="breadscrumb-contain">
-                        <h2>About Us</h2>
+                        <h2>{{ $translation->title ?? __('messages.About Us') }}</h2>
                         <nav>
                             <ol class="breadcrumb mb-0">
                                 <li class="breadcrumb-item">
@@ -16,7 +31,7 @@
                                         <i class="fa-solid fa-house"></i>
                                     </a>
                                 </li>
-                                <li class="breadcrumb-item active" aria-current="page">About Us</li>
+                                <li class="breadcrumb-item active mx-1" aria-current="page">{{ $translation->title ?? __('messages.About Us') }}</li>
                             </ol>
                         </nav>
                     </div>
@@ -26,26 +41,43 @@
     </section>
     <!-- Breadcrumb Section End -->
 
+    @if($aboutUs)
     <!-- Fresh Vegetable Section Start -->
     <section class="fresh-vegetable-section section-lg-space">
         <div class="container-fluid-lg">
             <div class="row gx-xl-5 gy-xl-0 g-3 ratio_148_1">
                 <div class="col-xl-6 col-12">
                     <div class="row g-sm-4 g-2">
+                        {{-- الصورة الأولى (الكبيرة) --}}
                         <div class="col-6">
                             <div class="fresh-image-2">
                                 <div>
-                                    <img src="{{asset('website/images/inner-page/about-us/1.jpg')}}"
-                                         class="bg-img blur-up lazyload" alt="">
+                                    @if($aboutUs->image_1)
+                                        <img src="{{ $aboutUs->image_1 }}" 
+                                             class="bg-img blur-up lazyload" 
+                                             alt="{{ $translation->title ?? 'About Us' }}">
+                                    @else
+                                        <img src="{{asset('website/images/151.jpeg')}}"
+                                             class="bg-img blur-up lazyload" 
+                                             alt="{{ $translation->title ?? 'About Us' }}">
+                                    @endif
                                 </div>
                             </div>
                         </div>
 
+                        {{-- الصورة الثانية (الصغيرة) --}}
                         <div class="col-6">
                             <div class="fresh-image">
                                 <div>
-                                    <img src="{{asset('website/images/inner-page/about-us/2.jpg')}}"
-                                         class="bg-img blur-up lazyload" alt="">
+                                    @if($aboutUs->image_2)
+                                        <img src="{{ $aboutUs->image_2 }}" 
+                                             class="bg-img blur-up lazyload" 
+                                             alt="{{ $translation->title ?? 'About Us' }}">
+                                    @else
+                                        <img src="{{asset('website/images/151.jpeg')}}"
+                                             class="bg-img blur-up lazyload" 
+                                             alt="{{ $translation->title ?? 'About Us' }}">
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -56,67 +88,51 @@
                     <div class="fresh-contain p-center-left">
                         <div>
                             <div class="review-title">
-                                <h4>About Us</h4>
-                                <h2>We make Organic Food In Market</h2>
+                                <h4>{{ __('messages.About Us') }}</h4>
+                                <h2>{{ $translation->title ?? __('messages.About Us') }}</h2>
                             </div>
 
                             <div class="delivery-list">
-                                <p class="text-content">Just a few seconds to measure your body temperature. Up to 5
-                                    users! The battery lasts up to 2 years. There are many variations of passages of
-                                    Lorem Ipsum available.We started in 2019 and haven't stopped smashing it since. A
-                                    global brand that doesn't sleep, we are 24/7 and always bringing something new with
-                                    over 100 new products dropping on the monhtly, bringing you the latest looks for
-                                    less.</p>
+                                {{-- الوصف من قاعدة البيانات --}}
+                                @if($translation && $translation->description)
+                                    <div class="text-content">
+                                        {!! $translation->description !!}
+                                    </div>
+                                @else
+                                    <p class="text-content">{{ __('messages.No description available') }}</p>
+                                @endif
 
-                                <ul class="delivery-box">
-                                    <li>
-                                        <div class="delivery-box">
-                                            <div class="delivery-icon">
-                                                <img src="{{asset('website/svg/3/delivery.svg')}}" class="blur-up lazyload" alt="">
-                                            </div>
-
-                                            <div class="delivery-detail">
-                                                <h5 class="text">Free delivery for all orders</h5>
-                                            </div>
-                                        </div>
-                                    </li>
-
-                                    <li>
-                                        <div class="delivery-box">
-                                            <div class="delivery-icon">
-                                                <img src="{{asset('website/svg/3/leaf.svg')}}" class="blur-up lazyload" alt="">
-                                            </div>
-
-                                            <div class="delivery-detail">
-                                                <h5 class="text">Only fresh </h5>
-                                            </div>
-                                        </div>
-                                    </li>
-
-                                    <li>
-                                        <div class="delivery-box">
-                                            <div class="delivery-icon">
-                                                <img src="{{asset('website/svg/3/delivery.svg')}}" class="blur-up lazyload" alt="">
-                                            </div>
-
-                                            <div class="delivery-detail">
-                                                <h5 class="text">Free delivery for all orders</h5>
-                                            </div>
-                                        </div>
-                                    </li>
-
-                                    <li>
-                                        <div class="delivery-box">
-                                            <div class="delivery-icon">
-                                                <img src="{{asset('website/svg/3/leaf.svg')}}" class="blur-up lazyload" alt="">
-                                            </div>
-
-                                            <div class="delivery-detail">
-                                                <h5 class="text">Only fresh </h5>
-                                            </div>
-                                        </div>
-                                    </li>
-                                </ul>
+                                {{-- المميزات (Features) من قاعدة البيانات --}}
+                                @if($aboutUs->features && $aboutUs->features->count() > 0)
+                                    <ul class="delivery-box">
+                                        @foreach($aboutUs->features as $feature)
+                                            @php
+                                                // جلب الترجمة الحالية للـ feature
+                                                $featureTranslation = $feature->translation ?? $feature->translations->first();
+                                            @endphp
+                                            @if($featureTranslation && $featureTranslation->title)
+                                                <li>
+                                                    <div class="delivery-box">
+                                                        <div class="delivery-icon">
+                                                            @if($feature->icon)
+                                                                <img src="{{ $feature->icon }}" 
+                                                                     class="blur-up lazyload" 
+                                                                     alt="{{ $featureTranslation->title ?? 'Feature Icon' }}">
+                                                            @else
+                                                                <img src="{{asset('website/svg/3/delivery.svg')}}" 
+                                                                     class="blur-up lazyload" 
+                                                                     alt="{{ $featureTranslation->title ?? 'Feature Icon' }}">
+                                                            @endif
+                                                        </div>
+                                                        <div class="delivery-detail">
+                                                            <h5 class="text">{{ $featureTranslation->title }}</h5>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            @endif
+                                        @endforeach
+                                    </ul>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -132,51 +148,61 @@
             <div class="row">
                 <div class="col-12">
                     <div class="about-us-title text-center">
-                        <h4>What We Do</h4>
-                        <h2 class="center">We are Trusted by Clients</h2>
+                        <h4>{{ __('messages.What We Do') }}</h4>
+                        <h2 class="center">{{ __('messages.We are Trusted by Clients') }}</h2>
                     </div>
 
-                    <div class="slider-3_1 product-wrapper">
-                        <div>
-                            <div class="clint-contain">
-                                <div class="client-icon">
-                                    <img src="{{asset('website/svg/3/work.svg')}}" class="blur-up lazyload" alt="">
-                                </div>
-                                <h2>10</h2>
-                                <h4>Business Years</h4>
-                                <p>A coffee shop is a small business that sells coffee, pastries, and other morning
-                                    goods. There are many different types of coffee shops around the world.</p>
-                            </div>
+                    {{-- الإحصائيات (Statistics) من قاعدة البيانات --}}
+                    @if($aboutUs->statistics && $aboutUs->statistics->count() > 0)
+                        <div class="slider-3_1 product-wrapper">
+                            @foreach($aboutUs->statistics as $statistic)
+                                @php
+                                    // جلب الترجمة الحالية للـ statistic
+                                    $statisticTranslation = $statistic->translation ?? $statistic->translations->first();
+                                @endphp
+                                @if($statisticTranslation && $statisticTranslation->title)
+                                    <div>
+                                        <div class="clint-contain">
+                                            <div class="client-icon">
+                                                @if($statistic->icon)
+                                                    <img src="{{ $statistic->icon }}" 
+                                                         class="blur-up lazyload" 
+                                                         alt="{{ $statisticTranslation->title ?? 'Statistic Icon' }}">
+                                                @else
+                                                    <img src="{{asset('website/svg/3/work.svg')}}" 
+                                                         class="blur-up lazyload" 
+                                                         alt="{{ $statisticTranslation->title ?? 'Statistic Icon' }}">
+                                                @endif
+                                            </div>
+                                            @if($statistic->value)
+                                                <h2>{{ $statistic->value }}</h2>
+                                            @endif
+                                            <h4>{{ $statisticTranslation->title }}</h4>
+                                            @if($statisticTranslation->description)
+                                                <p>{{ $statisticTranslation->description }}</p>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @endif
+                            @endforeach
                         </div>
-
-                        <div>
-                            <div class="clint-contain">
-                                <div class="client-icon">
-                                    <img src="{{asset('website/svg/3/buy.svg')}}" class="blur-up lazyload" alt="">
-                                </div>
-                                <h2>80 K+</h2>
-                                <h4>Products Sales</h4>
-                                <p>Some coffee shops have a seating area, while some just have a spot to order and then
-                                    go somewhere else to sit down. The coffee shop that I am going to.</p>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="clint-contain">
-                                <div class="client-icon">
-                                    <img src="{{asset('website/svg/3/user.svg')}}" class="blur-up lazyload" alt="">
-                                </div>
-                                <h2>90%</h2>
-                                <h4>Happy Customers</h4>
-                                <p>My goal for this coffee shop is to be able to get a coffee and get on with my day.
-                                    It's a Thursday morning and I am rushing between meetings.</p>
-                            </div>
-                        </div>
-                    </div>
+                    @endif
                 </div>
             </div>
         </div>
     </section>
     <!-- Client Section End -->
+    @else
+        {{-- في حالة عدم وجود بيانات --}}
+        <section class="section-lg-space">
+            <div class="container-fluid-lg">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <p>{{ __('messages.No data available') }}</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    @endif
 
 @endsection
