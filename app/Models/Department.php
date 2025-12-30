@@ -7,6 +7,7 @@ use App\Traits\TranslationsTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 class Department extends Model
 {
@@ -28,5 +29,10 @@ class Department extends Model
     public function categories()
     {
         return $this->belongsToMany(Category::class, 'department_categories', 'department_id', 'category_id');
+    }
+
+    public function getSlugAttribute()
+    {
+        return Str::slug($this->current_translation?->title);
     }
 }

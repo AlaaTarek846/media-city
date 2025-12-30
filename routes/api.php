@@ -36,6 +36,8 @@ use App\Http\Controllers\Dashboard\ShippingInformationController;
 use App\Http\Controllers\Dashboard\ShopByInstagramController;
 use App\Http\Controllers\Dashboard\TeamController;
 use App\Http\Controllers\Dashboard\VisionController;
+use App\Http\Controllers\Web\CartController;
+use App\Http\Controllers\Web\FavoriteController;
 use App\Http\Controllers\Web\HomePageController;
 use App\Http\Controllers\Web\RegisterController;
 use App\Http\Middleware\ChangeLang;
@@ -73,8 +75,14 @@ Route::group(['prefix' => 'web', 'middleware' => [ChangeLang::class,StartSession
      Route::post('/toggle-review-like/{id}', [HomePageController::class, 'toggleReviewLike'])->middleware('auth:user');
      Route::post('/updateProfile', [HomePageController::class, 'updateProfile'])->middleware('auth:user');
 
-     Route::post('/add-cart', [HomePageController::class, 'addCart'])->middleware('auth:user');
-    // Route::get('terms',[WebPagesController::class,'terms']);
+    // new
+    Route::get('/get-favorites', [FavoriteController::class, 'index'])->middleware('auth:user');
+    Route::post('/add-favorites', [FavoriteController::class, 'store'])->middleware('auth:user');
+    Route::delete('/delete-favorite/{id}', [FavoriteController::class, 'destroy'])->middleware('auth:user');
+
+    Route::get('/get-carts', [CartController::class, 'index'])->middleware('auth:user');
+    Route::post('/add-carts', [CartController::class, 'store'])->middleware('auth:user');
+    Route::delete('/delete-cart/{id}', [CartController::class, 'destroy'])->middleware('auth:user');    // Route::get('terms',[WebPagesController::class,'terms']);
     // Route::get('privacy',[WebPagesController::class,'privacy']);
 });
 

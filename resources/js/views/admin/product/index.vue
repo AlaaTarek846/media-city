@@ -37,7 +37,8 @@
                                     <th scope="col">{{ $t('label.title') }}</th>
                                     <th scope="col">{{ $t('global.brand') }}</th>
                                     <th scope="col">{{ $t('global.category') }}</th>
-                                    <th scope="col">{{ $t('global.type') }}</th>
+                                    <th scope="col">{{ $t('global.department') }}</th>
+                                    <th scope="col">{{ $t('global.condition') }}</th>
                                     <th scope="col">{{ $t('global.price') }}</th>
                                     <th scope="col">{{ $t('global.quantity') }}</th>
                                     <th scope="col">{{ $t('label.status') }}</th>
@@ -59,7 +60,8 @@
                                     <td>{{item.title}}</td>
                                     <td>{{item.brand}}</td>
                                     <td>{{item.category}}</td>
-                                    <td>{{ $t('global.' + item.type) }}</td>
+                                    <td>{{item.department}}</td>
+                                    <td>{{ $t('global.' + item.condition) }}</td>
                                     <td>{{item.price}}</td>
                                     <td>{{item.quantity}}</td>
                                     <td>
@@ -85,7 +87,7 @@
                                 </tbody>
                                 <tbody v-else>
                                     <tr>
-                                        <th class="text-center" colspan="10">{{ $t('global.NoDataFound') }}</th>
+                                        <th class="text-center" colspan="11">{{ $t('global.NoDataFound') }}</th>
                                     </tr>
                                 </tbody>
                             </table>

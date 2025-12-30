@@ -91,13 +91,21 @@ class CategoryController extends Controller implements HasMiddleware
         return responseJson([],'Deleted Successfully',200);
     }
 
-     public function dropdown()
+     public function dropdown(Request $request)
     {
-        $categories = Category::select('id')
+        $query = Category::select('id')
             ->with(['translations' => function($query) {
                 $query->where('locale', app()->getLocale());
-            }])
-            ->get()
+            }]);
+
+        // إذا تم إرسال department_id، جلب الفئات المرتبطة بهذا القسم فقط
+        if ($request->has('department_id') && $request->department_id) {
+            $query->whereHas('departments', function($q) use ($request) {
+                $q->where('departments.id', $request->department_id);
+            });
+        }
+
+        $categories = $query->get()
             ->map(function ($category) {
                 return [
                     'id' => $category->id,
