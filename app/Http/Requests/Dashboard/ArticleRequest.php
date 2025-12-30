@@ -1,0 +1,38 @@
+<?php
+
+namespace App\Http\Requests\Dashboard;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class ArticleRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
+    public function rules(): array
+    {
+
+        return [
+            "translations"         => "nullable|array",
+            "translations.*.title" => "required|string",
+            "translations.*.description" => "required|string",
+            "translations.*.slug" => "nullable|string|max:255",
+            "translations.*.keywords" => "nullable|array",
+            "translations.*.keywords.*" => "string|max:100",
+            "category_id" => "required|exists:article_categories,id",
+            "tags" => "nullable|array",
+            "tags.*" => "exists:article_tags,id",
+            'image' => $this->method() == 'PUT' ? 'nullable'.($this->hasFile('image')?'|file|mimes:jpeg,jpg,png,svg,webp':'') : 'required|file|mimes:png,svg,webp,jpg,jpeg' ,
+        ];
+    }
+}

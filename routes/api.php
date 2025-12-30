@@ -3,6 +3,8 @@
 use App\Http\Controllers\Dashboard\AboutUsController;
 use App\Http\Controllers\Dashboard\AdminController;
 use App\Http\Controllers\Dashboard\AreaController;
+use App\Http\Controllers\Dashboard\ArticleCategoryController;
+use App\Http\Controllers\Dashboard\ArticleController;
 use App\Http\Controllers\Dashboard\AuthDashboardController;
 use App\Http\Controllers\Dashboard\BackupController;
 use App\Http\Controllers\Dashboard\BannerController;
@@ -61,6 +63,12 @@ Route::group(['prefix' => 'web', 'middleware' => [ChangeLang::class,StartSession
     Route::post('complete-register',[RegisterController::class,'completeRegister'])->middleware(['auth:user']);
     Route::post('contact-us',[HomePageController::class,'contactUsForm']);
     Route::post('login',[RegisterController::class,'loginForm'])->middleware(['guest:user','throttle:login']);
+    
+    // Password Reset Routes
+    Route::post('password/email',[RegisterController::class,'sendResetLinkEmail'])->middleware(['guest:user']);
+    Route::get('password/reset',[RegisterController::class,'showResetForm'])->middleware(['guest:user'])->name('password.reset');
+    Route::post('password/reset',[RegisterController::class,'reset'])->middleware(['guest:user']);
+    
      Route::get('/show-product/{id}', [HomePageController::class, 'showProduct']);
      Route::post('/add-favorite/{id}', [HomePageController::class, 'addFavorite'])->middleware('auth:user');
      Route::post('/proceed-to-checkout', [HomePageController::class, 'proceedToCheckout'])->middleware('auth:user');
@@ -74,6 +82,7 @@ Route::group(['prefix' => 'web', 'middleware' => [ChangeLang::class,StartSession
      Route::post('/add-review', [HomePageController::class, 'addReview'])->middleware('auth:user');
      Route::post('/toggle-review-like/{id}', [HomePageController::class, 'toggleReviewLike'])->middleware('auth:user');
      Route::post('/updateProfile', [HomePageController::class, 'updateProfile'])->middleware('auth:user');
+     Route::post('/change-password', [HomePageController::class, 'changePassword'])->middleware('auth:user');
 
     // new
     Route::get('/get-favorites', [FavoriteController::class, 'index'])->middleware('auth:user');
@@ -206,6 +215,15 @@ Route::group(['prefix' => 'dashboard', 'middleware' => [ChangeLang::class]], fun
         Route::put('update-admin-profile', [ProfileController::class,'updateAdminProfile']);
 
         Route::post('send-notification', [SendNotificationController::class, 'sendNotification']);
+
+        // article
+        Route::get('articles/categories',[ArticleCategoryController::class,'dropdown']);
+        Route::apiResource('articleCategory', ArticleCategoryController::class);
+//        Route::get('articlesQueries', [ArticleController::class, 'articlesQueries']);
+        Route::apiResource('articles', ArticleController::class);
+        Route::get('articles/tags', [ArticleController::class, 'getTags']);
+        Route::post('articles/tags', [ArticleController::class, 'createTag']);
+        Route::get('articles/search', [ArticleController::class, 'search']);
 
     });
 

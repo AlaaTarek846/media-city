@@ -16,17 +16,12 @@ return new class extends Migration
     {
         Schema::create('addresses', function (Blueprint $table) {
             $table->id();
+            $table->string('name')->nullable();
             $table->string('title')->nullable();
             $table->text('address')->nullable();
-            $table->string('building_number')->nullable();
-            $table->string('floor_number')->nullable();
-            $table->string('apartment_number')->nullable();
-            $table->string('distinctive_mark')->nullable();
             $table->boolean('is_primary')->default(false);
             $table->foreignIdFor(User::class)->nullable();
-            $table->foreignIdFor(Country::class)->nullable();
             $table->foreignIdFor(Area::class)->nullable();
-
             $table->string('lat')->nullable();
             $table->string('lng')->nullable();
             $table->softDeletes();

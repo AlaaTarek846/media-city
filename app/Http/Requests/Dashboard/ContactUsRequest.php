@@ -23,12 +23,15 @@ class ContactUsRequest extends FormRequest
     {
         $id = $this->method() == 'PUT' ? last($this->segments()) : null;
         return [
-            "translations"         => "nullable|array",
-            "translations.*.title" => "required|string",
-            "translations.*.description" => "required|string",
-            'location' => 'required',
-            'phone' => 'required|string',
-            'email' => 'required|email',
+            "address_en" => "required|string|max:1000",
+            "address_ar" => "required|string|max:1000",
+            "email" => "required|string|email|max:200",
+            "mobile" => "required|string|max:200",
+            "twitter" => "required|string|max:200",
+            "instagram" => "required|string|max:200",
+            "facebook" => "required|string|max:200",
+            "linkedin" => "required|string|max:200",
+            "map" => "required|string|max:1000"
         ];
     }
 }

@@ -564,7 +564,7 @@
 .breadscrumb-section .breadscrumb-contain nav .breadcrumb .breadcrumb-item+.breadcrumb-item::before {
     font-family: "Font Awesome 6 Free";
     font-weight: 900;
-    content: "\f105";
+    content: "\f104";
     color: #4a5568
 }
 
@@ -1728,7 +1728,6 @@ input[type=number]::-webkit-outer-spin-button {
     transition: transform 0.4s cubic-bezier(0.45, 1.8, 0.5, 0.75);
     transition: transform 0.4s cubic-bezier(0.45, 1.8, 0.5, 0.75), -webkit-transform 0.4s cubic-bezier(0.45, 1.8, 0.5, 0.75);
     -webkit-transform: rotate(45deg) scale(0, 0);
-    transform: rotate(45deg) scale(0, 0);
     right: 4px;
     top: 4px;
     z-index: 1;
@@ -1753,7 +1752,7 @@ input[type=number]::-webkit-outer-spin-button {
 
 .checkbox_animated:checked:before {
     -webkit-transform: rotate(45deg) scale(1, 1);
-    transform: rotate(45deg) scale(1, 1)
+    transform: rotate3d(77, 170, 7, 158deg) !important;
 }
 
 .custom-form-check-2 {
@@ -7646,7 +7645,7 @@ header .onhover-category-list .onhover-category-box {
     padding: 20px 25px;
     border-radius: 5px;
     width: 520px;
-    height: 100%;
+    height: unset;
     overflow: auto;
     display: grid;
     grid-template-columns: auto auto;
@@ -28342,4 +28341,9 @@ header .offcanvas-backdrop {
 .required-hint{
     color: #e74c3c;
     font-size: 12px;
+}
+
+
+.form-floating>label {
+    left: unset;
 }

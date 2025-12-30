@@ -75,7 +75,21 @@
         "is_cash":"Cash Payment",
         "platform_commission":"Platform Commission",
         "additional":"Additions",
-        "driver_rental_requests_visibility":"Driver Rental Requests Visibility"
+        "driver_rental_requests_visibility":"Driver Rental Requests Visibility",
+        "translations": "Translations",
+        "images": "Images",
+        "order": "Order",
+        "icon": "Icon",
+        "main": "Main",
+        "feature": "Feature",
+        "statistic": "Statistic",
+        "statistics": "Statistics",
+        "orderHint": "The order in which the item will appear (0 = first)",
+        "statusHint": "Enable or disable the item",
+        "iconHint": "Icon path (example: /website/svg/3/delivery.svg)",
+        "valueHint": "The displayed value (example: 10, 80K+, 90%)",
+        "noFeatures": "No features. Click 'Add Feature' to add a new feature.",
+        "noStatistics": "No statistics. Click 'Add Statistic' to add a new statistic."
     },
     "notification":{
         "notifications": "Notifications",

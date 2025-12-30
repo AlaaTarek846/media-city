@@ -61,7 +61,7 @@
             </div>
         </div>
     </div>
-    <div class="top-nav top-header sticky-header sticky-header-3 py-2">
+    <div class="top-nav top-header sticky-header sticky-header-3 py-4">
         <div class="container-fluid-lg">
             <div class="row">
                 <div class="col-12">
@@ -243,39 +243,74 @@
                                         </div>
                                     </div>
                                 </li>
-                                <li class="right-side onhover-dropdown">
-                                    <div class="delivery-login-box">
-                                        <div class="delivery-icon">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                 viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                 class="feather feather-user">
-                                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                                <circle cx="12" cy="7" r="4"></circle>
-                                            </svg>
+                                <li class="right-side onhover-dropdown auth-card-custom">
+                                    @auth('user')
+                                        {{-- Authenticated User --}}
+                                        @php
+                                            $user = auth('user')->user();
+                                        @endphp
+                                        <div class="delivery-login-box">
+                                            <div class="delivery-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                     class="feather feather-user">
+                                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                                    <circle cx="12" cy="7" r="4"></circle>
+                                                </svg>
+                                            </div>
+                                            <div class="delivery-detail">
+                                                <h6>{{ __('messages.Hello') }},</h6>
+                                                <h5>{{ substr($user->name, 0, 13) }}</h5>
+                                            </div>
                                         </div>
-                                        <div class="delivery-detail">
-                                            <h6>Hello,</h6>
-                                            <h5>My Account</h5>
+
+                                        <div class="onhover-div onhover-div-login">
+                                            <ul class="user-box-name">
+                                                <li class="product-box-contain">
+                                                    <a href="{{ route('userDashboard') }}">{{ __('messages.My Profile') }}</a>
+                                                </li>
+
+                                                <li class="product-box-contain">
+                                                    <form action="{{ route('web.logout') }}" method="POST" class="d-inline">
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-link p-0 text-start w-100 text-decoration-none" style="color: inherit;">
+                                                            {{ __('messages.Logout') }}
+                                                        </button>
+                                                    </form>
+                                                </li>
+                                            </ul>
                                         </div>
-                                    </div>
+                                    @else
+                                        {{-- Guest User --}}
+                                        <div class="delivery-login-box">
+                                            <div class="delivery-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                     class="feather feather-user">
+                                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                                    <circle cx="12" cy="7" r="4"></circle>
+                                                </svg>
+                                            </div>
+                                            <div class="delivery-detail">
+                                                <h6>{{ __('messages.Hello') }},</h6>
+                                                <h5>{{ __('messages.My Account') }}</h5>
+                                            </div>
+                                        </div>
 
-                                    <div class="onhover-div onhover-div-login">
-                                        <ul class="user-box-name">
-                                            <li class="product-box-contain">
-                                                <i></i>
-                                                <a href="{{url('login')}}">Log In</a>
-                                            </li>
+                                        <div class="onhover-div onhover-div-login">
+                                            <ul class="user-box-name">
+                                                <li class="product-box-contain">
+                                                    <a href="{{ route('web.login') }}">{{ __('messages.Log In') }}</a>
+                                                </li>
 
-                                            <li class="product-box-contain">
-                                                <a href="{{url('register')}}">Register</a>
-                                            </li>
-
-                                            <li class="product-box-contain">
-                                                <a href="{{url('forgot')}}">Forgot Password</a>
-                                            </li>
-                                        </ul>
-                                    </div>
+                                                <li class="product-box-contain">
+                                                    <a href="{{ route('web.register') }}">{{ __('messages.Create account') }}</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    @endauth
                                 </li>
                             </ul>
                         </div>
@@ -307,7 +342,11 @@
                                     <a href="{{route('shop')}}" class="category-name">
                                         <img src="{{asset('website/svg/1/Cinema-camera.png')}}" alt="">
                                         <h6>Cameras</h6>
-                                        <i class="fa-solid fa-angle-right"></i>
+                                        @if (app()->getLocale() == 'ar')
+                                            <i class="fa-solid fa-angle-left"></i>
+                                        @else
+                                            <i class="fa-solid fa-angle-right"></i>
+                                        @endif
                                     </a>
 
                                     <div class="onhover-category-box">
@@ -340,299 +379,6 @@
                                             </ul>
                                         </div>
 
-
-                                        <div class="list-2">
-                                            <div class="category-title-box">
-                                                <h5>ALEXA 35</h5>
-                                            </div>
-                                            <ul>
-                                                <li>
-                                                    ALEXA 35 is the smallest fully
-                                                    featured ARRI production camera ever, packing the feature
-                                                    s and processing power of a larger ALEXA into a Mini-sized body
-                                                    that can record native 4K at up to 120 fps. Fast and easy
-                                                    operation
-                                                    is assured through numerous usability improvements and a simple
-                                                    menu structure that will be intuitively
-                                                    familiar to crews. ALEXA 35 is the best A-camera, B-camera, and
-                                                    action camera on the market, all rolled into one.
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </li>
-
-                                <li class="onhover-category-list">
-                                    <a href="{{route('shop')}}" class="category-name">
-                                        <img src="{{asset('website/svg/1/lenses.png')}}" alt="">
-                                        <h6>Lenses</h6>
-                                        <i class="fa-solid fa-angle-right"></i>
-                                    </a>
-
-                                    <div class="onhover-category-box w-100">
-                                        <div class="list-1">
-                                            <div class="category-title-box">
-                                                <h5>Energy & Soft Drinks</h5>
-                                            </div>
-                                            <ul>
-                                                <li>
-                                                    <a href="{{route('shop')}}">Soda & Cocktail Mix</a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{route('shop')}}">Soda & Cocktail Mix</a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{route('shop')}}">Sports & Energy Drinks</a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{route('shop')}}">Non Alcoholic Drinks</a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{route('shop')}}">Packaged Water</a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{route('shop')}}">Spring Water</a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{route('shop')}}">Flavoured Water</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="onhover-category-list">
-                                    <a href="{{route('shop')}}" class="category-name">
-                                        <img src="{{asset('website/svg/1/mic.png')}}" alt="">
-                                        <h6>Sound</h6>
-                                        <i class="fa-solid fa-angle-right"></i>
-                                    </a>
-
-                                    <div class="onhover-category-box">
-                                        <div class="list-1">
-                                            <div class="category-title-box">
-                                                <h5>Cameras</h5>
-                                            </div>
-                                            <ul>
-                                                <li>
-                                                    <a href="{{route('shop')}}">Cinema Camera</a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{route('shop')}}">DCLR & Mirrorless</a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{route('shop')}}">Action Cameras</a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{route('blog')}}">Blogs</a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{route('shop')}}">Beans & Okra</a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{route('shop')}}">Cabbage & Cauliflower</a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{route('shop')}}">Specialty</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-
-
-                                        <div class="list-2">
-                                            <div class="category-title-box">
-                                                <h5>ALEXA 35</h5>
-                                            </div>
-                                            <ul>
-                                                <li>
-                                                    ALEXA 35 is the smallest fully
-                                                    featured ARRI production camera ever, packing the feature
-                                                    s and processing power of a larger ALEXA into a Mini-sized body
-                                                    that can record native 4K at up to 120 fps. Fast and easy
-                                                    operation
-                                                    is assured through numerous usability improvements and a simple
-                                                    menu structure that will be intuitively
-                                                    familiar to crews. ALEXA 35 is the best A-camera, B-camera, and
-                                                    action camera on the market, all rolled into one.
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </li>
-
-                                <li class="onhover-category-list">
-                                    <a href="{{route('shop')}}" class="category-name">
-                                        <img src="{{asset('website/svg/1/tripod.png')}}" alt="">
-                                        <h6>Camera Accessories</h6>
-                                        <i class="fa-solid fa-angle-right"></i>
-                                    </a>
-
-                                    <div class="onhover-category-box">
-                                        <div class="list-1">
-                                            <div class="category-title-box">
-                                                <h5>Cameras</h5>
-                                            </div>
-                                            <ul>
-                                                <li>
-                                                    <a href="{{route('shop')}}">Cinema Camera</a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{route('shop')}}">DCLR & Mirrorless</a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{route('shop')}}">Action Cameras</a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{route('blog')}}">Blogs</a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{route('shop')}}">Beans & Okra</a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{route('shop')}}">Cabbage & Cauliflower</a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{route('shop')}}">Specialty</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-
-
-                                        <div class="list-2">
-                                            <div class="category-title-box">
-                                                <h5>ALEXA 35</h5>
-                                            </div>
-                                            <ul>
-                                                <li>
-                                                    ALEXA 35 is the smallest fully
-                                                    featured ARRI production camera ever, packing the feature
-                                                    s and processing power of a larger ALEXA into a Mini-sized body
-                                                    that can record native 4K at up to 120 fps. Fast and easy
-                                                    operation
-                                                    is assured through numerous usability improvements and a simple
-                                                    menu structure that will be intuitively
-                                                    familiar to crews. ALEXA 35 is the best A-camera, B-camera, and
-                                                    action camera on the market, all rolled into one.
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </li>
-
-                                <li class="onhover-category-list">
-                                    <a href="{{route('shop')}}" class="category-name">
-                                        <img src="{{asset('website/svg/1/illumination.png')}}" alt="">
-                                        <h6>Lighting</h6>
-                                        <i class="fa-solid fa-angle-right"></i>
-                                    </a>
-
-                                    <div class="onhover-category-box">
-                                        <div class="list-1">
-                                            <div class="category-title-box">
-                                                <h5>Cameras</h5>
-                                            </div>
-                                            <ul>
-                                                <li>
-                                                    <a href="{{route('shop')}}">Cinema Camera</a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{route('shop')}}">DCLR & Mirrorless</a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{route('shop')}}">Action Cameras</a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{route('blog')}}">Blogs</a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{route('shop')}}">Beans & Okra</a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{route('shop')}}">Cabbage & Cauliflower</a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{route('shop')}}">Specialty</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-
-
-                                        <div class="list-2">
-                                            <div class="category-title-box">
-                                                <h5>ALEXA 35</h5>
-                                            </div>
-                                            <ul>
-                                                <li>
-                                                    ALEXA 35 is the smallest fully
-                                                    featured ARRI production camera ever, packing the feature
-                                                    s and processing power of a larger ALEXA into a Mini-sized body
-                                                    that can record native 4K at up to 120 fps. Fast and easy
-                                                    operation
-                                                    is assured through numerous usability improvements and a simple
-                                                    menu structure that will be intuitively
-                                                    familiar to crews. ALEXA 35 is the best A-camera, B-camera, and
-                                                    action camera on the market, all rolled into one.
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </li>
-
-                                <li class="onhover-category-list">
-                                    <a href="{{route('shop')}}" class="category-name">
-                                        <img src="{{asset('website/svg/1/illumination.png')}}" alt="">
-                                        <h6>Lighting Accessories</h6>
-                                        <i class="fa-solid fa-angle-right"></i>
-                                    </a>
-
-                                    <div class="onhover-category-box">
-                                        <div class="list-1">
-                                            <div class="category-title-box">
-                                                <h5>Cameras</h5>
-                                            </div>
-                                            <ul>
-                                                <li>
-                                                    <a href="{{route('shop')}}">Cinema Camera</a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{route('shop')}}">DCLR & Mirrorless</a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{route('shop')}}">Action Cameras</a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{route('blog')}}">Blogs</a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{route('shop')}}">Beans & Okra</a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{route('shop')}}">Cabbage & Cauliflower</a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{route('shop')}}">Specialty</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-
-
-                                        <div class="list-2">
-                                            <div class="category-title-box">
-                                                <h5>ALEXA 35</h5>
-                                            </div>
-                                            <ul>
-                                                <li>
-                                                    ALEXA 35 is the smallest fully
-                                                    featured ARRI production camera ever, packing the feature
-                                                    s and processing power of a larger ALEXA into a Mini-sized body
-                                                    that can record native 4K at up to 120 fps. Fast and easy
-                                                    operation
-                                                    is assured through numerous usability improvements and a simple
-                                                    menu structure that will be intuitively
-                                                    familiar to crews. ALEXA 35 is the best A-camera, B-camera, and
-                                                    action camera on the market, all rolled into one.
-                                                </li>
-                                            </ul>
-                                        </div>
                                     </div>
                                 </li>
                             </ul>
@@ -665,14 +411,6 @@
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link ps-xl-2 ps-0" href="{{route('contact')}}">Contact Us</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a
-                                            class="nav-link ps-xl-2 ps-0"
-                                            href="{{ route('userDashboard') }}"
-                                        >
-                                            User Dashboard
-                                        </a>
                                     </li>
                                 </ul>
                             </div>

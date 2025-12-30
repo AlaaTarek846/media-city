@@ -499,7 +499,7 @@ $(".bg-overlay").click(function () {
     form.classList.add('was-validated');
   });
 })();
- 
+
 
 (function(){
   const fab = document.getElementById('waFab');
@@ -640,4 +640,5 @@ ${defaultMsg}`;
   // (اختياري) وقف التشغيل عند الوقوف بالماوس ورجّعه لما يسيب
   slider.addEventListener('mouseenter', ()=> clearInterval(timer));
   slider.addEventListener('mouseleave', ()=> timer = setInterval(next, 5000));
+
 })();

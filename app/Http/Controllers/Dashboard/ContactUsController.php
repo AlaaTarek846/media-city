@@ -30,7 +30,6 @@ class ContactUsController extends Controller implements HasMiddleware
         $data =$request->validated();
         $contactUs = ContactUs::find($id);
         $contactUs->update($data);
-        $contactUs->setTranslations($request->translations);
         return responseJson($contactUs,'Updated Successfully', 200);
     }
 

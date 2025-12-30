@@ -1,7 +1,136 @@
 @extends('website.layouts.layoutPage')
 @section('pageTitle',__('messages.register_new_account'))
-@push("headStyle")
-    @vite(['resources/js/single-components.js'])
+@push("headScript")
+    <script>
+        (function () {
+            function setBusinessVisibility(accountType) {
+                var isPerson = accountType === 'person';
+                var isCompany = accountType === 'company';
+            }
+
+            var accountRadios = document.querySelectorAll('input[name="accountType"]');
+            function getSelectedType() {
+                var checked = document.querySelector('input[name="accountType"]:checked');
+                return checked ? checked.value : 'person';
+            }
+
+            accountRadios.forEach(function (r) {
+                r.addEventListener('change', function () {
+                    setBusinessVisibility(getSelectedType());
+                });
+            });
+            setBusinessVisibility(getSelectedType());
+
+            var form = document.getElementById('registerForm');
+            if (form) {
+                form.addEventListener('submit', function (e) {
+                    e.preventDefault();
+
+                    if (!form.checkValidity()) {
+                        form.classList.add('was-validated');
+                        return;
+                    }
+
+                    // Get message container
+                    var messageDiv = document.getElementById('registerMessage');
+
+                    // Hide previous messages
+                    if (messageDiv) {
+                        messageDiv.classList.add('d-none');
+                        messageDiv.classList.remove('alert-success', 'alert-danger');
+                    }
+
+                    // Validate password confirmation
+                    var password = document.getElementById('password').value;
+                    var confirmation = document.getElementById('confirmation').value;
+                    if (password !== confirmation) {
+                        if (messageDiv) {
+                            messageDiv.classList.remove('d-none');
+                            messageDiv.classList.add('alert-danger');
+                            messageDiv.innerHTML = '<strong>{{ __("messages.Error") }}!</strong> {{ __("messages.Password confirmation does not match") }}';
+                            messageDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                        }
+                        return;
+                    }
+
+                    // Get selected user type
+                    var userType = getSelectedType();
+
+                    // Prepare form data
+                    var formData = {
+                        user_type: userType,
+                        name: document.getElementById('fullName').value,
+                        email: document.getElementById('email').value,
+                        mobile: document.getElementById('mobile').value,
+                        whatsapp: document.getElementById('whatsapp').value,
+                        password: document.getElementById('password').value,
+                        confirmation: document.getElementById('confirmation').value,
+                        _token: '{{ csrf_token() }}'
+                    };
+
+                    // Add how_did_you_hear_about_us if available
+                    var howDidYouHear = document.getElementById('howDidYouHear');
+                    if (howDidYouHear && howDidYouHear.value) {
+                        formData.how_did_you_hear_about_us = howDidYouHear.value;
+                    }
+
+                    // Disable submit button during request
+                    var submitBtn = form.querySelector('button[type="submit"]');
+                    var originalBtnText = submitBtn ? submitBtn.innerHTML : '';
+                    if (submitBtn) {
+                        submitBtn.disabled = true;
+                        submitBtn.innerHTML = '{{ __("messages.Sending") }}...';
+                    }
+
+                    // Submit form via AJAX
+                    $.ajax({
+                        url: '/api/web/register',
+                        type: 'POST',
+                        data: formData,
+                        dataType: 'json',
+                        success: function(data) {
+                            window.location.href = '{{ route("web.home") }}?registered=success';
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error:', error);
+                            var errorMessage = '{{ __("messages.An error occurred. Please try again.") }}';
+
+                            // Try to get error message from response
+                            if (xhr.responseJSON && xhr.responseJSON.message) {
+                                errorMessage = xhr.responseJSON.message;
+                            } else if (xhr.responseJSON && xhr.responseJSON.errors) {
+                                var errors = '';
+                                $.each(xhr.responseJSON.errors, function(key, errorArray) {
+                                    if (Array.isArray(errorArray)) {
+                                        $.each(errorArray, function(index, error) {
+                                            errors += error + '<br>';
+                                        });
+                                    } else {
+                                        errors += errorArray + '<br>';
+                                    }
+                                });
+                                errorMessage = errors;
+                            }
+
+                            if (messageDiv) {
+                                messageDiv.classList.remove('d-none');
+                                messageDiv.classList.add('alert-danger');
+                                messageDiv.innerHTML = '<strong>{{ __("messages.Error") }}!</strong> ' + errorMessage;
+                                messageDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                            }
+                        },
+                        complete: function() {
+                            // Re-enable submit button
+                            if (submitBtn) {
+                                submitBtn.disabled = false;
+                                submitBtn.innerHTML = originalBtnText;
+                            }
+                        }
+                    });
+                });
+            }
+        })();
+    </script>
 @endpush
 @section('body')
     <!-- Breadcrumb Section Start -->
@@ -10,7 +139,7 @@
             <div class="row">
                 <div class="col-12">
                     <div class="breadscrumb-contain">
-                        <h2>Register</h2>
+                        <h2>{{ __('messages.register_new_account') }}</h2>
                         <nav>
                             <ol class="breadcrumb mb-0">
                                 <li class="breadcrumb-item">
@@ -18,7 +147,7 @@
                                         <i class="fa-solid fa-house"></i>
                                     </a>
                                 </li>
-                                <li class="breadcrumb-item active">Register</li>
+                                <li class="breadcrumb-item active mx-1">{{ __('messages.register_new_account') }}</li>
                             </ol>
                         </nav>
                     </div>
@@ -42,15 +171,18 @@
                     <div class="auth-card">
                         <div class="auth-card-body">
                             <div class="auth-title">
-                                <h3>Create your account</h3>
-                                <p class="text-content">Fill in your information to complete registration.</p>
+                                <h3>{{ __('messages.Create your account') }}</h3>
+                                <p class="text-content">{{ __('messages.Fill in your information to complete registration') }}</p>
                             </div>
+
+                            <!-- Success/Error Messages Container -->
+                            <div id="registerMessage" class="alert d-none mb-3" role="alert"></div>
 
                             <form class="row g-3" id="registerForm" novalidate>
                                 <div class="col-12">
                                     <div class="mb-2">
-                                        <strong>Account type</strong>
-                                        <div class="required-hint">* Required</div>
+                                        <strong>{{ __('messages.Account type') }}</strong>
+                                        <div class="required-hint">* {{ __('messages.Required') }}</div>
                                     </div>
 
                                     <div class="account-type-grid">
@@ -60,8 +192,8 @@
                                                 <div class="left">
                                                     <div class="icon"><i data-feather="user"></i></div>
                                                     <div class="text">
-                                                        <h6>Person</h6>
-                                                        <small>Individual</small>
+                                                        <h6>{{ __('messages.Person') }}</h6>
+                                                        <small>{{ __('messages.Individual') }}</small>
                                                     </div>
                                                 </div>
                                                 <i data-feather="check"></i>
@@ -74,8 +206,8 @@
                                                 <div class="left">
                                                     <div class="icon"><i data-feather="briefcase"></i></div>
                                                     <div class="text">
-                                                        <h6>Company</h6>
-                                                        <small>Business</small>
+                                                        <h6>{{ __('messages.Company') }}</h6>
+                                                        <small>{{ __('messages.Business') }}</small>
                                                     </div>
                                                 </div>
                                                 <i data-feather="check"></i>
@@ -88,8 +220,8 @@
                                                 <div class="left">
                                                     <div class="icon"><i data-feather="camera"></i></div>
                                                     <div class="text">
-                                                        <h6>Studio</h6>
-                                                        <small>Production</small>
+                                                        <h6>{{ __('messages.Studio') }}</h6>
+                                                        <small>{{ __('messages.Production') }}</small>
                                                     </div>
                                                 </div>
                                                 <i data-feather="check"></i>
@@ -100,165 +232,78 @@
 
                                 <div class="col-md-12">
                                     <div class="form-floating theme-form-floating">
-                                        <input type="text" class="form-control" id="fullName" placeholder="Full name" required>
-                                        <label for="fullName">Full name (as on national ID) *</label>
+                                        <input type="text" class="form-control" id="fullName" placeholder="{{ __('messages.Full name') }}" required>
+                                        <label for="fullName">{{ __('messages.Full name') }} *</label>
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="form-floating theme-form-floating">
-                                        <input type="tel" class="form-control" id="mobile" placeholder="Mobile" required>
-                                        <label for="mobile">Mobile number *</label>
+                                        <input type="tel" class="form-control" id="mobile" placeholder="{{ __('messages.Mobile number') }}" required>
+                                        <label for="mobile">{{ __('messages.Mobile number') }} *</label>
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="form-floating theme-form-floating">
-                                        <input type="tel" class="form-control" id="whatsapp" placeholder="WhatsApp" required>
-                                        <label for="whatsapp">WhatsApp number *</label>
+                                        <input type="tel" class="form-control" id="whatsapp" placeholder="{{ __('messages.WhatsApp number') }}" required>
+                                        <label for="whatsapp">{{ __('messages.WhatsApp number') }} *</label>
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="form-floating theme-form-floating">
-                                        <input type="email" class="form-control" id="email" placeholder="Email" required>
-                                        <label for="email">Email address *</label>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <div class="form-floating theme-form-floating">
-                                        <input type="date" class="form-control" id="dob" required>
-                                        <label for="dob">Date of birth (21+ years) *</label>
-                                    </div>
-                                    <div class="required-hint" id="dobError" style="display: none;">You must be at least 21 years old.</div>
-                                </div>
-
-                                <div class="col-md-12">
-                                    <div class="form-floating theme-form-floating">
-                                        <input type="url" class="form-control" id="socialProfile" placeholder="Profile link" required>
-                                        <label for="socialProfile">Facebook / Instagram / LinkedIn profile link *</label>
+                                        <input type="email" class="form-control" id="email" placeholder="{{ __('messages.Email address') }}" required>
+                                        <label for="email">{{ __('messages.Email address') }} *</label>
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="form-floating theme-form-floating">
                                         <select class="form-select" id="howDidYouHear" required>
-                                            <option value="" selected disabled>Select</option>
-                                            <option value="facebook">Facebook</option>
-                                            <option value="instagram">Instagram</option>
-                                            <option value="tiktok">TikTok</option>
-                                            <option value="linkedin">LinkedIn</option>
-                                            <option value="youtube">YouTube</option>
-                                            <option value="google">Google</option>
-                                            <option value="friend">Friend / Referral</option>
-                                            <option value="other">Other</option>
+                                            <option value="" selected disabled>{{ __('messages.Select') }}</option>
+                                            <option value="facebook">{{ __('messages.Facebook') }}</option>
+                                            <option value="instagram">{{ __('messages.Instagram') }}</option>
+                                            <option value="tiktok">{{ __('messages.TikTok') }}</option>
+                                            <option value="linkedin">{{ __('messages.Linkedin') }}</option>
+                                            <option value="youtube">{{ __('messages.Youtube') }}</option>
+                                            <option value="google">{{ __('messages.Google') }}</option>
+                                            <option value="friend">{{ __('messages.Friend / Referral') }}</option>
+                                            <option value="other">{{ __('messages.Other') }}</option>
                                         </select>
-                                        <label for="howDidYouHear">How did you hear about us? *</label>
+                                        <label for="howDidYouHear">{{ __('messages.How did you hear about us?') }}</label>
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="form-floating theme-form-floating">
-                                        <select class="form-select" id="residence" required>
-                                            <option value="" selected disabled>Select residence</option>
-                                            <option value="cairo">Cairo</option>
-                                            <option value="giza">Giza</option>
-                                            <option value="alex">Alexandria</option>
-                                            <option value="other">Other</option>
-                                        </select>
-                                        <label for="residence">Current residence *</label>
+                                        <input type="password" class="form-control" id="password" placeholder="{{ __('messages.Password') }}" required>
+                                        <label for="password">{{ __('messages.Password') }} *</label>
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="form-floating theme-form-floating">
-                                        <select class="form-select" id="area" required>
-                                            <option value="" selected disabled>Select area</option>
-                                            <option value="nasr_city">Nasr City</option>
-                                            <option value="heliopolis">Heliopolis</option>
-                                            <option value="maadi">Maadi</option>
-                                            <option value="dokki">Dokki</option>
-                                            <option value="mohandeseen">Mohandeseen</option>
-                                            <option value="other">Other</option>
-                                        </select>
-                                        <label for="area">Area *</label>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <div class="form-floating theme-form-floating">
-                                        <input type="password" class="form-control" id="password" placeholder="Password" required>
-                                        <label for="password">Password *</label>
-                                    </div>
-                                </div>
-
-                                <div class="col-12" id="businessFields" style="display: none;">
-                                    <div class="row g-3">
-                                        <div class="col-12">
-                                            <div class="form-floating theme-form-floating">
-                                                <input type="url" class="form-control" id="portfolio" placeholder="Portfolio link">
-                                                <label for="portfolio">Portfolio / Previous work link *</label>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-6">
-                                            <div class="form-floating theme-form-floating">
-                                                <input type="text" class="form-control" id="commercialRegister" placeholder="Commercial register">
-                                                <label for="commercialRegister">Commercial register *</label>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-6">
-                                            <div class="form-floating theme-form-floating">
-                                                <input type="text" class="form-control" id="taxCard" placeholder="Tax card">
-                                                <label for="taxCard">Tax card *</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-12">
-                                    <div class="row g-3">
-                                        <div class="col-md-6">
-                                            <label class="form-label fw-bold" for="idFront">Attach national ID (front) *</label>
-                                            <input type="file" class="form-control" id="idFront" accept="image/*" required>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label fw-bold" for="idBack">Attach national ID (back) *</label>
-                                            <input type="file" class="form-control" id="idBack" accept="image/*" required>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-12" id="businessUploads" style="display: none;">
-                                    <div class="row g-3">
-                                        <div class="col-md-6">
-                                            <label class="form-label fw-bold" for="commercialRegisterFile">Upload commercial register *</label>
-                                            <input type="file" class="form-control" id="commercialRegisterFile" accept="image/*,application/pdf">
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label fw-bold" for="taxCardFile">Upload tax card *</label>
-                                            <input type="file" class="form-control" id="taxCardFile" accept="image/*,application/pdf">
-                                        </div>
+                                        <input type="password" class="form-control" id="confirmation" placeholder="{{ __('messages.Confirm Password') }}" required>
+                                        <label for="confirmation">{{ __('messages.Confirm Password') }} *</label>
                                     </div>
                                 </div>
 
                                 <div class="col-12">
                                     <div class="form-check ps-0 m-0 remember-box">
                                         <input class="checkbox_animated check-box" type="checkbox" id="terms" required>
-                                        <label class="form-check-label" for="terms">I agree with <span>Terms</span> and <span>Privacy</span></label>
+                                        <label class="form-check-label" for="terms">{{ __('messages.I agree with Terms and Privacy') }}</label>
                                     </div>
                                 </div>
 
                                 <div class="col-12">
-                                    <button class="btn btn-animation w-100 justify-content-center" type="submit">Create account</button>
+                                    <button class="btn btn-animation w-100 justify-content-center" type="submit">{{ __('messages.Create account') }}</button>
                                 </div>
                             </form>
 
                             <div class="sign-up-box">
-                                <h4>Already have an account?</h4>
-                                <a href="login.html">Log In</a>
+                                <h4>{{ __('messages.Already have an account?') }}</h4>
+                                <a href="{{ route('web.login') }}">{{ __('messages.Log In') }}</a>
                             </div>
                         </div>
                     </div>

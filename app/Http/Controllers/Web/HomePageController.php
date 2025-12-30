@@ -13,18 +13,29 @@ use App\Models\Category;
 use App\Models\ContactMessage;
 use App\Models\ContactUs;
 use App\Models\News;
+use App\Models\Article;
+use App\Models\ArticleSlugRedirect;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\ShopByInstagram;
 use App\Models\Team;
-use App\Models\Vision;
 use App\Models\Cart;
 use App\Models\DiscountCoupon;
 use App\Models\ProductAttributeValue;
+use App\Models\Address;
+use App\Models\Area;
 use App\Models\ReturnPolicy;
 use App\Models\Setting;
 use App\Models\ShippingInformation;
+use App\Http\Requests\Website\AddAddressRequest;
+use App\Http\Requests\Website\ChangePasswordRequest;
+use App\Http\Requests\Website\UpdateProfileRequest;
+use App\Models\PersonProfile;
+use App\Models\CompanyProfile;
+use App\Models\StudioProfile;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class HomePageController extends Controller
 {
@@ -287,12 +298,24 @@ class HomePageController extends Controller
 
     public function aboutUs(Request $request)
     {
-        $aboutUs = AboutUs::first();
-        $vision = Vision::first();
-        $brands = Brand::whereStatus(1)->latest()->get();
-        $teams = Team::latest()->get();
+        // جلب بيانات About Us مع العلاقات والترجمات
+        // التأكد من جلب الترجمة الحالية بناءً على locale المحدد
+        $aboutUs = AboutUs::with([
+            'translation', // ترجمة AboutUs الرئيسية للـ locale الحالي
+            'translations', // جميع الترجمات (fallback)
+            'features' => function($query) {
+                $query->with(['translation', 'translations']); // ترجمة كل feature + جميع الترجمات
+            },
+            'statistics' => function($query) {
+                $query->with(['translation', 'translations']); // ترجمة كل statistic + جميع الترجمات
+            }
+        ])->first();
 
-        return view('website.about-us',compact('aboutUs','teams','vision','brands'));
+        // جلب بيانات إضافية (إذا كانت مطلوبة في الصفحة)
+        $brands = Brand::whereStatus(1)->with('translation')->latest()->get();
+        $teams = Team::with('translation')->latest()->get();
+
+        return view('website.about-us', compact('aboutUs', 'teams', 'brands'));
     }
 
      public function shop(Request $request){
@@ -367,14 +390,57 @@ class HomePageController extends Controller
         return view('website.shop',compact('categories','maxPrice','minPrice','attributes','brands','products','productData'));
     }
 
-     public function blog(){
-        $news = News::latest()->paginate(20);
-        return view('website.blog',compact('news'));
+    /**
+     * Display blog listing page with paginated articles
+     *
+     * جلب المقالات المنشورة مع الترجمات والعلاقات وعرضها بصفحة المدونة
+     */
+    public function blog(){
+        // Get published articles only, ordered by latest, with translations and category
+        $articles = Article::where('status', 1)
+            ->with(['translation', 'category.translation'])
+            ->latest()
+            ->paginate(4);
+
+        return view('website.blog', compact('articles'));
     }
 
+    /**
+     * Display single article details page by slug
+     *
+     * عرض تفاصيل المقال بناءً على slug مع دعم إعادة التوجيه للـ slugs القديمة
+     */
     public function blogDetails($slug){
+        $locale = app()->getLocale();
 
-        return view('website.blog-details');
+        // First, check if there's a redirect for this slug
+        $redirect = ArticleSlugRedirect::where('old_slug', $slug)
+            ->where('locale', $locale)
+            ->first();
+
+        if ($redirect) {
+            // Redirect to new slug with 301 (permanent redirect for SEO)
+            return redirect()->route('blog-details', $redirect->new_slug, 301);
+        }
+
+        // Find article by slug in current locale
+        $article = Article::where('status', 1)
+            ->whereHas('translations', function($query) use ($slug, $locale) {
+                $query->where('slug', $slug)->where('locale', $locale);
+            })
+            ->with(['translation', 'category.translation', 'tags'])
+            ->firstOrFail();
+
+        // Get related articles (same category, excluding current article)
+        $relatedArticles = Article::where('status', 1)
+            ->where('category_id', $article->category_id)
+            ->where('id', '!=', $article->id)
+            ->with(['translation', 'category.translation'])
+            ->latest()
+            ->take(3)
+            ->get();
+
+        return view('website.blog-details', compact('article', 'relatedArticles'));
     }
 
     public function accountAddresses(){
@@ -402,9 +468,311 @@ class HomePageController extends Controller
 
     public function userDashboard()
     {
-        return view('website.user-dashboard');
+        $user = auth('user')->user();
+        // Load user with all profile relationships
+        $user->load('personProfile', 'companyProfile', 'studioProfile');
+        $areas = Area::whereStatus(1)->latest()->get();
+        return view('website.user-dashboard', compact('user', 'areas'));
     }
 
+    /**
+     * Get user addresses via API
+     *
+     * Returns all addresses for the authenticated user
+     */
+    public function getUserAddresses()
+    {
+        $user = auth('user')->user();
+        $addresses = $user->addresses()->with('area')->latest()->get();
+        return responseJson($addresses, __('messages.Addresses fetched successfully'), 200);
+    }
 
+    /**
+     * Add a new address for the authenticated user
+     *
+     * Validates address data and saves it with user_id
+     * Supports Google Maps lat/lng coordinates
+     */
+    public function addAddress(AddAddressRequest $request)
+    {
+        try {
+            $user = auth('user')->user();
+
+            // If this is set as primary, unset other primary addresses
+            if ($request->boolean('is_primary')) {
+                $user->addresses()->update(['is_primary' => false]);
+            }
+
+            // Create address with user_id
+            $address = $user->addresses()->create([
+                'name' => $request->name,
+                'title' => $request->title,
+                'address' => $request->address,
+                'area_id' => $request->area_id,
+                'lat' => $request->lat,
+                'lng' => $request->lng,
+                'is_primary' => $request->boolean('is_primary', false),
+            ]);
+
+            return responseJson($address, __('messages.Address added successfully'), 200);
+        } catch (\Exception $e) {
+            return responseJson(null, __('messages.An error occurred while adding the address'), 500);
+        }
+    }
+
+    /**
+     * Update an existing address
+     *
+     * Validates and updates address data
+     */
+    public function editAddress(AddAddressRequest $request, $id)
+    {
+        try {
+            $user = auth('user')->user();
+            $address = $user->addresses()->findOrFail($id);
+
+            // If this is set as primary, unset other primary addresses
+            if ($request->boolean('is_primary')) {
+                $user->addresses()->where('id', '!=', $id)->update(['is_primary' => false]);
+            }
+
+            $address->update([
+                'name' => $request->name,
+                'title' => $request->title,
+                'address' => $request->address,
+                'area_id' => $request->area_id,
+                'lat' => $request->lat,
+                'lng' => $request->lng,
+                'is_primary' => $request->boolean('is_primary', false),
+            ]);
+
+            return responseJson($address, __('messages.Address updated successfully'), 200);
+        } catch (\Exception $e) {
+            return responseJson(null, __('messages.An error occurred while updating the address'), 500);
+        }
+    }
+
+    /**
+     * Delete an address
+     *
+     * Soft deletes the address (uses softDeletes)
+     */
+    public function removeAddress($id)
+    {
+        try {
+            $user = auth('user')->user();
+            $address = $user->addresses()->findOrFail($id);
+            $address->delete();
+
+            return responseJson(null, __('messages.Address removed successfully'), 200);
+        } catch (\Exception $e) {
+            return responseJson(null, __('messages.An error occurred while removing the address'), 500);
+        }
+    }
+
+    /**
+     * Change user password
+     *
+     * Validates current password and updates to new password
+     */
+    public function changePassword(ChangePasswordRequest $request)
+    {
+        try {
+            $user = auth('user')->user();
+
+            // Update password
+            $user->password = Hash::make($request->password);
+            $user->save();
+
+            return responseJson($user, __('messages.Password changed successfully'), 200);
+        } catch (\Exception $e) {
+            return responseJson(null, __('messages.An error occurred while changing password'), 500);
+        }
+    }
+
+    /**
+     * Update user profile
+     *
+     * Updates user basic information and profile-specific data based on user_type
+     * Handles file uploads for documents
+     */
+    public function updateProfile(UpdateProfileRequest $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $user = auth('user')->user();
+            $userType = $user->user_type;
+
+            // Update user basic information
+            $user->name = $request->name;
+            $user->mobile = $request->mobile;
+            $user->whatsapp = $request->whatsapp;
+            $user->link = $request->link;
+            $user->save();
+
+            // Initialize profile data array
+            $profileData = [];
+
+            // Handle file uploads and profile data based on user type
+            switch ($userType) {
+                case 'person':
+                    $profile = $user->personProfile;
+                    if (!$profile) {
+                        $profile = PersonProfile::create(['user_id' => $user->id]);
+                    }
+
+                    // Handle ID card front upload
+                    if ($request->hasFile('id_card_front')) {
+                        // Delete old file if exists
+                        if ($profile->id_card_front) {
+                            unlink_image_by_path($profile->id_card_front);
+                        }
+                        $profileData['id_card_front'] = store_single_image($request->file('id_card_front'), 'person_profiles/');
+                    }
+
+                    // Handle ID card back upload
+                    if ($request->hasFile('id_card_back')) {
+                        // Delete old file if exists
+                        if ($profile->id_card_back) {
+                            unlink_image_by_path($profile->id_card_back);
+                        }
+                        $profileData['id_card_back'] = store_single_image($request->file('id_card_back'), 'person_profiles/');
+                    }
+
+                    // Update profile if there's data to update
+                    if (!empty($profileData)) {
+                        $profile->update($profileData);
+                    }
+                    break;
+
+                case 'company':
+                    $profile = $user->companyProfile;
+                    if (!$profile) {
+                        $profile = CompanyProfile::create(['user_id' => $user->id]);
+                    }
+
+                    // Handle commercial register upload
+                    if ($request->hasFile('commercial_register_image')) {
+                        // Delete old file if exists
+                        if ($profile->commercial_register_image) {
+                            unlink_image_by_path($profile->commercial_register_image);
+                        }
+                        $profileData['commercial_register_image'] = store_single_image($request->file('commercial_register_image'), 'company_profiles/');
+                    }
+
+                    // Handle tax card upload
+                    if ($request->hasFile('tax_card_image')) {
+                        // Delete old file if exists
+                        if ($profile->tax_card_image) {
+                            unlink_image_by_path($profile->tax_card_image);
+                        }
+                        $profileData['tax_card_image'] = store_single_image($request->file('tax_card_image'), 'company_profiles/');
+                    }
+
+                    // Update profile if there's data to update
+                    if (!empty($profileData)) {
+                        $profile->update($profileData);
+                    }
+                    break;
+
+                case 'studio':
+                    $profile = $user->studioProfile;
+                    if (!$profile) {
+                        $profile = StudioProfile::create(['user_id' => $user->id]);
+                    }
+
+                    // Handle ID card front upload
+                    if ($request->hasFile('id_card_front')) {
+                        // Delete old file if exists
+                        if ($profile->id_card_front) {
+                            unlink_image_by_path($profile->id_card_front);
+                        }
+                        $profileData['id_card_front'] = store_single_image($request->file('id_card_front'), 'studio_profiles/');
+                    }
+
+                    // Handle ID card back upload
+                    if ($request->hasFile('id_card_back')) {
+                        // Delete old file if exists
+                        if ($profile->id_card_back) {
+                            unlink_image_by_path($profile->id_card_back);
+                        }
+                        $profileData['id_card_back'] = store_single_image($request->file('id_card_back'), 'studio_profiles/');
+                    }
+
+                    // Update profile if there's data to update
+                    if (!empty($profileData)) {
+                        $profile->update($profileData);
+                    }
+                    break;
+            }
+
+            DB::commit();
+
+            // Reload user with relationships
+            $user->load('personProfile', 'companyProfile', 'studioProfile');
+
+            // Prepare response data with formatted URLs
+            $responseData = [
+                'user' => [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'mobile' => $user->mobile,
+                    'whatsapp' => $user->whatsapp,
+                    'link' => $user->link,
+                    'user_type' => $user->user_type,
+                    'status' => $user->status,
+                    'created_at' => $user->created_at,
+                    'updated_at' => $user->updated_at,
+                ],
+                'profile' => null,
+            ];
+
+            // Add profile data based on user type with full image URLs
+            switch ($userType) {
+                case 'person':
+                    if ($user->personProfile) {
+                        $responseData['profile'] = [
+                            'id' => $user->personProfile->id,
+                            'id_card_front' => $user->personProfile->id_card_front ? asset('upload/general/' . $user->personProfile->id_card_front) : null,
+                            'id_card_back' => $user->personProfile->id_card_back ? asset('upload/general/' . $user->personProfile->id_card_back) : null,
+                            'created_at' => $user->personProfile->created_at,
+                            'updated_at' => $user->personProfile->updated_at,
+                        ];
+                    }
+                    break;
+
+                case 'company':
+                    if ($user->companyProfile) {
+                        $responseData['profile'] = [
+                            'id' => $user->companyProfile->id,
+                            'commercial_register_image' => $user->companyProfile->commercial_register_image ? asset('upload/general/' . $user->companyProfile->commercial_register_image) : null,
+                            'tax_card_image' => $user->companyProfile->tax_card_image ? asset('upload/general/' . $user->companyProfile->tax_card_image) : null,
+                            'created_at' => $user->companyProfile->created_at,
+                            'updated_at' => $user->companyProfile->updated_at,
+                        ];
+                    }
+                    break;
+
+                case 'studio':
+                    if ($user->studioProfile) {
+                        $responseData['profile'] = [
+                            'id' => $user->studioProfile->id,
+                            'id_card_front' => $user->studioProfile->id_card_front ? asset('upload/general/' . $user->studioProfile->id_card_front) : null,
+                            'id_card_back' => $user->studioProfile->id_card_back ? asset('upload/general/' . $user->studioProfile->id_card_back) : null,
+                            'created_at' => $user->studioProfile->created_at,
+                            'updated_at' => $user->studioProfile->updated_at,
+                        ];
+                    }
+                    break;
+            }
+
+            return responseJson($responseData, __('messages.Profile updated successfully'), 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return responseJson(null, __('messages.An error occurred while updating profile') . ': ' . $e->getMessage(), 500);
+        }
+    }
 
 }

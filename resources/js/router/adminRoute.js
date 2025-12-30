@@ -25,7 +25,8 @@ import aboutUs from "./adminRoute/aboutUs.js";
 import vision from "./adminRoute/vision.js";
 import user from "./adminRoute/user.js";
 import setting from "./adminRoute/setting.js";
-
+import article from "./adminRoute/articale.js";
+import articleClient from "./adminRoute/articleClient.js";
 import category from "./adminRoute/category.js";
 import productAttribute from "./adminRoute/productAttribute.js";
 import product from "./adminRoute/product.js";
@@ -97,6 +98,8 @@ const routes = [
             ...shippingInformation,
             ...order,
             ...department,
+            ...article,
+            ...articleClient
 
         ]
     },

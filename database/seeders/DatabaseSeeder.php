@@ -36,6 +36,8 @@ class DatabaseSeeder extends Seeder
         $this->call(ShippingInformationSeeder::class);
         $this->call(ReturnPolicySeeder::class);
         $this->call(DepartmentSeeder::class);
+        $this->call(BlogSeeder::class);
+        $this->call(UserProfileSeeder::class);
 
     }
 }
