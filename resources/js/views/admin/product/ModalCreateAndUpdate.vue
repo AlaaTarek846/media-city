@@ -55,6 +55,27 @@
                         </div>
 
                         <div class="col-md-4 mt-3">
+                            <label class="form-label">{{ $t('global.departments') }}</label>
+
+                            <Select v-model="data.department_id" :filterFields="['id','title']" :options="departments" filter
+                                    :invalid="v$.department_id.$error || errors[`department_id`]"
+                                        optionLabel="title" optionValue="id"
+                                    :class="['w-full w-100', { 'is-invalid': v$.department_id.$error || errors[`department_id`], 'is-valid': !v$.department_id.$invalid && !errors[`department_id`] }]">
+
+                            </Select>
+                            <div class="invalid-feedback">
+                                <span v-if="v$.department_id.required.$invalid">{{
+                                        $t('global.ThisFieldIsRequired') }}<br />
+                                </span>
+                            </div>
+                            <template v-if="errors['department_id']">
+                                <error-message v-for="(errorMessage, index) in errors['department_id']" :key="index">
+                                    {{ errorMessage }}
+                                </error-message>
+                            </template>
+                        </div>
+
+                        <div class="col-md-4 mt-3">
                             <label class="form-label">{{ $t('global.selectCategory') }}</label>
 
                             <Select v-model="data.category_id" :filterFields="['id','title']" :options="categories" filter
@@ -75,6 +96,27 @@
                             </template>
                         </div>
 
+                        <div class="col-md-4 mt-3" v-if="showConditionSelect">
+                            <label class="form-label">{{ $t('global.condition') }}</label>
+
+                            <Select v-model="data.condition" :filterFields="['value','label']" :options="conditionOptions" filter
+                                    :invalid="v$.condition.$error || errors[`condition`]"
+                                        optionLabel="label" optionValue="value"
+                                    :class="['w-full w-100', { 'is-invalid': v$.condition.$error || errors[`condition`], 'is-valid': !v$.condition.$invalid && !errors[`condition`] }]">
+
+                            </Select>
+                            <div class="invalid-feedback">
+                                <span v-if="v$.condition.required.$invalid">{{
+                                        $t('global.ThisFieldIsRequired') }}<br />
+                                </span>
+                            </div>
+                            <template v-if="errors['condition']">
+                                <error-message v-for="(errorMessage, index) in errors['condition']" :key="index">
+                                    {{ errorMessage }}
+                                </error-message>
+                            </template>
+                        </div>
+
                         <div class="col-md-3 mt-3">
                             <label class="form-label">{{ $t('global.selectBrand') }}</label>
 
@@ -84,36 +126,6 @@
                                     :class="['w-full w-100', { 'is-invalid': v$.brand_id.$error || errors[`brand_id`], 'is-valid': !v$.brand_id.$invalid && !errors[`brand_id`] }]">
 
                             </Select>
-                            <div class="invalid-feedback">
-                                <span v-if="v$.brand_id.required.$invalid">{{
-                                        $t('global.ThisFieldIsRequired') }}<br />
-                                </span>
-                            </div>
-                            <template v-if="errors['brand_id']">
-                                <error-message v-for="(errorMessage, index) in errors['brand_id']" :key="index">
-                                    {{ errorMessage }}
-                                </error-message>
-                            </template>
-                        </div>
-
-                         <div class="col-md-3 mt-3">
-                            <label class="form-label">{{ $t('global.selectProductType') }}</label>
-
-                            <div class="card-body d-sm-flex align-items-center">
-                                 <div class="form-check form-check-md">
-                                    <input class="form-check-input" type="radio" v-model="data.type" id="Radio-md" value="standard" checked>
-                                    <label class="form-check-label" for="Radio-md">
-                                        {{ $t('global.standard') }}
-                                    </label>
-                                </div>
-                                <div class="form-check form-check-md mx-4">
-                                    <input class="form-check-input" type="radio" v-model="data.type" id="Radio-md" value="variant">
-                                    <label class="form-check-label" for="Radio-md">
-                                        {{ $t('global.variant') }}
-                                    </label>
-                                </div>
-                            </div>
-
                             <div class="invalid-feedback">
                                 <span v-if="v$.brand_id.required.$invalid">{{
                                         $t('global.ThisFieldIsRequired') }}<br />
@@ -270,10 +282,11 @@
                                             <th v-if="data.type == 'variant'">{{ $t('label.status') }}</th>
                                             <th v-if="data.type == 'variant'">{{ $t('global.attribute_values') }}</th>
                                             <th>{{ $t('global.sku') }}</th>
-                                            <th>{{ $t('global.price_before_discount') }}</th>
-                                            <th>{{ $t('global.discount_percentage') }}</th>
-                                            <th>{{ $t('global.price') }}</th>
+                                            <th v-if="showPriceDay || showPriceFields">{{ data.department_id == 1 ? $t('global.rent_price_day') : $t('global.price') }}</th>
+                                            <th v-if="showPriceDay || showPriceFields">{{ $t('global.discount_percentage') }}</th>
+                                            <th v-if="showPriceDay || showPriceFields">{{ $t('global.price_before_discount') }}</th>
                                             <th>{{ $t('global.quantity') }}</th>
+
                                         </tr>
                                         </thead>
                                         <tbody v-for="(el, index) in data.variant" :key="index">
@@ -285,33 +298,46 @@
                                                            'is-valid': !v$.variant[index].status.$invalid && !errors[`variant.${index}.status`] }">
                                                 </div>
                                             </td>
-                                            <td v-if="data.type == 'variant'"><input type="text" disabled v-model.trim="v$.variant[index].attribute_values.$model"
+                                            <td v-if="data.type == 'variant'">
+                                                <input type="text" disabled v-model.trim="v$.variant[index].attribute_values.$model"
                                                        :class="{'is-invalid': v$.variant[index].attribute_values.$error || errors[`variant.${index}.attribute_values`],
                                                        'is-valid': !v$.variant[index].attribute_values.$invalid && !errors[`variant.${index}.attribute_values`] }"
-                                                       class="form-control"></td>
-                                            <td><input type="text" v-model.trim="v$.variant[index].sku.$model"
+                                                       class="form-control">
+                                            </td>
+                                            <td>
+                                                <input type="text" v-model.trim="v$.variant[index].sku.$model"
                                                        :class="{'is-invalid': v$.variant[index].sku.$error || errors[`variant.${index}.sku`],
                                                        'is-valid': !v$.variant[index].sku.$invalid && !errors[`variant.${index}.sku`] }"
-                                                       class="form-control"></td>
-
-                                            <td><input type="number" step="any" v-model.trim="v$.variant[index].price_before_discount.$model" @input="v$.variant[index].price.$model = v$.variant[index].price_before_discount.$model - (v$.variant[index].price_before_discount.$model * v$.variant[index].discount_percentage.$model / 100)"
-                                                       :class="{'is-invalid': v$.variant[index].price_before_discount.$error || errors[`variant.${index}.price_before_discount`],
-                                                       'is-valid': !v$.variant[index].price_before_discount.$invalid && !errors[`variant.${index}.price_before_discount`] }"
-                                                       class="form-control"></td>
-
-                                            <td><input type="number" step="any" v-model.trim="v$.variant[index].discount_percentage.$model" @input="v$.variant[index].price.$model = v$.variant[index].price_before_discount.$model - (v$.variant[index].price_before_discount.$model * v$.variant[index].discount_percentage.$model / 100)"
-                                                       :class="{'is-invalid': v$.variant[index].discount_percentage.$error || errors[`variant.${index}.discount_percentage`],
-                                                       'is-valid': !v$.variant[index].discount_percentage.$invalid && !errors[`variant.${index}.discount_percentage`] }"
-                                                       class="form-control"></td>
-
-                                            <td><input type="number" step="any" v-model.trim="v$.variant[index].price.$model"
+                                                       class="form-control">
+                                            </td>
+                                            <td v-if="showPriceDay || showPriceFields">
+                                                <input type="number" step="any" v-model.number="v$.variant[index].price.$model"
+                                                       @input="(showPriceDay || showPriceFields) ? calculatePriceBeforeDiscount(index) : ''"
                                                        :class="{'is-invalid': v$.variant[index].price.$error || errors[`variant.${index}.price`],
                                                        'is-valid': !v$.variant[index].price.$invalid && !errors[`variant.${index}.price`] }"
-                                                       class="form-control" disabled></td>
-                                            <td><input type="number" v-model.trim="v$.variant[index].quantity.$model"
+                                                       class="form-control">
+                                            </td>
+                                            <td v-if="showPriceDay || showPriceFields">
+                                                <input type="number" step="any" min="0" max="100" v-model.number="v$.variant[index].discount_percentage.$model" 
+                                                       @input="(showPriceDay || showPriceFields) ? calculatePriceBeforeDiscount(index) : ''"
+                                                       :class="{'is-invalid': v$.variant[index].discount_percentage.$error || errors[`variant.${index}.discount_percentage`],
+                                                       'is-valid': !v$.variant[index].discount_percentage.$invalid && !errors[`variant.${index}.discount_percentage`] }"
+                                                       class="form-control">
+                                            </td>
+                                            <td v-if="showPriceDay || showPriceFields">
+                                                <input type="number" step="any" v-model.number="v$.variant[index].price_before_discount.$model" 
+                                                       disabled
+                                                       :class="{'is-invalid': v$.variant[index].price_before_discount.$error || errors[`variant.${index}.price_before_discount`],
+                                                       'is-valid': !v$.variant[index].price_before_discount.$invalid && !errors[`variant.${index}.price_before_discount`] }"
+                                                       class="form-control">
+                                            </td>
+                                            <td>
+                                                <input type="number" step="any" v-model.trim="v$.variant[index].quantity.$model"
+                                                       :placeholder="$t('global.quantity')"
                                                        :class="{'is-invalid': v$.variant[index].quantity.$error || errors[`variant.${index}.quantity`],
                                                        'is-valid': !v$.variant[index].quantity.$invalid && !errors[`variant.${index}.quantity`] }"
-                                                       class="form-control"></td>
+                                                       class="form-control">
+                                            </td>
 
                                         </tr>
                                         </tbody>
@@ -341,7 +367,7 @@
 <script>
 import {computed, onMounted, reactive, ref, toRefs, watch,nextTick} from "vue";
 import {useI18n} from "vue-i18n";
-import {maxLength, minLength, required, requiredIf,numeric} from "@vuelidate/validators";
+import {maxLength, minLength, required, requiredIf, numeric, minValue, maxValue} from "@vuelidate/validators";
 import useVuelidate from "@vuelidate/core";
 import adminApi from "../../../api/adminAxios";
 import Editor from 'primevue/editor';
@@ -380,9 +406,23 @@ export default {
                         })
                     },
                sku: {required},
-               price_before_discount: {required,numeric},
-               discount_percentage: {required,numeric},
-               price: {required,numeric},
+               price_before_discount: {
+                   required: requiredIf(function (model, index) {
+                       const variant = submitdata.data.variant[index];
+                       return (submitdata.data.department_id == 1 || submitdata.data.department_id == 2) 
+                           && variant && variant.discount_percentage > 0;
+                   }),
+                   numeric
+               },
+               discount_percentage: {
+                   numeric,
+                   minValue: minValue(0),
+                   maxValue: maxValue(100)
+               },
+               price: {
+                   required: requiredIf(() => submitdata.data.department_id == 1 || submitdata.data.department_id == 2),
+                   numeric
+               },
                quantity: {required,numeric},
                status: {required}
            }]);
@@ -390,23 +430,79 @@ export default {
         let is_disabled = ref(false);
         const {t} = useI18n({});
         const id = ref(null);
+        let isInitialLoad = ref(false); // flag لتحديد التحميل الأولي
+        let departments = ref([]);
         let categories = ref([]);
         let brands = ref([]);
         let attributes = ref([]);
         let attribute = ref(null);
         const descRef = ref(null);
+        
+        // Condition options - مترجمة
+        const conditionOptions = computed(() => [
+            { value: 'new', label: t('global.new') },
+            { value: 'used', label: t('global.used') }
+        ]);
+        
+        // Computed property لإظهار/إخفاء select condition
+        const showConditionSelect = computed(() => {
+            return submitdata.data.department_id == 2;
+        });
+        
+        // Computed property لإظهار/إخفاء price_day (للإيجار)
+        const showPriceDay = computed(() => {
+            return submitdata.data.department_id == 1;
+        });
+        
+        // Computed property لإظهار/إخفاء price fields (للمبيعات)
+        const showPriceFields = computed(() => {
+            return submitdata.data.department_id == 2;
+        });
 
         onMounted(()=>{
             languages.value=JSON.parse(localStorage.getItem('languages'));
         });
 
-         let getCategories = () => {
+         let getDepartments = () => {
             loading.value = true;
 
-            adminApi.get(`dashboard/categories-dropdown`)
+            adminApi.get(`dashboard/departments-dropdown`)
+                .then((res) => {
+                    let l = res.data.data;
+                    departments.value = l;
+                })
+                .catch((err) => {
+                    console.log(err.response.data);
+                })
+                .finally(() => {
+                    loading.value = false;
+                })
+        }
+
+         let getCategories = (departmentId = null, preserveCategoryId = false) => {
+            loading.value = true;
+
+            let url = `dashboard/categories-dropdown`;
+            if (departmentId) {
+                url += `?department_id=${departmentId}`;
+            }
+
+            const currentCategoryId = preserveCategoryId ? submitdata.data.category_id : null;
+
+            adminApi.get(url)
                 .then((res) => {
                     let l = res.data.data;
                     categories.value = l;
+                    // إذا كان في وضع التعديل وكانت الفئة موجودة في القائمة، احتفظ بها
+                    if (preserveCategoryId && currentCategoryId) {
+                        const categoryExists = categories.value.some(cat => cat.id == currentCategoryId);
+                        if (!categoryExists) {
+                            submitdata.data.category_id = '';
+                        }
+                    } else if (departmentId) {
+                        // إعادة تعيين category_id عند تغيير القسم (وليس في التعديل)
+                        submitdata.data.category_id = '';
+                    }
                 })
                 .catch((err) => {
                     console.log(err.response.data);
@@ -459,12 +555,14 @@ export default {
                }
            });
            submitdata.data.status = true;
+           submitdata.data.department_id = 2; // القيمة الافتراضية (رقم)
            submitdata.data.category_id = '';
            submitdata.data.brand_id = '';
            submitdata.data.type = 'standard';
+           submitdata.data.condition = '';
 
            submitdata.data.variant=[
-                { attribute_values:'', sku: '', price_before_discount: '', discount_percentage: 0, price: '', quantity: '', status: true }
+                { attribute_values:'', sku: '', price_before_discount: '', discount_percentage: 0, price: 0, quantity: '', status: true }
            ];
            submitdata.data.attributes = [];
 
@@ -480,7 +578,9 @@ export default {
        function resetModal() {
             defaultData();
             setTimeout(async () => {
-                getCategories();
+                getDepartments();
+                // جلب الفئات المرتبطة بالقسم الافتراضي (2)
+                getCategories(2);
                 getBrands();
                 getProductAttributes();
                 if (props.type != 'edit') {
@@ -503,9 +603,25 @@ export default {
                             submitdata.data[el.locale]['feature'] = el.description;
                         });
                         submitdata.data.status = l.status==1;
-                        submitdata.data.category_id = l.category_id;
+                        submitdata.data.category_id = l.category_id; // تعيين category_id أولاً
                         submitdata.data.brand_id = l.brand_id;
-                        submitdata.data.type = l.type;
+                        
+                        // تعيين flag للتحميل الأولي
+                        isInitialLoad.value = true;
+                        
+                        submitdata.data.department_id = l.department_id || ''; // تعيين department_id بعد category_id
+                        
+                        // جلب الفئات المرتبطة بالقسم مع الحفاظ على الفئة المختارة
+                        if (l.department_id) {
+                            getCategories(l.department_id, true);
+                        }
+                        
+                        // إعادة تعيين flag بعد التحميل
+                        setTimeout(() => {
+                            isInitialLoad.value = false;
+                        }, 500);
+                        submitdata.data.type = 'standard'; // دائماً standard
+                        submitdata.data.condition = l.condition || '';
                         l.attributes.forEach((attr) => {
                             submitdata.data.attributes.push({
                                 attribute_id: attr.attribute_id,
@@ -522,21 +638,34 @@ export default {
                                 attribute_values: variant.attribute_values,
                                 sku: variant.sku,
                                 price_before_discount: variant.price_before_discount,
-                                discount_percentage: variant.discount_percentage,
-                                price: variant.price,
+                                discount_percentage: variant.discount_percentage || 0,
+                                price: variant.price || 0,
                                 quantity: variant.quantity,
                                 status: variant.status==1
                             });
                         });
 
-                        variantValidation.value = submitdata.data.variant.map(() => ({
+                        variantValidation.value = submitdata.data.variant.map((variant, index) => ({
                             attribute_values: {
                                 required: requiredIf(() => submitdata.data.type === "variant")
                             },
                             sku: { required },
-                            price_before_discount: { required, numeric },
-                            discount_percentage: { required, numeric },
-                            price: { required, numeric },
+                            price_before_discount: {
+                                required: requiredIf(() => {
+                                    return (submitdata.data.department_id == 1 || submitdata.data.department_id == 2) 
+                                        && variant && variant.discount_percentage > 0;
+                                }),
+                                numeric
+                            },
+                            discount_percentage: {
+                                numeric,
+                                minValue: minValue(0),
+                                maxValue: maxValue(100)
+                            },
+                            price: {
+                                required: requiredIf(() => submitdata.data.department_id == 1 || submitdata.data.department_id == 2),
+                                numeric
+                            },
                             quantity: { required, numeric },
                             status: { required }
                         }));
@@ -568,12 +697,14 @@ export default {
         let submitdata =  reactive({
             data:{
                 status: true,
+                department_id: 2, // القيمة الافتراضية (رقم)
                 category_id: '',
                 brand_id: '',
                 type: 'standard',
+                condition: '',
                 attributes: [],
                 variant: [
-                    { attribute_values:'', sku: '', price_before_discount: '', discount_percentage: 0, price: '', quantity: '', status: true }
+                    { attribute_values:'', sku: '', price_before_discount: '', discount_percentage: 0, price: 0, quantity: '', status: true }
                 ]
             }
         });
@@ -679,11 +810,64 @@ export default {
             });
         };
 
+        // Watch على department_id لجلب الفئات المرتبطة بهذا القسم وتحديد condition
+        watch(() => submitdata.data.department_id, (newDepartmentId, oldDepartmentId) => {
+            if (newDepartmentId) {
+                // إذا كان في التحميل الأولي، لا تفعل شيء (تم التعامل معه في الكود أعلاه)
+                if (isInitialLoad.value) {
+                    return;
+                }
+                
+                getCategories(newDepartmentId);
+                
+                // إذا كان القسم id=1، ضبط condition = 'rent'
+                if (newDepartmentId == 1) {
+                    submitdata.data.condition = 'rent';
+                }
+                // إذا كان القسم id=2، إعادة تعيين condition
+                else if (newDepartmentId == 2) {
+                    submitdata.data.condition = '';
+                }
+                
+                // تحديث validation للـ variants
+                if (submitdata.data.variant && submitdata.data.variant.length > 0) {
+                    variantValidation.value = submitdata.data.variant.map((variant, index) => ({
+                        attribute_values: {
+                            required: requiredIf(() => submitdata.data.type === "variant")
+                        },
+                        sku: { required },
+                        price_before_discount: {
+                            required: requiredIf(() => {
+                                return (submitdata.data.department_id == 1 || submitdata.data.department_id == 2) 
+                                    && variant && variant.discount_percentage > 0;
+                            }),
+                            numeric
+                        },
+                        discount_percentage: {
+                            numeric,
+                            minValue: minValue(0),
+                            maxValue: maxValue(100)
+                        },
+                        price: {
+                            required: requiredIf(() => submitdata.data.department_id == 1 || submitdata.data.department_id == 2),
+                            numeric
+                        },
+                        quantity: { required, numeric },
+                        status: { required }
+                    }));
+                }
+            } else {
+                // إذا لم يتم اختيار قسم، جلب كل الفئات وإعادة تعيين condition
+                getCategories();
+                submitdata.data.condition = '';
+            }
+        });
+
         watch(() => submitdata.data.type, (newType) => {
             if (newType === 'standard') {
                 submitdata.data.attributes = [];
                 submitdata.data.variant=[
-                        { attribute_values:'', sku: '', price_before_discount: '', discount_percentage: 0, price: '', quantity: '', status: true }
+                        { attribute_values:'', sku: '', price_before_discount: '', discount_percentage: 0, price: 0, quantity: '', status: true }
                 ];
 
                 variantValidation.value = [{
@@ -691,9 +875,23 @@ export default {
                         required: requiredIf(() => submitdata.data.type === "variant")
                     },
                     sku: { required },
-                    price_before_discount: { required, numeric },
-                    discount_percentage: { required, numeric },
-                    price: { required, numeric },
+                    price_before_discount: {
+                        required: requiredIf(function (model, index) {
+                            const variant = submitdata.data.variant[index];
+                            return (submitdata.data.department_id == 1 || submitdata.data.department_id == 2) 
+                                && variant && variant.discount_percentage > 0;
+                        }),
+                        numeric
+                    },
+                    discount_percentage: {
+                        numeric,
+                        minValue: minValue(0),
+                        maxValue: maxValue(100)
+                    },
+                    price: {
+                        required: requiredIf(() => submitdata.data.department_id == 1 || submitdata.data.department_id == 2),
+                        numeric
+                    },
                     quantity: { required, numeric },
                     status: { required }
                 }];
@@ -712,6 +910,18 @@ export default {
                 }
             }
         });
+
+        // Watch على price و discount_percentage في كل variant لتحديث الحسابات تلقائياً
+        watch(() => submitdata.data.variant?.map(v => ({ price: v.price, discount_percentage: v.discount_percentage })), (newValues, oldValues) => {
+            if (newValues && newValues.length > 0 && (showPriceDay.value || showPriceFields.value)) {
+                newValues.forEach((value, index) => {
+                    // حساب السعر قبل الخصم لكل variant
+                    nextTick(() => {
+                        calculatePriceBeforeDiscount(index);
+                    });
+                });
+            }
+        }, { deep: true });
 
         let addAttribute = () => {
 
@@ -797,7 +1007,7 @@ export default {
                             sku: '',
                             price_before_discount: '',
                             discount_percentage: 0,
-                            price: '',
+                            price: 0,
                             quantity: '',
                             status: true
                         });
@@ -810,21 +1020,34 @@ export default {
                     sku: '',
                     price_before_discount: '',
                     discount_percentage: 0,
-                    price: '',
+                    price: 0,
                     quantity: '',
                     status: true
                 }));
             }
 
             // Add validation for each variant
-            variantValidation.value = submitdata.data.variant.map(() => ({
+            variantValidation.value = submitdata.data.variant.map((variant, index) => ({
                 attribute_values: {
                     required: requiredIf(() => submitdata.data.type === "variant")
                 },
                 sku: { required },
-                price_before_discount: { required, numeric },
-                discount_percentage: { required, numeric },
-                price: { required, numeric },
+                price_before_discount: {
+                    required: requiredIf(() => {
+                        return (submitdata.data.department_id == 1 || submitdata.data.department_id == 2) 
+                            && variant && variant.discount_percentage > 0;
+                    }),
+                    numeric
+                },
+                discount_percentage: {
+                    numeric,
+                    minValue: minValue(0),
+                    maxValue: maxValue(100)
+                },
+                price: {
+                    required: requiredIf(() => submitdata.data.department_id == 1 || submitdata.data.department_id == 2),
+                    numeric
+                },
                 quantity: { required, numeric },
                 status: { required }
             }));
@@ -835,9 +1058,13 @@ export default {
         const rules = computed(() => {
             return {
                 ...langValidation.value,
+                department_id: {required},
                 category_id: {required},
                 brand_id: {required},
                 type: {required},
+                condition: {
+                    required: requiredIf(() => submitdata.data.department_id == 2)
+                },
                 variant:[...variantValidation.value],
                 attributes: {
                     required: requiredIf(() => submitdata.data.type === "variant")
@@ -847,11 +1074,47 @@ export default {
 
         const v$ = useVuelidate(rules,submitdata.data);
 
-        return {t,id,categories,brands,numberOfImageUpload,imagesGroup,previewGroup,emptyOther,attributes,addAttribute,attribute,addAttributeOptions,removeAttribute,removeAttributeOption,descRef,
+        // دالة لحساب السعر قبل الخصم بناءً على السعر ونسبة الخصم
+        const calculatePriceBeforeDiscount = (index) => {
+            // التحقق من وجود v$.variant[index]
+            if (!v$.variant || !v$.variant[index]) return;
+            
+            // يجب أن يكون department_id == 1 أو 2
+            if (!showPriceDay.value && !showPriceFields.value) return;
+            
+            // قراءة القيم من v$ model
+            const price = parseFloat(v$.variant[index].price?.$model) || 0;
+            const discountPercentage = parseFloat(v$.variant[index].discount_percentage?.$model) || 0;
+            
+            // التحقق من وجود submitdata.data.variant[index]
+            if (!submitdata.data.variant || !submitdata.data.variant[index]) return;
+            
+            let priceBeforeDiscount = 0;
+            
+            // إذا كان هناك خصم (discount_percentage > 0)
+            if (discountPercentage > 0 && discountPercentage <= 100 && price > 0) {
+                // حساب السعر قبل الخصم: السعر قبل الخصم = السعر + (السعر × نسبة الخصم / 100)
+                // أو بشكل أدق: السعر قبل الخصم = السعر / (1 - نسبة الخصم / 100)
+                // لكن حسب المتطلبات: السعر قبل الخصم = السعر + (السعر × نسبة الخصم / 100)
+                const discountAmount = (price * discountPercentage) / 100;
+                priceBeforeDiscount = price + discountAmount;
+            } else {
+                // إذا لم يكن هناك خصم (discount_percentage = 0 أو null)
+                priceBeforeDiscount = 0;
+            }
+            
+            // تحديث القيمة في v$ model و submitdata.data
+            if (v$.variant[index].price_before_discount) {
+                v$.variant[index].price_before_discount.$model = priceBeforeDiscount;
+            }
+            submitdata.data.variant[index].price_before_discount = priceBeforeDiscount;
+        };
+
+        return {t,id,departments,categories,brands,numberOfImageUpload,imagesGroup,previewGroup,emptyOther,attributes,addAttribute,attribute,addAttributeOptions,removeAttribute,removeAttributeOption,descRef,calculatePriceBeforeDiscount,
             loading,is_disabled,languages,
             resetModal,empty,preview,resetModalHidden,
             imageUpload,image,...toRefs(submitdata),
-            v$,numberOfImage,requiredn,errors};
+            v$,numberOfImage,requiredn,errors,conditionOptions,showConditionSelect,showPriceDay,showPriceFields};
     },
     methods: {
         AddSubmit() {
@@ -869,9 +1132,11 @@ export default {
            formData.append(`features[${el.code}][description]`, this.data[el.code].feature);
        })
         formData.append('status', this.data.status ? 1 : 0);
+        formData.append('department_id', this.data.department_id);
         formData.append('category_id', this.data.category_id);
         formData.append('brand_id', this.data.brand_id);
-        formData.append('type', this.data.type);
+        formData.append('type', 'standard'); // دائماً standard
+        formData.append('condition', this.data.condition);
         if (this.image) {
             formData.append('image', this.image);
         }
@@ -886,12 +1151,20 @@ export default {
             });
         });
         this.data.variant.forEach((variant, index) => {
-            formData.append(`variant[${index}][attribute_values]`, variant.attribute_values);
-            formData.append(`variant[${index}][sku]`, variant.sku);
-            formData.append(`variant[${index}][price_before_discount]`, variant.price_before_discount);
-            formData.append(`variant[${index}][discount_percentage]`, variant.discount_percentage);
-            formData.append(`variant[${index}][price]`, variant.price);
-            formData.append(`variant[${index}][quantity]`, variant.quantity);
+            formData.append(`variant[${index}][attribute_values]`, variant.attribute_values || '');
+            formData.append(`variant[${index}][sku]`, variant.sku || '');
+            
+            // إرسال الحقول حسب department_id
+            if (this.data.department_id == 1 || this.data.department_id == 2) {
+                // للإيجار والمبيعات: price_before_discount و discount_percentage و price مطلوبان
+                // قراءة السعر من v$ إذا كان محسوباً، وإلا من variant
+                const calculatedPrice = this.v$.variant[index]?.price?.$model ?? variant.price ?? 0;
+                formData.append(`variant[${index}][price_before_discount]`, variant.price_before_discount ?? 0);
+                formData.append(`variant[${index}][discount_percentage]`, variant.discount_percentage ?? 0);
+                formData.append(`variant[${index}][price]`, calculatedPrice);
+            }
+            
+            formData.append(`variant[${index}][quantity]`, variant.quantity ?? 0);
             formData.append(`variant[${index}][status]`, variant.status ? 1 : 0);
         });
         if (this.type !== 'edit') {

@@ -76,6 +76,13 @@
                         </router-link>
                     </li>
 
+                    <li class="slide" v-if="permission.includes('department read')">
+                        <router-link :to="{name:'departments'}" class="side-menu__item">
+                            <i class="bx bx-category side-menu__icon"></i>
+                            <span class="side-menu__label">{{$t('global.departments')}}</span>
+                        </router-link>
+                    </li>
+
                     <li class="slide" v-show="permission.includes('brand read')">
                         <router-link :to="{name:'brand'}" class="side-menu__item">
                             <i class="bx bx-tag side-menu__icon"></i>

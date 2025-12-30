@@ -14,6 +14,7 @@ use App\Http\Controllers\Dashboard\ContactMessageController;
 use App\Http\Controllers\Dashboard\ContactUsController;
 use App\Http\Controllers\Dashboard\CountryController;
 use App\Http\Controllers\Dashboard\DashboardStatisticsController;
+use App\Http\Controllers\Dashboard\DepartmentController;
 use App\Http\Controllers\Dashboard\DiscountCouponController;
 use App\Http\Controllers\Dashboard\FrequentlyAskedQuestionController;
 use App\Http\Controllers\Dashboard\HistoryController;
@@ -37,6 +38,8 @@ use App\Http\Controllers\Dashboard\ShippingInformationController;
 use App\Http\Controllers\Dashboard\ShopByInstagramController;
 use App\Http\Controllers\Dashboard\TeamController;
 use App\Http\Controllers\Dashboard\VisionController;
+use App\Http\Controllers\Web\CartController;
+use App\Http\Controllers\Web\FavoriteController;
 use App\Http\Controllers\Web\HomePageController;
 use App\Http\Controllers\Web\RegisterController;
 use App\Http\Middleware\ChangeLang;
@@ -81,8 +84,14 @@ Route::group(['prefix' => 'web', 'middleware' => [ChangeLang::class,StartSession
      Route::post('/updateProfile', [HomePageController::class, 'updateProfile'])->middleware('auth:user');
      Route::post('/change-password', [HomePageController::class, 'changePassword'])->middleware('auth:user');
 
-     Route::post('/add-cart', [HomePageController::class, 'addCart'])->middleware('auth:user');
-    // Route::get('terms',[WebPagesController::class,'terms']);
+    // new
+    Route::get('/get-favorites', [FavoriteController::class, 'index'])->middleware('auth:user');
+    Route::post('/add-favorites', [FavoriteController::class, 'store'])->middleware('auth:user');
+    Route::delete('/delete-favorite/{id}', [FavoriteController::class, 'destroy'])->middleware('auth:user');
+
+    Route::get('/get-carts', [CartController::class, 'index'])->middleware('auth:user');
+    Route::post('/add-carts', [CartController::class, 'store'])->middleware('auth:user');
+    Route::delete('/delete-cart/{id}', [CartController::class, 'destroy'])->middleware('auth:user');    // Route::get('terms',[WebPagesController::class,'terms']);
     // Route::get('privacy',[WebPagesController::class,'privacy']);
 });
 
@@ -144,6 +153,10 @@ Route::group(['prefix' => 'dashboard', 'middleware' => [ChangeLang::class]], fun
         // Category
         Route::get('categories-dropdown',[CategoryController::class,'dropdown']);
         Route::apiResource('category', CategoryController::class);
+
+        // Department
+        Route::get('departments-dropdown',[DepartmentController::class,'dropdown']);
+        Route::apiResource('departments', DepartmentController::class);
 
         // JoinUs
         Route::apiResource('join-us', JoinUsController::class);

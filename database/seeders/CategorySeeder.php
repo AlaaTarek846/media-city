@@ -16,127 +16,127 @@ class CategorySeeder extends Seeder
         Category::truncate();
 
         $Category = Category::create([
-            'image'   => '01.png',
+            'image'   => 'Cinema-camera1.png',
         ]);
 
         $Category->setTranslations([
             'ar' => [
-                'title' => 'أزياء الرجال',
+                'title' => 'كاميرات DSLR',
             ],
             'en' => [
-                'title'       => 'Men Fashion',
+                'title'       => 'DSLR Cameras',
             ],
 
         ]);
 
          $Category = Category::create([
-            'image'   => '02.png',
+            'image'   => 'Cinema-camera2.png',
         ]);
 
         $Category->setTranslations([
             'ar' => [
-                'title' => 'أزياء النساء',
+                'title' => 'كاميرات Mirrorless',
             ],
             'en' => [
-                'title'       => 'Women',
+                'title'       => 'Mirrorless Cameras',
             ],
 
         ]);
 
         $Category = Category::create([
-            'image'   => '03.png',
+            'image'   => 'Cinema-camera3.png',
         ]);
 
         $Category->setTranslations([
             'ar' => [
-                'title' => 'أزياء الأطفال',
+                'title' => 'كاميرات الفيديو',
             ],
             'en' => [
-                'title'       => 'Kids Fashion',
+                'title'       => 'Video Cameras',
             ],
 
         ]);
 
          $Category = Category::create([
-            'image'   => '05.png',
+            'image'   => 'lenses.png',
         ]);
 
         $Category->setTranslations([
             'ar' => [
-                'title' => 'قمصان',
+                'title' => 'العدسات',
             ],
             'en' => [
-                'title'       => 'Shirts',
+                'title'       => 'Lenses',
             ],
 
         ]);
 
         $Category = Category::create([
-            'image'   => '07.png',
+            'image'   => 'illumination.png',
         ]);
 
         $Category->setTranslations([
             'ar' => [
-                'title' => 'فساتين',
+                'title' => 'الإضاءة',
             ],
             'en' => [
-                'title' => 'Dresses',
+                'title' => 'Lighting Equipment',
             ],
 
         ]);
 
         $Category = Category::create([
-            'image'   => '09.png',
+            'image'   => 'tripod1.png',
         ]);
 
         $Category->setTranslations([
             'ar' => [
-                'title' => 'أحذية',
+                'title' => 'الحاملات والستاندات',
             ],
             'en' => [
-                'title' => 'Shoes',
+                'title' => 'Tripods & Stands',
             ],
 
         ]);
 
         $Category = Category::create([
-            'image'   => '10.png',
+            'image'   => 'tripod.png',
         ]);
 
         $Category->setTranslations([
             'ar' => [
-                'title' => 'حقائب',
+                'title' => 'الحاملات',
             ],
             'en' => [
-                'title' => 'Bags',
+                'title' => 'Tripod',
             ],
 
         ]);
 
         $Category = Category::create([
-            'image'   => '11.png',
+            'image'   => 'mic.png',
         ]);
 
         $Category->setTranslations([
             'ar' => [
-                'title' => 'ساعات',
+                'title' => 'الميكروفونات',
             ],
             'en' => [
-                'title' => 'Watches',
+                'title' => 'Mic',
             ],
 
         ]);
 
         $Category = Category::create([
-            'image'   => '12.png',
+            'image'   => 'Cinema-camera.png',
         ]);
 
         $Category->setTranslations([
             'ar' => [
-                'title' => 'ملابس علوية',
+                'title' => 'كاميرات السينما',
             ],
             'en' => [
-                'title' => 'Top wear',
+                'title' => 'Cinema Camera',
             ],
 
         ]);

@@ -13,9 +13,11 @@ class ShowProductResource extends JsonResource
         return [
             "id"  => $this->id,
             "translations"       => $this->translations,
+            "department_id"       => $this->department_id,
             "category_id"       => $this->category_id,
             "brand_id"       => $this->brand_id,
             "type" => $this->type,
+            "condition" => $this->condition,
             "image" => $this->image.'',
             "status" => $this->status,
             "features"       => $this->features ? $this->features->translations : [],

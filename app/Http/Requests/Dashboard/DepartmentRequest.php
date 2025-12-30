@@ -5,7 +5,7 @@ namespace App\Http\Requests\Dashboard;
 use App\Models\Category;
 use Illuminate\Foundation\Http\FormRequest;
 
-class CategoryRequest extends FormRequest
+class DepartmentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -29,8 +29,8 @@ class CategoryRequest extends FormRequest
             "translations.*.title" => "required|string",
             "status" =>  "required|boolean",
             'image' => $this->method() == 'PUT' ? 'nullable'.($this->hasFile('image')?'|file|mimes:jpeg,jpg,png,svg,webp':'') : 'required|file|mimes:png,svg,webp,jpg,jpeg' ,
-            'departments' => 'nullable|array',
-            'departments.*' => 'exists:departments,id',
+            'categories' => 'nullable|array',
+            'categories.*' => 'exists:categories,id',
         ];
     }
 }

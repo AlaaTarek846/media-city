@@ -15,6 +15,7 @@ class CategoryResource extends JsonResource
             "title"  => $this->current_translation?->title,
             "image" => $this->image.'',
             "status" => $this->status,
+            "slug" => $this->slug,
         ];
     }
 }

@@ -21,10 +21,10 @@ class BrandSeeder extends Seeder
 
         $Brand->setTranslations([
             'ar' => [
-                'title' => 'أمازون',
+                'title' => 'كانون',
             ],
             'en' => [
-                'title'       => 'Amazon',
+                'title'       => 'Canon',
             ],
 
         ]);
@@ -35,10 +35,10 @@ class BrandSeeder extends Seeder
 
         $Brand->setTranslations([
             'ar' => [
-                'title' => 'بومة',
+                'title' => 'نيكون',
             ],
             'en' => [
-                'title'       => 'Puma',
+                'title'       => 'Nikon',
             ],
 
         ]);
@@ -49,10 +49,10 @@ class BrandSeeder extends Seeder
 
         $Brand->setTranslations([
             'ar' => [
-                'title' => 'أديداس',
+                'title' => 'سوني',
             ],
             'en' => [
-                'title'       => 'Adidas',
+                'title'       => 'Sony',
             ],
 
         ]);
@@ -63,10 +63,10 @@ class BrandSeeder extends Seeder
 
         $Brand->setTranslations([
             'ar' => [
-                'title' => 'نيو بالانس',
+                'title' => 'باناسونيك',
             ],
             'en' => [
-                'title'       => 'New Balance',
+                'title'       => 'Panasonic',
             ],
 
         ]);
@@ -77,10 +77,122 @@ class BrandSeeder extends Seeder
 
         $Brand->setTranslations([
             'ar' => [
-                'title' => 'سامسونج',
+                'title' => 'فوجي فيلم',
             ],
             'en' => [
-                'title'       => 'Samsung',
+                'title'       => 'Fujifilm',
+            ],
+
+        ]);
+
+        $Brand = Brand::create([
+            'image'   => 'br-05.webp',
+        ]);
+
+        $Brand->setTranslations([
+            'ar' => [
+                'title' => 'مانفروتو',
+            ],
+            'en' => [
+                'title'       => 'Manfrotto',
+            ],
+
+        ]);
+
+        $Brand = Brand::create([
+            'image'   => 'br-06.webp',
+        ]);
+
+        $Brand->setTranslations([
+            'ar' => [
+                'title' => 'رود',
+            ],
+            'en' => [
+                'title'       => 'Rode',
+            ],
+
+        ]);
+
+        $Brand = Brand::create([
+            'image'   => 'br-07.webp',
+        ]);
+
+        $Brand->setTranslations([
+            'ar' => [
+                'title' => 'جودوكس',
+            ],
+            'en' => [
+                'title'       => 'Godox',
+            ],
+
+        ]);
+
+        $Brand = Brand::create([
+            'image'   => 'br-11.webp',
+        ]);
+
+        $Brand->setTranslations([
+            'ar' => [
+                'title' => 'سيجما',
+            ],
+            'en' => [
+                'title'       => 'Sigma',
+            ],
+
+        ]);
+
+        $Brand = Brand::create([
+            'image'   => 'br-12.webp',
+        ]);
+
+        $Brand->setTranslations([
+            'ar' => [
+                'title' => 'تامرون',
+            ],
+            'en' => [
+                'title'       => 'Tamron',
+            ],
+
+        ]);
+
+        $Brand = Brand::create([
+            'image'   => 'br-13.webp',
+        ]);
+
+        $Brand->setTranslations([
+            'ar' => [
+                'title' => 'دي جي آي',
+            ],
+            'en' => [
+                'title'       => 'DJI',
+            ],
+
+        ]);
+
+        $Brand = Brand::create([
+            'image'   => 'br-14.webp',
+        ]);
+
+        $Brand->setTranslations([
+            'ar' => [
+                'title' => 'جوبرو',
+            ],
+            'en' => [
+                'title'       => 'GoPro',
+            ],
+
+        ]);
+
+        $Brand = Brand::create([
+            'image'   => 'br-15.webp',
+        ]);
+
+        $Brand->setTranslations([
+            'ar' => [
+                'title' => 'لويبرو',
+            ],
+            'en' => [
+                'title'       => 'Lowepro',
             ],
 
         ]);

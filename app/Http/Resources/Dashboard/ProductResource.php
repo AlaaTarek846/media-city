@@ -15,6 +15,8 @@ class ProductResource extends JsonResource
             "title"       => $this->current_translation?->title,
             "category" => $this->category?->current_translation?->title,
             "brand" => $this->brand?->current_translation?->title,
+            "department" => $this->department?->current_translation?->title,
+            "condition" => $this->condition,
             "type" => $this->type,
             "price" => $this->variants->first()?->price,
             "quantity" => $this->variants->sum('quantity'),

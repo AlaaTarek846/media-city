@@ -9,13 +9,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
-class Category extends Model
+class Department extends Model
 {
-    use HasFactory,SoftDeletes,TranslationsTrait,SearchFilterTrait;
+    use HasFactory,TranslationsTrait,SearchFilterTrait;
 
     protected $guarded = ['id'];
 
-    protected $table = "categories";
+    protected $table = "departments";
 
     public function getImageAttribute($value): string
     {
@@ -23,16 +23,16 @@ class Category extends Model
     }
     public function products()
     {
-        return $this->hasMany(Product::class, 'category_id');
+        return $this->hasMany(Product::class, 'department_id');
     }
 
-    public function departments()
+    public function categories()
     {
-        return $this->belongsToMany(Department::class, 'department_categories', 'category_id', 'department_id');
+        return $this->belongsToMany(Category::class, 'department_categories', 'department_id', 'category_id');
     }
+
     public function getSlugAttribute()
     {
         return Str::slug($this->current_translation?->title);
     }
-
 }
