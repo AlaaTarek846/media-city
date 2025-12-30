@@ -29,13 +29,13 @@ class DatabaseSeeder extends Seeder
         $this->call(ShopByInstagramSeeder::class);
         $this->call(TeamSeeder::class);
         $this->call(BannerSeeder::class);
+        $this->call(DepartmentSeeder::class);
         $this->call(ProductSeeder::class);
         $this->call(DiscountCouponSeeder::class);
         $this->call(OrderStatusSeeder::class);
         $this->call(SettingSeeder::class);
         $this->call(ShippingInformationSeeder::class);
         $this->call(ReturnPolicySeeder::class);
-        $this->call(DepartmentSeeder::class);
         $this->call(BlogSeeder::class);
         $this->call(UserProfileSeeder::class);
 
