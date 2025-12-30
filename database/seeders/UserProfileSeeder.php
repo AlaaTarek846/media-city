@@ -39,7 +39,6 @@ class UserProfileSeeder extends Seeder
 
         PersonProfile::create([
             'user_id' => $personUser->id,
-            'social_media_link' => 'https://facebook.com/person',
             'id_card_front' => 'person_profiles/id_cards/front.jpg',
             'id_card_back' => 'person_profiles/id_cards/back.jpg',
         ]);
@@ -60,7 +59,6 @@ class UserProfileSeeder extends Seeder
             'user_id' => $companyUser->id,
             'commercial_register_image' => 'company_profiles/documents/commercial_register.jpg',
             'tax_card_image' => 'company_profiles/documents/tax_card.jpg',
-            'social_media_link' => 'https://facebook.com/company',
         ]);
 
         // Create Studio User

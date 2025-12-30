@@ -53,8 +53,8 @@
                                 <i class="fas fa-angle-right"></i>Contact Us</a>
                         </li>
                         <li>
-                            <a href="term_condition.html" class="footer-contain-2">
-                                <i class="fas fa-angle-right"></i>Terms & Coditions</a>
+                            <a href="{{route('terms-condition')}}" class="footer-contain-2">
+                                <i class="fas fa-angle-right"></i>Terms & Conditions</a>
                         </li>
                         <li>
                             <a href="{{route('renting')}}" class="footer-contain-2">

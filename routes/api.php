@@ -33,6 +33,7 @@ use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Dashboard\ProductAttributeController;
 use App\Http\Controllers\Dashboard\ProductController;
 use App\Http\Controllers\Dashboard\ReturnPolicyController;
+use App\Http\Controllers\Dashboard\TermsConditionController;
 use App\Http\Controllers\Dashboard\ShippingInformationController;
 use App\Http\Controllers\Dashboard\ShopByInstagramController;
 use App\Http\Controllers\Dashboard\TeamController;
@@ -123,6 +124,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => [ChangeLang::class]], fun
 
         Route::apiResource('settings', SettingController::class);
         Route::apiResource('return-policy', ReturnPolicyController::class);
+        Route::apiResource('terms-condition', TermsConditionController::class);
         Route::apiResource('shipping-information', ShippingInformationController::class);
 
         // backup

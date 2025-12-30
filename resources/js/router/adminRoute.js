@@ -34,6 +34,7 @@ import shopByInstagram from "./adminRoute/shopByInstagram.js";
 import team from "./adminRoute/team.js";
 import discountCoupon from "./adminRoute/discountCoupon.js";
 import returnPolicy from "./adminRoute/returnPolicy.js";
+import termsCondition from "./adminRoute/termsCondition.js";
 import shippingInformation from "./adminRoute/shippingInformation.js";
 import order from "./adminRoute/order.js";
 
@@ -94,6 +95,7 @@ const routes = [
             ...discountCoupon,
             ...setting,
             ...returnPolicy,
+            ...termsCondition,
             ...shippingInformation,
             ...order,
             ...article,

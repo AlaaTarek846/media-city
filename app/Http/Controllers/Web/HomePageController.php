@@ -33,6 +33,7 @@ use App\Http\Requests\Website\UpdateProfileRequest;
 use App\Models\PersonProfile;
 use App\Models\CompanyProfile;
 use App\Models\StudioProfile;
+use App\Models\TermsCondition;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
@@ -316,6 +317,14 @@ class HomePageController extends Controller
         $teams = Team::with('translation')->latest()->get();
 
         return view('website.about-us', compact('aboutUs', 'teams', 'brands'));
+    }
+
+    public function termsCondition(Request $request)
+    {
+        // جلب بيانات Terms & Conditions مع الترجمة الحالية
+        $termsCondition = TermsCondition::with(['translation', 'translations'])->first();
+
+        return view('website.terms-condition', compact('termsCondition'));
     }
 
      public function shop(Request $request){

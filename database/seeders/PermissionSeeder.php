@@ -128,6 +128,8 @@ class PermissionSeeder extends Seeder
             ['name' => 'setting edit'  ,  'category' => 'Setting'],
             ['name' => 'return policy read'  ,  'category' => 'Setting'],
             ['name' => 'return policy edit'  ,  'category' => 'Setting'],
+            ['name' => 'terms conditions read'  ,  'category' => 'Setting'],
+            ['name' => 'terms conditions edit'  ,  'category' => 'Setting'],
             ['name' => 'shipping information read'  ,  'category' => 'Setting'],
             ['name' => 'shipping information edit'  ,  'category' => 'Setting'],
 

@@ -28347,3 +28347,7 @@ header .offcanvas-backdrop {
 .form-floating>label {
     left: unset;
 }
+.ms-3 {
+    margin-right: 1rem !important;
+    margin-left: unset !important;
+}

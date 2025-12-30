@@ -43,6 +43,7 @@ Route::group(['middleware' => [ChangeLangForWeb::class]], function () {
 
     Route::get('/contact', [HomePageController::class, 'contact'])->name('contact');
     Route::get('/about-us', [HomePageController::class, 'aboutUs'])->name('about-us');
+    Route::get('/terms-condition', [HomePageController::class, 'termsCondition'])->name('terms-condition');
     Route::get('/shopping-cart', [HomePageController::class, 'shoppingCart']);
 //        ->middleware('auth:user');
     Route::get('/checkout', [HomePageController::class, 'checkout']);
