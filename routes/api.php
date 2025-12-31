@@ -104,6 +104,7 @@ Route::group(['prefix' => 'web', 'middleware' => [ChangeLang::class,StartSession
     Route::post('/cart/add-single', [CartController::class, 'addSingleProduct'])->middleware('auth:user');
     Route::post('/cart/sync', [CartController::class, 'syncCart'])->middleware('auth:user');
     Route::get('/cart/items', [CartController::class, 'getCartItems'])->middleware('auth:user');
+    Route::put('/cart/update-quantity/{id}', [CartController::class, 'updateQuantity'])->middleware('auth:user');
     Route::delete('/delete-cart/{id}', [CartController::class, 'destroy'])->middleware('auth:user');    // Route::get('terms',[WebPagesController::class,'terms']);
     // Route::get('privacy',[WebPagesController::class,'privacy']);
 });

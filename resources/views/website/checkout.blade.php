@@ -345,6 +345,60 @@
                 </div>
 
                 <div class="col-lg-4">
+                    <div class="summery-box p-sticky">
+                        <div class="summery-header">
+                            <h3>Cart Total</h3>
+                        </div>
+
+                        <div class="summery-contain">
+                            <div class="coupon-cart">
+                                <h6 class="text-content mb-2">Coupon Apply</h6>
+                                <div class="mb-3 coupon-box input-group">
+                                    <input type="email" class="form-control" id="exampleFormControlInput1"
+                                           placeholder="Enter Coupon Code Here...">
+                                    <button class="btn-apply">Apply</button>
+                                </div>
+                            </div>
+                            <ul>
+                                <li>
+                                    <h4>Subtotal</h4>
+                                    <h4 class="price">EGP 125.65</h4>
+                                </li>
+
+                                <li>
+                                    <h4>Coupon Discount</h4>
+                                    <h4 class="price">(-) 0.00</h4>
+                                </li>
+
+                                <li class="align-items-start">
+                                    <h4>Shipping</h4>
+                                    <h4 class="price text-end">EGP 6.90</h4>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <ul class="summery-total">
+                            <li class="list-total border-top-0">
+                                <h4>Total (USD)</h4>
+                                <h4 class="price theme-color">EGP 132.58</h4>
+                            </li>
+                        </ul>
+
+                        <div class="button-group cart-button">
+                            <ul>
+                                <li>
+                                    <button onclick="location.href = 'checkout.html';"
+                                            class="btn btn-animation proceed-btn fw-bold">Process To Checkout</button>
+                                </li>
+
+                                <li>
+                                    <button onclick="location.href = 'index.html';"
+                                            class="btn btn-light shopping-button text-dark">
+                                        <i class="fa-solid fa-arrow-left-long"></i>Return To Shopping</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                     <div class="right-side-summery-box">
                         <div class="summery-box-2">
                             <div class="summery-header">
