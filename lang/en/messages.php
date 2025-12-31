@@ -230,6 +230,8 @@ return [
     "trips"=>'Trips',
     "account"=>'Account',
     "SKU"=>'SKU',
+    "Items"=>'Items',
+    "Your cart is empty"=>'Your cart is empty',
     "Stock"=>'Stock',
     "Items Available"=>'Items Available',
     "membership_loyalty_points"=>'Membership and loyalty points',

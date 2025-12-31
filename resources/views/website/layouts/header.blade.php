@@ -171,7 +171,7 @@
                                     </a>
                                 </li>
                                 <li class="right-side">
-                                    <div class="onhover-dropdown header-badge">
+                                    <div class="onhover-dropdown header-badge cart-section-custom">
                                         <button type="button" class="btn p-0 position-relative header-wishlist">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                  viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -190,6 +190,7 @@
 
                                         <div class="onhover-div">
                                             <ul class="cart-list">
+
                                                 <li class="product-box-contain">
                                                     <div class="drop-cart">
                                                         <a href="{{route('productDetail',1)}}" class="drop-image">
@@ -209,25 +210,6 @@
                                                     </div>
                                                 </li>
 
-                                                <li class="product-box-contain">
-                                                    <div class="drop-cart">
-                                                        <a href="{{route('productDetail',1)}}" class="drop-image">
-                                                            <img src="{{asset('website/images/veg-3/home/19.jpg')}}"
-                                                                 class="blur-up lazyloaded" alt="">
-                                                        </a>
-
-                                                        <div class="drop-contain">
-                                                            <a href="{{route('productDetail',1)}}">
-                                                                <h5>Peanut Butter Bite Premium Butter Cookies 600 g
-                                                                </h5>
-                                                            </a>
-                                                            <h6><span>1 x</span> EGP25.68</h6>
-                                                            <button class="close-button close_button">
-                                                                <i class="fa-solid fa-xmark"></i>
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </li>
                                             </ul>
 
                                             <div class="price-box">
@@ -236,9 +218,9 @@
                                             </div>
 
                                             <div class="button-group">
-                                                <a href="cart.html" class="btn btn-sm cart-button">View Cart</a>
-                                                <a href="checkout.html" class="btn btn-sm cart-button theme-bg-color
-                                                    text-white">Checkout</a>
+                                                <a href="{{ route('shoppingCart') }}" class="btn btn-sm cart-button">{{ __('messages.View Cart') }}</a>
+                                                <a href="{{ route('checkout') }}" class="btn btn-sm cart-button theme-bg-color
+                                                    text-white">{{ __('messages.Checkout') }}</a>
                                             </div>
                                         </div>
                                     </div>
@@ -346,7 +328,7 @@
                                             // Categories are already filtered by status in ViewServiceProvider
                                             $departmentCategories = $department->categories;
                                         @endphp
-                                        
+
                                         @if($departmentTranslation && $departmentCategories->count() > 0)
                                             <li class="onhover-category-list">
                                                 {{-- Department Link --}}
@@ -431,9 +413,18 @@
                                     <!-- <li class="nav-item">
                                         <a class="nav-link ps-xl-2 ps-0" href="javascript:void(0)">Home</a>
                                     </li> -->
-                                    <li class="nav-item">
-                                        <a class="nav-link ps-xl-2 ps-0" href="{{route('renting')}}">Our Items</a>
-                                    </li>
+                                    @foreach($headerDepartments as $department)
+                                        @if($department->id == 1)
+                                        @php
+                                            $departmentTranslation = $department->translation ?? $department->translations->first();
+                                        @endphp
+                                        <li class="nav-item">
+                                            <a class="nav-link ps-xl-2 ps-0" href="{{ url('/shop/' . $department->slug) }}">
+                                                {{ $departmentTranslation->title }}
+                                            </a>
+                                        </li>
+                                        @endif
+                                    @endforeach
                                     <li class="nav-item">
                                         <a class="nav-link ps-xl-2 ps-0" href="{{route('best-seller')}}">Best Seller </a>
                                     </li>

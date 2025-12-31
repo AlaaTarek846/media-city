@@ -358,18 +358,14 @@
     </button>
     <h6>
         <i class="iconly-Bag-2 icli"></i>
-        <span>5 Items</span>
+        <span class="cart-items-count">0 {{ __('messages.Items') }}</span>
     </h6>
     <ul class="items-image">
-        <li>
-            <img src="{{asset('website/images/veg-3/home/1.png')}}" alt="">
+        <li class="text-center py-2">
+            <p class="text-muted mb-0 small">{{ __('messages.Your cart is empty') }}</p>
         </li>
-        <li>
-            <img src="{{asset('website/images/veg-3/home/2.png')}}" alt="">
-        </li>
-        <li>+3</li>
     </ul>
-    <button onclick="location.href = 'cart.html';" class="btn item-button btn-sm fw-bold">EGP 20.70</button>
+    <a href="{{ route('shoppingCart') }}" class="btn item-button btn-sm fw-bold cart-total-price">{{ __('messages.currency') }} 0.00</a>
 </div>
 <!-- Items section End -->
 

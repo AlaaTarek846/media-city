@@ -441,25 +441,25 @@
                                 </div>
 
                                 <div class="note-box product-packege">
-                                    <div class="cart_qty qty-box product-qty">
-                                        <div class="input-group">
-                                            <button type="button" class="qty-right-plus" data-type="plus" data-field="">
-                                                <i class="fa fa-plus" aria-hidden="true"></i>
-                                            </button>
-                                            <input class="form-control input-number qty-input" type="text"
-                                                       name="quantity" value="1" min="1" id="product-quantity">
-                                                <button type="button" class="qty-left-minus" data-type="minus" data-field="">
-                                                <i class="fa fa-minus" aria-hidden="true"></i>
-                                            </button>
-                                        </div>
-                                    </div>
+{{--                                    <div class="cart_qty qty-box product-qty">--}}
+{{--                                        <div class="input-group">--}}
+{{--                                            <button type="button" class="qty-right-plus" data-type="plus" data-field="">--}}
+{{--                                                <i class="fa fa-plus" aria-hidden="true"></i>--}}
+{{--                                            </button>--}}
+{{--                                            <input class="form-control input-number qty-input" type="text"--}}
+{{--                                                       name="quantity" value="1" min="1" id="product-quantity">--}}
+{{--                                                <button type="button" class="qty-left-minus" data-type="minus" data-field="">--}}
+{{--                                                <i class="fa fa-minus" aria-hidden="true"></i>--}}
+{{--                                            </button>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
 
-                                        <button class="btn btn-md bg-dark cart-button text-white w-100"
-                                                id="add-to-cart-btn"
-                                                data-product-id="{{ $product->id }}"
-                                                data-variant-id="{{ $firstVariant->id ?? '' }}">
-                                            {{ __('messages.Add to cart') }}
-                                        </button>
+                                    <button class="btn btn-md bg-dark cart-button text-white w-100 addcart-button"
+                                            id="add-to-cart-btn"
+                                            data-product-id="{{ $product->id }}"
+                                            data-variant-id="{{ $firstVariant->id ?? '' }}">
+                                        {{ __('messages.Add to cart') }}
+                                    </button>
                                 </div>
 
                                 <div class="buy-box">

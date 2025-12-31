@@ -32,614 +32,83 @@
     <!-- Wishlist Section Start -->
     <section class="wishlist-section section-b-space">
         <div class="container-fluid-lg">
-            <div class="row g-sm-3 g-2">
-                <div class="col-xxl-2 col-lg-3 col-md-4 col-6 product-box-contain">
-                    <div class="product-box-3 h-100">
-                        <div class="product-header">
-                            <div class="product-image">
-                                <a href="product-left-thumbnail.html">
-                                    <img src="{{asset('website/images/veg-3/home/16.jpg')}}" class="img-fluid blur-up lazyload"
-                                         alt="">
-                                </a>
+            <div class="row g-sm-3 g-2" id="wishlist-products-container">
+                @if(auth('user')->check() && $wishlistProducts->count() > 0)
+                    @foreach($wishlistProducts as $product)
+                        @php
+                            $translation = $product->translation ?? $product->translations->first();
+                            $variant = $product->variants->first();
+                            $category = $product->category;
+                        @endphp
+                        <div class="col-xxl-2 col-lg-3 col-md-4 col-6 product-box-contain" data-product-id="{{ $product->id }}">
+                            <div class="product-box-3 h-100">
+                                <div class="product-header">
+                                    <div class="product-image">
+                                        <a href="{{ route('productDetail', $translation->slug ?? $product->id) }}">
+                                            <img src="{{ $product->image }}" class="img-fluid blur-up lazyload" alt="{{ $translation->title ?? '' }}">
+                                        </a>
 
-                                <div class="product-header-top">
-                                    <button class="btn wishlist-button close_button">
-                                        <i data-feather="x"></i>
-                                    </button>
+                                        <div class="product-header-top">
+                                            <button class="btn wishlist-button close_button" data-product-id="{{ $product->id }}">
+                                                <i data-feather="x"></i>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="product-footer">
-                            <div class="product-detail">
-                                <span class="span-name">Lenses</span>
-                                <a href="product-left-thumbnail.html">
-                                    <h5 class="name">Sony Alpha a7 IV Mirrorless Digital Camera</h5>
-                                </a>
-                                <h6 class="unit mt-1">250 ml</h6>
-                                <h5 class="price">
-                                    <span class="theme-color">EGP 08.02</span>
-                                    <del>EGP 15.15</del>
-                                </h5>
+                                <div class="product-footer">
+                                    <div class="product-detail">
+                                        <span class="span-name">{{ $category->translation->title ?? ($category->translations->first()->title ?? '') }}</span>
+                                        <a href="{{ route('productDetail', $translation->slug ?? $product->id) }}">
+                                            <h5 class="name">{{ $translation->title ?? '' }}</h5>
+                                        </a>
+                                        @if($variant && $variant->unit)
+                                            <h6 class="unit mt-1">{{ $variant->unit }}</h6>
+                                        @endif
+                                        <h5 class="price">
+                                            @if($variant && $variant->discount_price && $variant->discount_percentage > 0)
+                                                <span class="theme-color">{{ __('messages.currency') }} {{ number_format($variant->discount_price, 2) }}</span>
+                                                <del>{{ __('messages.currency') }} {{ number_format($variant->price_before_discount ?? $variant->price, 2) }}</del>
+                                            @elseif($variant)
+                                                <span class="theme-color">{{ __('messages.currency') }} {{ number_format($variant->price, 2) }}</span>
+                                            @endif
+                                        </h5>
 
-                                <div class="add-to-cart-box bg-white mt-2">
-                                    <button class="btn btn-add-cart addcart-button">Add
-                                        <span class="add-icon bg-light-gray">
-                                            <i class="fa-solid fa-plus"></i>
-                                        </span>
-                                    </button>
-                                    <div class="cart_qty qty-box">
-                                        <div class="input-group bg-white">
-                                            <button type="button" class="qty-left-minus bg-gray" data-type="minus"
-                                                    data-field="">
-                                                <i class="fa fa-minus" aria-hidden="true"></i>
+                                        <div class="add-to-cart-box bg-white mt-2">
+                                            <button class="btn btn-add-cart addcart-button" 
+                                                    data-product-id="{{ $product->id }}"
+                                                    data-variant-id="{{ $variant->id ?? '' }}">{{ __('messages.Add') }}
+                                                <span class="add-icon bg-light-gray">
+                                                    <i class="fa-solid fa-plus"></i>
+                                                </span>
                                             </button>
-                                            <input class="form-control input-number qty-input" type="text"
-                                                   name="quantity" value="0">
-                                            <button type="button" class="qty-right-plus bg-gray" data-type="plus"
-                                                    data-field="">
-                                                <i class="fa fa-plus" aria-hidden="true"></i>
-                                            </button>
+                                            <div class="cart_qty qty-box">
+                                                <div class="input-group bg-white">
+                                                    <button type="button" class="qty-left-minus bg-gray" data-type="minus" data-field="">
+                                                        <i class="fa fa-minus" aria-hidden="true"></i>
+                                                    </button>
+                                                    <input class="form-control input-number qty-input" type="text" name="quantity" value="0">
+                                                    <button type="button" class="qty-right-plus bg-gray" data-type="plus" data-field="">
+                                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-
-                <div class="col-xxl-2 col-lg-3 col-md-4 col-6 product-box-contain">
-                    <div class="product-box-3 h-100">
-                        <div class="product-header">
-                            <div class="product-image">
-                                <a href="product-left-thumbnail.html">
-                                    <img src="{{asset('website/images/veg-3/home/17.jpg')}}" class="img-fluid blur-up lazyload"
-                                         alt="">
-                                </a>
-
-                                <div class="product-header-top">
-                                    <button class="btn wishlist-button close_button">
-                                        <i data-feather="x"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="product-footer">
-                            <div class="product-detail">
-                                <span class="span-name">Lenses</span>
-                                <a href="product-left-thumbnail.html">
-                                    <h5 class="name">Sony Alpha a7 IV Mirrorless Digital Camera</h5>
-                                </a>
-                                <h6 class="unit mt-1">350 G</h6>
-                                <h5 class="price">
-                                    <span class="theme-color">EGP 04.33</span>
-                                    <del>EGP 10.36</del>
-                                </h5>
-
-                                <div class="add-to-cart-box bg-white mt-2">
-                                    <button class="btn btn-add-cart addcart-button">Add
-                                        <span class="add-icon bg-light-gray">
-                                            <i class="fa-solid fa-plus"></i>
-                                        </span>
-                                    </button>
-                                    <div class="cart_qty qty-box">
-                                        <div class="input-group bg-white">
-                                            <button type="button" class="qty-left-minus bg-gray" data-type="minus"
-                                                    data-field="">
-                                                <i class="fa fa-minus" aria-hidden="true"></i>
-                                            </button>
-                                            <input class="form-control input-number qty-input" type="text"
-                                                   name="quantity" value="0">
-                                            <button type="button" class="qty-right-plus bg-gray" data-type="plus"
-                                                    data-field="">
-                                                <i class="fa fa-plus" aria-hidden="true"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                    @endforeach
+                @elseif(auth('user')->check() && $wishlistProducts->count() == 0)
+                    <div class="col-12">
+                        <div class="text-center py-5">
+                            <h4>{{ __('messages.Your wishlist is empty') }}</h4>
+                            <p class="text-muted">{{ __('messages.Add products to your wishlist to see them here') }}</p>
                         </div>
                     </div>
-                </div>
-
-                <div class="col-xxl-2 col-lg-3 col-md-4 col-6 product-box-contain">
-                    <div class="product-box-3 h-100">
-                        <div class="product-header">
-                            <div class="product-image">
-                                <a href="product-left-thumbnail.html">
-                                    <img src="{{asset('website/images/veg-3/home/19.jpg')}}" class="img-fluid blur-up lazyload"
-                                         alt="">
-                                </a>
-
-                                <div class="product-header-top">
-                                    <button class="btn wishlist-button close_button">
-                                        <i data-feather="x"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="product-footer">
-                            <div class="product-detail">
-                                <span class="span-name">Cameras</span>
-                                <a href="product-left-thumbnail.html">
-                                    <h5 class="name">Sony Alpha a7 IV Mirrorless Digital Camera</h5>
-                                </a>
-
-                                <h5 class="price">
-                                    <span class="theme-color">EGP 12.52</span>
-                                    <del>EGP 13.62</del>
-                                </h5>
-
-                                <div class="add-to-cart-box bg-white mt-2">
-                                    <button class="btn btn-add-cart addcart-button">Add
-                                        <span class="add-icon bg-light-gray">
-                                            <i class="fa-solid fa-plus"></i>
-                                        </span>
-                                    </button>
-                                    <div class="cart_qty qty-box">
-                                        <div class="input-group bg-white">
-                                            <button type="button" class="qty-left-minus bg-gray" data-type="minus"
-                                                    data-field="">
-                                                <i class="fa fa-minus" aria-hidden="true"></i>
-                                            </button>
-                                            <input class="form-control input-number qty-input" type="text"
-                                                   name="quantity" value="0">
-                                            <button type="button" class="qty-right-plus bg-gray" data-type="plus"
-                                                    data-field="">
-                                                <i class="fa fa-plus" aria-hidden="true"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-xxl-2 col-lg-3 col-md-4 col-6 product-box-contain">
-                    <div class="product-box-3 h-100">
-                        <div class="product-header">
-                            <div class="product-image">
-                                <a href="product-left-thumbnail.html">
-                                    <img src="{{asset('website/images/veg-3/home/22.jpg')}}" class="img-fluid blur-up lazyload"
-                                         alt="">
-                                </a>
-
-                                <div class="product-header-top">
-                                    <button class="btn wishlist-button close_button">
-                                        <i data-feather="x"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="product-footer">
-                            <div class="product-detail">
-                                <span class="span-name">Cameras</span>
-                                <a href="product-left-thumbnail.html">
-                                    <h5 class="name">Sony Alpha a7 IV Mirrorless Digital Camera</h5>
-                                </a>
-                                <h6 class="unit mt-1">100 G</h6>
-                                <h5 class="price">
-                                    <span class="theme-color">EGP 10.25</span>
-                                    <del>EGP 12.36</del>
-                                </h5>
-
-                                <div class="add-to-cart-box bg-white mt-2">
-                                    <button class="btn btn-add-cart addcart-button">Add
-                                        <span class="add-icon bg-light-gray">
-                                            <i class="fa-solid fa-plus"></i>
-                                        </span>
-                                    </button>
-                                    <div class="cart_qty qty-box">
-                                        <div class="input-group bg-white">
-                                            <button type="button" class="qty-left-minus bg-gray" data-type="minus"
-                                                    data-field="">
-                                                <i class="fa fa-minus" aria-hidden="true"></i>
-                                            </button>
-                                            <input class="form-control input-number qty-input" type="text"
-                                                   name="quantity" value="0">
-                                            <button type="button" class="qty-right-plus bg-gray" data-type="plus"
-                                                    data-field="">
-                                                <i class="fa fa-plus" aria-hidden="true"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-xxl-2 col-lg-3 col-md-4 col-6 product-box-contain">
-                    <div class="product-box-3 h-100">
-                        <div class="product-header">
-                            <div class="product-image">
-                                <a href="product-left-thumbnail.html">
-                                    <img src="{{asset('website/images/veg-3/home/15.jpg')}}" class="img-fluid blur-up lazyload"
-                                         alt="">
-                                </a>
-
-                                <div class="product-header-top">
-                                    <button class="btn wishlist-button close_button">
-                                        <i data-feather="x"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="product-footer">
-                            <div class="product-detail">
-                                <span class="span-name">Lenses</span>
-                                <a href="product-left-thumbnail.html">
-                                    <h5 class="name">Sony Alpha a7 IV Mirrorless Digital Camera</h5>
-                                </a>
-                                <h6 class="unit mt-1">550 G</h6>
-                                <h5 class="price">
-                                    <span class="theme-color">EGP 14.25</span>
-                                    <del>EGP 16.57</del>
-                                </h5>
-
-                                <div class="add-to-cart-box bg-white mt-2">
-                                    <button class="btn btn-add-cart addcart-button">Add
-                                        <span class="add-icon bg-light-gray">
-                                            <i class="fa-solid fa-plus"></i>
-                                        </span>
-                                    </button>
-                                    <div class="cart_qty qty-box">
-                                        <div class="input-group bg-white">
-                                            <button type="button" class="qty-left-minus bg-gray" data-type="minus"
-                                                    data-field="">
-                                                <i class="fa fa-minus" aria-hidden="true"></i>
-                                            </button>
-                                            <input class="form-control input-number qty-input" type="text"
-                                                   name="quantity" value="0">
-                                            <button type="button" class="qty-right-plus bg-gray" data-type="plus"
-                                                    data-field="">
-                                                <i class="fa fa-plus" aria-hidden="true"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-xxl-2 col-lg-3 col-md-4 col-6 product-box-contain">
-                    <div class="product-box-3 h-100">
-                        <div class="product-header">
-                            <div class="product-image">
-                                <a href="product-left-thumbnail.html">
-                                    <img src="{{asset('website/images/veg-3/home/23.jpg')}}" class="img-fluid blur-up lazyload"
-                                         alt="">
-                                </a>
-
-                                <div class="product-header-top">
-                                    <button class="btn wishlist-button close_button">
-                                        <i data-feather="x"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="product-footer">
-                            <div class="product-detail">
-                                <span class="span-name">Lenses</span>
-                                <a href="product-left-thumbnail.html">
-                                    <h5 class="name">Sony Alpha a7 IV Mirrorless Digital Camera</h5>
-                                </a>
-                                <h6 class="unit mt-1">1 Kg</h6>
-                                <h5 class="price">
-                                    <span class="theme-color">EGP 12.68</span>
-                                    <del>EGP 14.69</del>
-                                </h5>
-
-                                <div class="add-to-cart-box bg-white mt-2">
-                                    <button class="btn btn-add-cart addcart-button">Add
-                                        <span class="add-icon bg-light-gray">
-                                            <i class="fa-solid fa-plus"></i>
-                                        </span>
-                                    </button>
-                                    <div class="cart_qty qty-box">
-                                        <div class="input-group bg-white">
-                                            <button type="button" class="qty-left-minus bg-gray" data-type="minus"
-                                                    data-field="">
-                                                <i class="fa fa-minus" aria-hidden="true"></i>
-                                            </button>
-                                            <input class="form-control input-number qty-input" type="text"
-                                                   name="quantity" value="0">
-                                            <button type="button" class="qty-right-plus bg-gray" data-type="plus"
-                                                    data-field="">
-                                                <i class="fa fa-plus" aria-hidden="true"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-xxl-2 col-lg-3 col-md-4 col-6 product-box-contain">
-                    <div class="product-box-3 h-100">
-                        <div class="product-header">
-                            <div class="product-image">
-                                <a href="product-left-thumbnail.html">
-                                    <img src="{{asset('website/images/veg-3/home/16.jpg')}}" class="img-fluid blur-up lazyload"
-                                         alt="">
-                                </a>
-
-                                <div class="product-header-top">
-                                    <button class="btn wishlist-button close_button">
-                                        <i data-feather="x"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="product-footer">
-                            <div class="product-detail">
-                                <span class="span-name">Lenses</span>
-                                <a href="product-left-thumbnail.html">
-                                    <h5 class="name">Sony Alpha a7 IV Mirrorless Digital Camera</h5>
-                                </a>
-                                <h6 class="unit mt-1">250 ml</h6>
-                                <h5 class="price">
-                                    <span class="theme-color">EGP 08.02</span>
-                                    <del>EGP 15.15</del>
-                                </h5>
-
-                                <div class="add-to-cart-box bg-white mt-2">
-                                    <button class="btn btn-add-cart addcart-button">Add
-                                        <span class="add-icon bg-light-gray">
-                                            <i class="fa-solid fa-plus"></i>
-                                        </span>
-                                    </button>
-                                    <div class="cart_qty qty-box">
-                                        <div class="input-group bg-white">
-                                            <button type="button" class="qty-left-minus bg-gray" data-type="minus"
-                                                    data-field="">
-                                                <i class="fa fa-minus" aria-hidden="true"></i>
-                                            </button>
-                                            <input class="form-control input-number qty-input" type="text"
-                                                   name="quantity" value="0">
-                                            <button type="button" class="qty-right-plus bg-gray" data-type="plus"
-                                                    data-field="">
-                                                <i class="fa fa-plus" aria-hidden="true"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-xxl-2 col-lg-3 col-md-4 col-6 product-box-contain">
-                    <div class="product-box-3 h-100">
-                        <div class="product-header">
-                            <div class="product-image">
-                                <a href="product-left-thumbnail.html">
-                                    <img src="{{asset('website/images/veg-3/home/17.jpg')}}" class="img-fluid blur-up lazyload"
-                                         alt="">
-                                </a>
-
-                                <div class="product-header-top">
-                                    <button class="btn wishlist-button close_button">
-                                        <i data-feather="x"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="product-footer">
-                            <div class="product-detail">
-                                <span class="span-name">Lenses</span>
-                                <a href="product-left-thumbnail.html">
-                                    <h5 class="name">Sony Alpha a7 IV Mirrorless Digital Camera</h5>
-                                </a>
-                                <h6 class="unit mt-1">350 G</h6>
-                                <h5 class="price">
-                                    <span class="theme-color">EGP 04.33</span>
-                                    <del>EGP 10.36</del>
-                                </h5>
-
-                                <div class="add-to-cart-box bg-white mt-2">
-                                    <button class="btn btn-add-cart addcart-button">Add
-                                        <span class="add-icon bg-light-gray">
-                                            <i class="fa-solid fa-plus"></i>
-                                        </span>
-                                    </button>
-                                    <div class="cart_qty qty-box">
-                                        <div class="input-group bg-white">
-                                            <button type="button" class="qty-left-minus bg-gray" data-type="minus"
-                                                    data-field="">
-                                                <i class="fa fa-minus" aria-hidden="true"></i>
-                                            </button>
-                                            <input class="form-control input-number qty-input" type="text"
-                                                   name="quantity" value="0">
-                                            <button type="button" class="qty-right-plus bg-gray" data-type="plus"
-                                                    data-field="">
-                                                <i class="fa fa-plus" aria-hidden="true"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-xxl-2 col-lg-3 col-md-4 col-6 product-box-contain">
-                    <div class="product-box-3 h-100">
-                        <div class="product-header">
-                            <div class="product-image">
-                                <a href="product-left-thumbnail.html">
-                                    <img src="{{asset('website/images/veg-3/home/19.jpg')}}" class="img-fluid blur-up lazyload"
-                                         alt="">
-                                </a>
-
-                                <div class="product-header-top">
-                                    <button class="btn wishlist-button close_button">
-                                        <i data-feather="x"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="product-footer">
-                            <div class="product-detail">
-                                <span class="span-name">Cameras</span>
-                                <a href="product-left-thumbnail.html">
-                                    <h5 class="name">Sony Alpha a7 IV Mirrorless Digital Camera</h5>
-                                </a>
-
-                                <h5 class="price">
-                                    <span class="theme-color">EGP 12.52</span>
-                                    <del>EGP 13.62</del>
-                                </h5>
-
-                                <div class="add-to-cart-box bg-white mt-2">
-                                    <button class="btn btn-add-cart addcart-button">Add
-                                        <span class="add-icon bg-light-gray">
-                                            <i class="fa-solid fa-plus"></i>
-                                        </span>
-                                    </button>
-                                    <div class="cart_qty qty-box">
-                                        <div class="input-group bg-white">
-                                            <button type="button" class="qty-left-minus bg-gray" data-type="minus"
-                                                    data-field="">
-                                                <i class="fa fa-minus" aria-hidden="true"></i>
-                                            </button>
-                                            <input class="form-control input-number qty-input" type="text"
-                                                   name="quantity" value="0">
-                                            <button type="button" class="qty-right-plus bg-gray" data-type="plus"
-                                                    data-field="">
-                                                <i class="fa fa-plus" aria-hidden="true"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-xxl-2 col-lg-3 col-md-4 col-6 product-box-contain">
-                    <div class="product-box-3 h-100">
-                        <div class="product-header">
-                            <div class="product-image">
-                                <a href="product-left-thumbnail.html">
-                                    <img src="{{asset('website/images/veg-3/home/22.jpg')}}" class="img-fluid blur-up lazyload"
-                                         alt="">
-                                </a>
-
-                                <div class="product-header-top">
-                                    <button class="btn wishlist-button close_button">
-                                        <i data-feather="x"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="product-footer">
-                            <div class="product-detail">
-                                <span class="span-name">Cameras</span>
-                                <a href="product-left-thumbnail.html">
-                                    <h5 class="name">Sony Alpha a7 IV Mirrorless Digital Camera</h5>
-                                </a>
-                                <h6 class="unit mt-1">100 G</h6>
-                                <h5 class="price">
-                                    <span class="theme-color">EGP 10.25</span>
-                                    <del>EGP 12.36</del>
-                                </h5>
-
-                                <div class="add-to-cart-box bg-white mt-2">
-                                    <button class="btn btn-add-cart addcart-button">Add
-                                        <span class="add-icon bg-light-gray">
-                                            <i class="fa-solid fa-plus"></i>
-                                        </span>
-                                    </button>
-                                    <div class="cart_qty qty-box">
-                                        <div class="input-group bg-white">
-                                            <button type="button" class="qty-left-minus bg-gray" data-type="minus"
-                                                    data-field="">
-                                                <i class="fa fa-minus" aria-hidden="true"></i>
-                                            </button>
-                                            <input class="form-control input-number qty-input" type="text"
-                                                   name="quantity" value="0">
-                                            <button type="button" class="qty-right-plus bg-gray" data-type="plus"
-                                                    data-field="">
-                                                <i class="fa fa-plus" aria-hidden="true"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-xxl-2 col-lg-3 col-md-4 col-6 product-box-contain">
-                    <div class="product-box-3 h-100">
-                        <div class="product-header">
-                            <div class="product-image">
-                                <a href="product-left-thumbnail.html">
-                                    <img src="{{asset('website/images/veg-3/home/15.jpg')}}" class="img-fluid blur-up lazyload"
-                                         alt="">
-                                </a>
-
-                                <div class="product-header-top">
-                                    <button class="btn wishlist-button close_button">
-                                        <i data-feather="x"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="product-footer">
-                            <div class="product-detail">
-                                <span class="span-name">Lenses</span>
-                                <a href="product-left-thumbnail.html">
-                                    <h5 class="name">Sony Alpha a7 IV Mirrorless Digital Camera</h5>
-                                </a>
-                                <h6 class="unit mt-1">550 G</h6>
-                                <h5 class="price">
-                                    <span class="theme-color">EGP 14.25</span>
-                                    <del>EGP 16.57</del>
-                                </h5>
-
-                                <div class="add-to-cart-box bg-white mt-2">
-                                    <button class="btn btn-add-cart addcart-button">Add
-                                        <span class="add-icon bg-light-gray">
-                                            <i class="fa-solid fa-plus"></i>
-                                        </span>
-                                    </button>
-                                    <div class="cart_qty qty-box">
-                                        <div class="input-group bg-white">
-                                            <button type="button" class="qty-left-minus bg-gray" data-type="minus"
-                                                    data-field="">
-                                                <i class="fa fa-minus" aria-hidden="true"></i>
-                                            </button>
-                                            <input class="form-control input-number qty-input" type="text"
-                                                   name="quantity" value="0">
-                                            <button type="button" class="qty-right-plus bg-gray" data-type="plus"
-                                                    data-field="">
-                                                <i class="fa fa-plus" aria-hidden="true"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                @endif
             </div>
         </div>
     </section>
     <!-- Wishlist Section End -->
-
-
-
 @endsection
+

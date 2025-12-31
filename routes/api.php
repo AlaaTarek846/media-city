@@ -96,9 +96,14 @@ Route::group(['prefix' => 'web', 'middleware' => [ChangeLang::class,StartSession
     Route::post('/wishlist/add', [FavoriteController::class, 'addToWishlist'])->middleware('auth:user');
     Route::post('/wishlist/sync', [FavoriteController::class, 'syncWishlist'])->middleware('auth:user');
     Route::get('/wishlist/check/{productId}', [FavoriteController::class, 'checkWishlist'])->middleware('auth:user');
+    Route::get('/wishlist/products', [FavoriteController::class, 'getWishlistProducts'])->middleware('auth:user');
+    Route::post('/wishlist/products-by-ids', [FavoriteController::class, 'getProductsByIds']);
 
     Route::get('/get-carts', [CartController::class, 'index'])->middleware('auth:user');
     Route::post('/add-carts', [CartController::class, 'store'])->middleware('auth:user');
+    Route::post('/cart/add-single', [CartController::class, 'addSingleProduct'])->middleware('auth:user');
+    Route::post('/cart/sync', [CartController::class, 'syncCart'])->middleware('auth:user');
+    Route::get('/cart/items', [CartController::class, 'getCartItems'])->middleware('auth:user');
     Route::delete('/delete-cart/{id}', [CartController::class, 'destroy'])->middleware('auth:user');    // Route::get('terms',[WebPagesController::class,'terms']);
     // Route::get('privacy',[WebPagesController::class,'privacy']);
 });
