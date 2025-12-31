@@ -257,6 +257,12 @@
                             <span class="side-menu__label">{{$t('global.returnPolicy')}}</span>
                         </router-link>
                     </li>
+                     <li class="slide" v-show="permission.includes('terms conditions read')">
+                        <router-link :to="{name:'termsCondition'}" class="side-menu__item">
+                            <i class="bx bx-file-blank side-menu__icon" aria-hidden="true"></i>
+                            <span class="side-menu__label">{{$t('global.termsConditions')}}</span>
+                        </router-link>
+                    </li>
                      <li class="slide" v-show="permission.includes('shipping information read')">
                         <router-link :to="{name:'shippingInformation'}" class="side-menu__item">
                             <i class="bx bx-car side-menu__icon" aria-hidden="true"></i>

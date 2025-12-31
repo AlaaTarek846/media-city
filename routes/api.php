@@ -34,6 +34,7 @@ use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Dashboard\ProductAttributeController;
 use App\Http\Controllers\Dashboard\ProductController;
 use App\Http\Controllers\Dashboard\ReturnPolicyController;
+use App\Http\Controllers\Dashboard\TermsConditionController;
 use App\Http\Controllers\Dashboard\ShippingInformationController;
 use App\Http\Controllers\Dashboard\ShopByInstagramController;
 use App\Http\Controllers\Dashboard\TeamController;
@@ -70,6 +71,8 @@ Route::group(['prefix' => 'web', 'middleware' => [ChangeLang::class,StartSession
     Route::post('password/reset',[RegisterController::class,'reset'])->middleware(['guest:user']);
     
      Route::get('/show-product/{id}', [HomePageController::class, 'showProduct']);
+     Route::get('/product-modal/{id}', [HomePageController::class, 'getProductForModal']); // AJAX endpoint for quick view modal
+     Route::get('/shop-products', [HomePageController::class, 'getShopProducts']); // AJAX endpoint for shop filtering
      Route::post('/add-favorite/{id}', [HomePageController::class, 'addFavorite'])->middleware('auth:user');
      Route::post('/proceed-to-checkout', [HomePageController::class, 'proceedToCheckout'])->middleware('auth:user');
      Route::post('/check-coupon', [HomePageController::class, 'checkCoupon'])->middleware('auth:user');
@@ -88,6 +91,11 @@ Route::group(['prefix' => 'web', 'middleware' => [ChangeLang::class,StartSession
     Route::get('/get-favorites', [FavoriteController::class, 'index'])->middleware('auth:user');
     Route::post('/add-favorites', [FavoriteController::class, 'store'])->middleware('auth:user');
     Route::delete('/delete-favorite/{id}', [FavoriteController::class, 'destroy'])->middleware('auth:user');
+    
+    // Wishlist routes
+    Route::post('/wishlist/add', [FavoriteController::class, 'addToWishlist'])->middleware('auth:user');
+    Route::post('/wishlist/sync', [FavoriteController::class, 'syncWishlist'])->middleware('auth:user');
+    Route::get('/wishlist/check/{productId}', [FavoriteController::class, 'checkWishlist'])->middleware('auth:user');
 
     Route::get('/get-carts', [CartController::class, 'index'])->middleware('auth:user');
     Route::post('/add-carts', [CartController::class, 'store'])->middleware('auth:user');
@@ -132,6 +140,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => [ChangeLang::class]], fun
 
         Route::apiResource('settings', SettingController::class);
         Route::apiResource('return-policy', ReturnPolicyController::class);
+        Route::apiResource('terms-condition', TermsConditionController::class);
         Route::apiResource('shipping-information', ShippingInformationController::class);
 
         // backup

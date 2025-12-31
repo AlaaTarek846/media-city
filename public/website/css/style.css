@@ -16915,35 +16915,35 @@ header .offcanvas-backdrop {
     z-index: 1
 }
 
-.product-box .label-tag::after {
-    content: "";
-    position: absolute;
-    width: 15px;
-    height: 15px;
-    top: 16px;
-    left: 44px;
-    border-bottom: solid 15px #faba02;
-    border-left: solid 15px transparent;
-    border-right: solid 15px transparent;
-    -webkit-transform: rotate(0);
-    transform: rotate(0);
-    z-index: 1
-}
+/*.product-box .label-tag::after {*/
+/*    content: "";*/
+/*    position: absolute;*/
+/*    width: 15px;*/
+/*    height: 15px;*/
+/*    top: 16px;*/
+/*    left: 44px;*/
+/*    border-bottom: solid 15px #faba02;*/
+/*    border-left: solid 15px transparent;*/
+/*    border-right: solid 15px transparent;*/
+/*    -webkit-transform: rotate(0);*/
+/*    transform: rotate(0);*/
+/*    z-index: 1*/
+/*}*/
 
-.product-box .label-tag::before {
-    content: "";
-    position: absolute;
-    width: 15px;
-    height: 15px;
-    top: 0;
-    left: 44px;
-    border-bottom: solid 15px #faba02;
-    border-left: solid 15px transparent;
-    border-right: solid 15px transparent;
-    -webkit-transform: rotate(180deg);
-    transform: rotate(180deg);
-    z-index: 1
-}
+/*.product-box .label-tag::before {*/
+/*    content: "";*/
+/*    position: absolute;*/
+/*    width: 15px;*/
+/*    height: 15px;*/
+/*    top: 0;*/
+/*    left: 44px;*/
+/*    border-bottom: solid 15px #faba02;*/
+/*    border-left: solid 15px transparent;*/
+/*    border-right: solid 15px transparent;*/
+/*    -webkit-transform: rotate(180deg);*/
+/*    transform: rotate(180deg);*/
+/*    z-index: 1*/
+/*}*/
 
 .product-box .label-tag span {
     font-weight: 700

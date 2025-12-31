@@ -1,8 +1,5 @@
 @extends('website.layouts.layoutPage')
 @section('pageTitle',__('messages.Shop'))
-@push("headStyle")
-    @vite(['resources/js/single-components.js'])
-@endpush
 @section('body')
 
 

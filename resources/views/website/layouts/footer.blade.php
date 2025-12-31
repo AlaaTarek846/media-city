@@ -53,8 +53,8 @@
                                 <i class="fas fa-angle-right"></i>Contact Us</a>
                         </li>
                         <li>
-                            <a href="term_condition.html" class="footer-contain-2">
-                                <i class="fas fa-angle-right"></i>Terms & Coditions</a>
+                            <a href="{{route('terms-condition')}}" class="footer-contain-2">
+                                <i class="fas fa-angle-right"></i>Terms & Conditions</a>
                         </li>
                         <li>
                             <a href="{{route('renting')}}" class="footer-contain-2">
@@ -169,6 +169,7 @@
     </div>
 </footer>
 <!-- Footer End -->
+
 <!-- Quick View Modal Box Start -->
 <div class="modal fade theme-modal view-modal" id="view" tabindex="-1" aria-labelledby="exampleModalLabel"
      aria-hidden="true">
@@ -180,78 +181,85 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="row g-sm-4 g-2">
-                    <div class="col-lg-6">
-                        <div class="slider-image">
-                            <img src="{{asset('website/images/veg-3/home/17.jpg')}}" class="img-fluid blur-up lazyload" alt="">
-                        </div>
+                {{-- Loading Indicator --}}
+                <div id="modal-loading" class="text-center py-5" style="display: none;">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">{{ __('messages.Loading') }}...</span>
                     </div>
+                </div>
 
-                    <div class="col-lg-6">
-                        <div class="right-sidebar-modal">
-                            <h4 class="title-name">Sony Alpha a7 IV Mirrorless Digital Camera</h4>
-                            <h4 class="price">EGP 36.99</h4>
-                            <div class="product-rating">
-                                <ul class="rating">
-                                    <li>
-                                        <i data-feather="star" class="fill"></i>
-                                    </li>
-                                    <li>
-                                        <i data-feather="star" class="fill"></i>
-                                    </li>
-                                    <li>
-                                        <i data-feather="star" class="fill"></i>
-                                    </li>
-                                    <li>
-                                        <i data-feather="star" class="fill"></i>
-                                    </li>
-                                    <li>
-                                        <i data-feather="star"></i>
-                                    </li>
+                {{-- Product Content --}}
+                <div id="modal-product-content" style="display: none;">
+                    <div class="row g-sm-4 g-2">
+                        {{-- Product Images Slider --}}
+                        <div class="col-lg-6">
+                            <div id="product-images-slider" class="carousel slide" data-bs-ride="carousel"
+                                 @if(app()->getLocale() == 'ar') dir="rtl" @endif>
+                                {{-- Carousel Indicators --}}
+                                <div class="carousel-indicators" id="carousel-indicators">
+                                    {{-- Will be populated dynamically --}}
+                                </div>
+
+                                {{-- Carousel Inner --}}
+                                <div class="carousel-inner" id="carousel-inner">
+                                    {{-- Will be populated dynamically --}}
+                                </div>
+
+                                {{-- Carousel Controls --}}
+                                @if(app()->getLocale() == 'ar')
+                                    <button class="carousel-control-prev" type="button" data-bs-target="#product-images-slider" data-bs-slide="next">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">{{ __('messages.Previous') }}</span>
+                                    </button>
+                                    <button class="carousel-control-next" type="button" data-bs-target="#product-images-slider" data-bs-slide="prev">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">{{ __('messages.Next') }}</span>
+                                    </button>
+                                @else
+                                    <button class="carousel-control-prev" type="button" data-bs-target="#product-images-slider" data-bs-slide="prev">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">{{ __('messages.Previous') }}</span>
+                                    </button>
+                                    <button class="carousel-control-next" type="button" data-bs-target="#product-images-slider" data-bs-slide="next">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">{{ __('messages.Next') }}</span>
+                                    </button>
+                                @endif
+                            </div>
+                        </div>
+
+                        {{-- Product Details --}}
+                        <div class="col-lg-6">
+                            <div class="right-sidebar-modal">
+                                <h4 class="title-name" id="modal-product-title"></h4>
+
+                                {{-- Price --}}
+                                <div id="modal-product-price"></div>
+
+                                {{-- Rating --}}
+                                <div class="product-rating" id="modal-product-rating">
+                                    {{-- Will be populated dynamically --}}
+                                </div>
+
+                                {{-- Product Description --}}
+                                <div class="product-detail" id="modal-product-description">
+                                    {{-- Will be populated dynamically --}}
+                                </div>
+
+                                {{-- Product Info (Brand, SKU, Category) --}}
+                                <ul class="brand-list" id="modal-product-info">
+                                    {{-- Will be populated dynamically --}}
                                 </ul>
-                                <span class="ms-2 text-danger">6 sold in last 16 hours</span>
-                            </div>
 
-                            <div class="product-detail">
-                                <h4>Product Details :</h4>
-                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quae voluptatem modi
-                                    debitis tempore, praesentium qui sunt quod temporibus optio cumque et neque quas
-                                    eaque veritatis aspernatur corporis atque ipsum at ut id doloremque consequatur
-                                    esse! Dolore quo adipisci dolorum, quam atque sapiente, distinctio quasi
-                                    reiciendis assumenda accusantium laborum, eum quaerat!</p>
-                            </div>
-
-                            <ul class="brand-list">
-                                <li>
-                                    <div class="brand-box">
-                                        <h5>Brand Name:</h5>
-                                        <h6>Black Forest</h6>
-                                    </div>
-                                </li>
-
-                                <li>
-                                    <div class="brand-box">
-                                        <h5>Product Code:</h5>
-                                        <h6>W0690034</h6>
-                                    </div>
-                                </li>
-
-                                <li>
-                                    <div class="brand-box">
-                                        <h5>Product Type:</h5>
-                                        <h6>Whdasfasfke</h6>
-                                    </div>
-                                </li>
-                            </ul>
-
-
-                            <div class="modal-button">
-                                <button onclick="location.href = 'cart.html';"
-                                        class="btn btn-md add-cart-button icon">Add
-                                    To Cart</button>
-                                <button onclick="location.href = 'product-left.html';"
-                                        class="btn theme-bg-color view-button icon text-white fw-bold btn-md">
-                                    View More Details</button>
+                                {{-- Action Buttons --}}
+                                <div class="modal-button">
+                                    <button class="btn btn-md add-cart-button icon" id="modal-add-to-cart-btn">
+                                        {{ __('messages.Add') }} {{ __('messages.To Cart') }}
+                                    </button>
+                                    <a href="#" class="btn theme-bg-color view-button icon text-white fw-bold btn-md" id="modal-view-details-btn">
+                                        {{ __('messages.View More Details') }}
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -261,139 +269,6 @@
     </div>
 </div>
 <!-- Quick View Modal Box End -->
-
-<div class="modal fade theme-modal view-modal rent-modal" id="viewfd" tabindex="-1" aria-hidden="true" dir="ltr">
-    <div class="modal-dialog modal-dialog-centered modal-xl modal-fullscreen-sm-down">
-        <div class="modal-content">
-            <div class="modal-header p-0">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-
-            <div class="modal-body">
-                <div class="row g-sm-4 g-3 align-items-start">
-                    <!-- Image (left on large screens) -->
-                    <div class="col-lg-6 order-lg-1">
-                        <div class="slider-image text-center">
-                            <img src="{{asset('website/images/veg-3/home/16.jpg')}}" class="img-fluid rounded-2"
-                                 alt="Product image">
-                        </div>
-                    </div>
-
-                    <!-- Details + Rent form (right on large screens) -->
-                    <div class="col-lg-6 order-lg-2">
-                        <div class="right-sidebar-modal">
-                            <h3 class="title-name mb-2">Sony Alpha a7 IV Mirrorless Digital Camera</h3>
-
-                            <!-- Price + unit -->
-                            <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
-                                <div class="price h4 m-0">
-                                    <span class="text-dark fw-bold">EGP</span>
-                                    <span id="unitPrice" class="fw-bold" data-price-per-day="12.50">12.50</span>
-                                </div>
-                                <span class="text-muted">/ per</span>
-                                <select id="priceUnit" class="form-select form-select-sm w-auto">
-                                    <option value="day" selected>day</option>
-                                    <option value="week">week</option>
-                                    <option value="month">month</option>
-                                </select>
-                            </div>
-
-                            <p class="small text-muted mb-4">
-                                Full-frame mirrorless camera ideal for photo & 4K video.
-                            </p>
-
-                            <!-- ===== Rent Form ===== -->
-                            <form id="rentForm" class="needs-validation" novalidate>
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label class="form-label">Full name</label>
-                                        <input type="text" name="fullName" class="form-control" required>
-                                        <div class="invalid-feedback">Please enter your name.</div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label class="form-label">Phone</label>
-                                        <input type="tel" name="phone" class="form-control" inputmode="tel"
-                                               required>
-                                        <div class="invalid-feedback">Please enter a valid phone.</div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label class="form-label">Email (optional)</label>
-                                        <input type="email" name="email" class="form-control">
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label class="form-label">Start date</label>
-                                        <input type="date" name="startDate" class="form-control" required>
-                                        <div class="invalid-feedback">Please pick a start date.</div>
-                                    </div>
-
-                                    <div class="col-md-4">
-                                        <label class="form-label">Duration</label>
-                                        <input type="number" id="durationValue" name="durationValue"
-                                               class="form-control" min="1" value="1" required>
-                                        <div class="invalid-feedback">Enter a valid duration.</div>
-                                    </div>
-
-                                    <div class="col-md-4">
-                                        <label class="form-label">Unit</label>
-                                        <select id="durationUnit" name="durationUnit" class="form-select" required>
-                                            <option value="day" selected>day(s)</option>
-                                            <option value="week">week(s)</option>
-                                            <option value="month">month(s)</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="col-md-4">
-                                        <label class="form-label">Quantity</label>
-                                        <input type="number" id="qty" name="qty" class="form-control" min="1"
-                                               value="1" required>
-                                        <div class="invalid-feedback">Select quantity.</div>
-                                    </div>
-
-                                    <div class="col-12">
-                                        <label class="form-label">Notes (optional)</label>
-                                        <textarea name="notes" rows="3" class="form-control"
-                                                  placeholder="e.g. extra lens / delivery…"></textarea>
-                                    </div>
-
-                                    <!-- Estimate -->
-                                    <div class="col-12">
-                                        <div
-                                            class="bg-light rounded-2 p-3 d-flex justify-content-between align-items-center">
-                                            <span class="fw-semibold">Estimated total</span>
-                                            <span class="h5 m-0"><strong>EGP</strong> <span
-                                                    id="totalEstimate">12.50</span></span>
-                                        </div>
-                                        <div class="form-text">Estimate based on base rate. Final price will be
-                                            confirmed after we contact you.</div>
-                                    </div>
-
-                                    <div class="col-12 d-grid gap-2 mt-2">
-                                        <button type="submit" class="btn btn-danger btn-lg">Send rental
-                                            request</button>
-                                        <button type="button" class="btn btn-outline-secondary"
-                                                data-bs-dismiss="modal">Cancel</button>
-                                    </div>
-                                </div>
-
-                                <!-- Hidden data -->
-                                <input type="hidden" name="productId" value="SKU-12345">
-                                <input type="hidden" name="productName"
-                                       value="Sony Alpha a7 IV Mirrorless Digital Camera">
-                            </form>
-                            <!-- ===== /Rent Form ===== -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-</div>
 
 <!-- Deal Box Modal Start -->
 <div class="modal fade theme-modal deal-modal" id="deal-box" tabindex="-1" aria-labelledby="exampleModalLabel"
@@ -470,8 +345,6 @@
     </div>
 </div>
 <!-- Deal Box Modal End -->
-
-
 
 <!-- Items section Start -->
 <div class="button-item">
@@ -569,3 +442,7 @@
 <!-- Bg overlay Start -->
 <div class="bg-overlay"></div>
 <!-- Bg overlay End -->
+
+@push('headScript')
+
+@endpush

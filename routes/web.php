@@ -43,16 +43,17 @@ Route::group(['middleware' => [ChangeLangForWeb::class]], function () {
 
     Route::get('/contact', [HomePageController::class, 'contact'])->name('contact');
     Route::get('/about-us', [HomePageController::class, 'aboutUs'])->name('about-us');
+    Route::get('/terms-condition', [HomePageController::class, 'termsCondition'])->name('terms-condition');
     Route::get('/shopping-cart', [HomePageController::class, 'shoppingCart']);
 //        ->middleware('auth:user');
     Route::get('/checkout', [HomePageController::class, 'checkout']);
 //        ->middleware('auth:user');
-//    Route::get('/wishlist', [HomePageController::class, 'wishlist'])->middleware('auth:user');
     Route::get('/wishlist', [HomePageController::class, 'wishlist'])->name('wishlist');
     Route::get('/checkout-thankyou', [HomePageController::class, 'checkoutThankyou'])->middleware('auth:user');
     Route::get('/product-detail/{id}', [HomePageController::class, 'productDetail'])->name('productDetail');
     Route::get('/rent-retail/{id}', [HomePageController::class, 'rentDetail'])->name('rentDetail');
-    Route::get('/shop', [HomePageController::class, 'shop'])->name('shop');
+    // Shop route with department and category slugs (SEO-friendly URLs)
+    Route::get('/shop/{department?}/{category?}', [HomePageController::class, 'shop'])->name('shop');
     Route::get('/renting', [HomePageController::class, 'renting'])->name('renting');
 
     Route::get('/category', [HomePageController::class, 'category']);

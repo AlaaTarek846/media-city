@@ -338,49 +338,83 @@
                             </div>
 
                             <ul class="category-list">
-                                <li class="onhover-category-list">
-                                    <a href="{{route('shop')}}" class="category-name">
-                                        <img src="{{asset('website/svg/1/Cinema-camera.png')}}" alt="">
-                                        <h6>Cameras</h6>
-                                        @if (app()->getLocale() == 'ar')
-                                            <i class="fa-solid fa-angle-left"></i>
-                                        @else
-                                            <i class="fa-solid fa-angle-right"></i>
+                                {{-- Loop through Departments with their Categories --}}
+                                @if(isset($headerDepartments) && $headerDepartments->count() > 0)
+                                    @foreach($headerDepartments as $department)
+                                        @php
+                                            $departmentTranslation = $department->translation ?? $department->translations->first();
+                                            // Categories are already filtered by status in ViewServiceProvider
+                                            $departmentCategories = $department->categories;
+                                        @endphp
+                                        
+                                        @if($departmentTranslation && $departmentCategories->count() > 0)
+                                            <li class="onhover-category-list">
+                                                {{-- Department Link --}}
+                                                <a href="{{ url('/shop/' . $department->slug) }}" class="category-name">
+                                                    @if($department->image)
+                                                        <img src="{{ $department->image }}" alt="{{ $departmentTranslation->title }}">
+                                                    @else
+                                                        <img src="{{asset('website/svg/1/Cinema-camera.png')}}" alt="{{ $departmentTranslation->title }}">
+                                                    @endif
+                                                    <h6>{{ $departmentTranslation->title }}</h6>
+                                                    @if (app()->getLocale() == 'ar')
+                                                        <i class="fa-solid fa-angle-left"></i>
+                                                    @else
+                                                        <i class="fa-solid fa-angle-right"></i>
+                                                    @endif
+                                                </a>
+
+                                                {{-- Categories Dropdown --}}
+                                                <div class="onhover-category-box">
+                                                    <div class="list-1">
+                                                        <div class="category-title-box">
+                                                            <h5>{{ $departmentTranslation->title }}</h5>
+                                                        </div>
+                                                        <ul>
+                                                            @foreach($departmentCategories as $category)
+                                                                @php
+                                                                    $categoryTranslation = $category->translation ?? $category->translations->first();
+                                                                @endphp
+                                                                @if($categoryTranslation)
+                                                                    <li>
+                                                                        <a href="{{ url('/shop/' . $department->slug . '/' . $category->slug) }}">
+                                                                            {{ $categoryTranslation->title }}
+                                                                        </a>
+                                                                    </li>
+                                                                @endif
+                                                            @endforeach
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </li>
                                         @endif
-                                    </a>
-
-                                    <div class="onhover-category-box">
-                                        <div class="list-1">
-                                            <div class="category-title-box">
-                                                <h5>Cameras</h5>
+                                    @endforeach
+                                @else
+                                    {{-- Fallback if no departments --}}
+                                    <li class="onhover-category-list">
+                                        <a href="{{route('shop')}}" class="category-name">
+                                            <img src="{{asset('website/svg/1/Cinema-camera.png')}}" alt="">
+                                            <h6>{{ __('messages.Categories') }}</h6>
+                                            @if (app()->getLocale() == 'ar')
+                                                <i class="fa-solid fa-angle-left"></i>
+                                            @else
+                                                <i class="fa-solid fa-angle-right"></i>
+                                            @endif
+                                        </a>
+                                        <div class="onhover-category-box">
+                                            <div class="list-1">
+                                                <div class="category-title-box">
+                                                    <h5>{{ __('messages.Categories') }}</h5>
+                                                </div>
+                                                <ul>
+                                                    <li>
+                                                        <a href="{{route('shop')}}">{{ __('messages.All Products') }}</a>
+                                                    </li>
+                                                </ul>
                                             </div>
-                                            <ul>
-                                                <li>
-                                                    <a href="{{route('shop')}}">Cinema Camera</a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{route('shop')}}">DCLR & Mirrorless</a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{route('shop')}}">Action Cameras</a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{route('blog')}}">Blogs</a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{route('shop')}}">Beans & Okra</a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{route('shop')}}">Cabbage & Cauliflower</a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{route('shop')}}">Specialty</a>
-                                                </li>
-                                            </ul>
                                         </div>
-
-                                    </div>
-                                </li>
+                                    </li>
+                                @endif
                             </ul>
                         </div>
                     </div>

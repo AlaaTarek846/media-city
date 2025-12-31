@@ -49,7 +49,13 @@
                         data: formData,
                         dataType: 'json',
                         success: function(data) {
-                            window.location.href = '{{ route("web.home") }}?logged=success';
+                            // Trigger custom event for wishlist sync
+                            $(document).trigger('userLoggedIn');
+                            
+                            // Small delay to ensure event is processed
+                            setTimeout(function() {
+                                window.location.href = '{{ route("web.home") }}?logged=success';
+                            }, 100);
                         },
                         error: function(xhr, status, error) {
                             console.error('Error:', error);

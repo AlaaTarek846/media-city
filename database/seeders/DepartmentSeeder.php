@@ -11,6 +11,9 @@ class DepartmentSeeder extends Seeder
 {
     /**
      * Run the database seeds.
+     * 
+     * Note: Images should be placed in public/upload/general/
+     * All images should have similar dimensions to Cinema-camera.png
      */
     public function run(): void
     {
@@ -18,8 +21,9 @@ class DepartmentSeeder extends Seeder
         Department::truncate();
         DepartmentCategory::truncate();
 
+        // Renting Department - Key icon represents renting/leasing
         $department1 = Department::create([
-            'image'   => 'rent.png',
+            'image'   => 'rent.png', // Key icon - appropriate for renting/leasing
         ]);
 
         $department1->setTranslations([
@@ -32,8 +36,9 @@ class DepartmentSeeder extends Seeder
 
         ]);
 
+        // Buying Department - Shopping cart icon represents buying/purchasing
         $department2 = Department::create([
-            'image'   => 'buy-button.png',
+            'image'   => 'buy-button.png', // Shopping cart icon - appropriate for buying/purchasing
         ]);
 
         $department2->setTranslations([
