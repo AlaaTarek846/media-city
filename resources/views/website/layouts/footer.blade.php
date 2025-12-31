@@ -277,67 +277,62 @@
         <div class="modal-content">
             <div class="modal-header">
                 <div>
-                    <h5 class="modal-title w-100" id="deal_today">Deal Today</h5>
-                    <p class="mt-1 text-content">Recommended deals for you.</p>
+                    <h5 class="modal-title w-100" id="deal_today">{{ __('messages.Deal Today') }}</h5>
+                    <p class="mt-1 text-content">{{ __('messages.Recommended deals for you') }}.</p>
                 </div>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('messages.Close') }}">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
             <div class="modal-body">
                 <div class="deal-offer-box">
                     <ul class="deal-offer-list">
-                        <li class="list-1">
-                            <div class="deal-offer-contain">
-                                <a href="{{route('shop')}}" class="deal-image">
-                                    <img src="{{asset('website/images/veg-3/home/15.jpg')}}" class="blur-up lazyload" alt="">
-                                </a>
+                        @if(isset($dealProducts) && $dealProducts->count() > 0)
+                            @foreach($dealProducts as $index => $product)
+                                @php
+                                    $translation = $product->translation ?? $product->translations->first();
+                                    $variant = $product->variants->first();
+                                    $listClass = 'list-' . (($index % 4) + 1);
+                                @endphp
+                                @if($translation && $variant && $variant->discount_percentage > 0)
+                                    @php
+                                        // price is the discounted price, price_before_discount is the original price
+                                        $discountPrice = $variant->price;
+                                        $priceBeforeDiscount = $variant->price_before_discount > 0 ? $variant->price_before_discount : $variant->price;
+                                    @endphp
+                                    <li class="{{ $listClass }}">
+                                        <div class="deal-offer-contain">
+                                            <a href="{{ route('productDetail', $translation->slug) }}" class="deal-image">
+                                                <img src="{{ $product->image }}" class="blur-up lazyload" alt="{{ $translation->title }}">
+                                            </a>
 
-                                <a href="{{route('shop')}}" class="deal-contain">
-                                    <h5>Canon EOS C300 Mark III Digital Cinema Camera (EF Lens Mount)</h5>
-                                    <h6>EGP 52.57 <del>57.62</del> </h6>
-                                </a>
-                            </div>
-                        </li>
-
-                        <li class="list-2">
-                            <div class="deal-offer-contain">
-                                <a href="{{route('shop')}}" class="deal-image">
-                                    <img src="{{asset('website/images/veg-3/home/16.jpg')}}" class="blur-up lazyload" alt="">
-                                </a>
-
-                                <a href="{{route('shop')}}" class="deal-contain">
-                                    <h5>Canon EOS C300 Mark III Digital Cinema Camera (EF Lens Mount)</h5>
-                                    <h6>EGP 52.57 <del>57.62</del></h6>
-                                </a>
-                            </div>
-                        </li>
-
-                        <li class="list-3">
-                            <div class="deal-offer-contain">
-                                <a href="{{route('shop')}}" class="deal-image">
-                                    <img src="{{asset('website/images/veg-3/home/17.jpg')}}" class="blur-up lazyload" alt="">
-                                </a>
-
-                                <a href="{{route('shop')}}" class="deal-contain">
-                                    <h5>Canon EOS C300 Mark III Digital Cinema Camera (EF Lens Mount)</h5>
-                                    <h6>EGP 52.57 <del>57.62</del> </h6>
-                                </a>
-                            </div>
-                        </li>
-
-                        <li class="list-1">
-                            <div class="deal-offer-contain">
-                                <a href="{{route('shop')}}" class="deal-image">
-                                    <img src="{{asset('website/images/veg-3/home/19.jpg')}}" class="blur-up lazyload" alt="">
-                                </a>
-
-                                <a href="{{route('shop')}}" class="deal-contain">
-                                    <h5>Canon EOS C300 Mark III Digital Cinema Camera (EF Lens Mount)</h5>
-                                    <h6>EGP 52.57 <del>57.62</del> </h6>
-                                </a>
-                            </div>
-                        </li>
+                                            <a href="{{ route('productDetail', $translation->slug) }}" class="deal-contain">
+                                                <h5>{{ $translation->title }}</h5>
+                                                <h6>
+                                                    {{ __('messages.currency') }} {{ number_format($discountPrice, 2) }}
+                                                    @if($priceBeforeDiscount > $discountPrice)
+                                                        <del>{{ __('messages.currency') }} {{ number_format($priceBeforeDiscount, 2) }}</del>
+                                                    @endif
+                                                </h6>
+                                            </a>
+                                        </div>
+                                    </li>
+                                @endif
+                            @endforeach
+                        @else
+                            {{-- Fallback if no products with discounts --}}
+                            <li class="list-1">
+                                <div class="deal-offer-contain">
+                                    <a href="{{route('shop')}}" class="deal-image">
+                                        <img src="{{asset('website/images/veg-3/home/15.jpg')}}" class="blur-up lazyload" alt="">
+                                    </a>
+                                    <a href="{{route('shop')}}" class="deal-contain">
+                                        <h5>{{ __('messages.No deals available') }}</h5>
+                                        <h6>{{ __('messages.Check back soon') }}</h6>
+                                    </a>
+                                </div>
+                            </li>
+                        @endif
                     </ul>
                 </div>
             </div>

@@ -289,7 +289,7 @@
         categories: [],
         brands: [],
         condition: '',
-        search: '',
+        search: `{{ request('search') }}` ?? '',
         sort_by: 'latest',
         page: 1
     };
