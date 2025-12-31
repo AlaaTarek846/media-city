@@ -8903,6 +8903,8 @@ header .onhover-dropdown .onhover-div {
     background-color: #fff;
     z-index: 1001;
     width: 320px;
+    max-height: 400px;
+    overflow-y: auto;
     border-radius: 10px;
     padding: calc(14px + (30 - 14) * ((100vw - 320px) / (1920 - 320))) calc(11px + (20 - 11) * ((100vw - 320px) / (1920 - 320)));
     -webkit-box-shadow: -1px 0 10px 0 rgba(34, 34, 34, 0.07), 5px 20px 40px 0 rgba(34, 34, 34, 0.04);
@@ -8911,6 +8913,23 @@ header .onhover-dropdown .onhover-div {
     -webkit-transition: all 0.3s ease-in-out;
     transition: all 0.3s ease-in-out;
     visibility: hidden
+}
+
+header .onhover-dropdown .onhover-div::-webkit-scrollbar {
+    width: 5px; /* عرض شريط التمرير */
+}
+
+header .onhover-dropdown .onhover-div::-webkit-scrollbar-track {
+    background: #9d080f; /* لون خلفية مسار الشريط */
+}
+
+header .onhover-dropdown .onhover-div::-webkit-scrollbar-thumb {
+    background: #888; /* لون زر شريط التمرير */
+    border-radius: 5px; /* حواف مستديرة للزر */
+}
+
+header .onhover-dropdown .onhover-div::-webkit-scrollbar-thumb:hover {
+    background: #9d080f; /* لون الزر عند مرور الماوس فوقه */
 }
 
 [dir="rtl"] header .onhover-dropdown .onhover-div {

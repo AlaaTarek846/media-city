@@ -386,14 +386,6 @@ function readURL(uploader) {
         window.URL.createObjectURL(uploader.files[0]));
 };
 
-/*=====================
-   21. Wishlist box remove js
-   ==========================*/
-$(".close_button").click(function () {
-    $(this).closest(".product-box-contain").fadeOut("slow", function () {
-        $(this).closest(".product-box-contain").remove();
-    });
-});
 
 /*=====================
    22. Category Box js
@@ -455,14 +447,14 @@ $(".bg-overlay").click(function () {
   if (!unitPriceEl) {
     return; // Exit if element doesn't exist
   }
-  
+
   const perDay = parseFloat(unitPriceEl.dataset.pricePerDay || '0');
   const priceUnitSel = document.getElementById('priceUnit');
   const durationVal = document.getElementById('durationValue');
   const durationUnit = document.getElementById('durationUnit');
   const qty = document.getElementById('qty');
   const totalEl = document.getElementById('totalEstimate');
-  
+
   // Check if all required elements exist
   if (!priceUnitSel || !durationVal || !durationUnit || !qty || !totalEl) {
     return; // Exit if any required element is missing

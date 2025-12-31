@@ -165,7 +165,27 @@ class HomePageController extends Controller
 
     public function wishlist()
     {
-        return view('website.wishlist');
+        // If user is authenticated, get wishlist from database
+        if (auth('user')->check()) {
+            $user = auth('user')->user();
+            $wishlistProducts = $user->favorites()
+                ->where('products.status', 1)
+                ->with([
+                    'translation',
+                    'variants' => function($query) {
+                        $query->orderBy('price', 'asc')->limit(1);
+                    },
+                    'category.translation',
+                    'brand.translation',
+                    'department.translation'
+                ])
+                ->get();
+        } else {
+            // For guest users, products will be loaded via JavaScript from localStorage
+            $wishlistProducts = collect();
+        }
+
+        return view('website.wishlist', compact('wishlistProducts'));
     }
 
     public function shoppingCart()

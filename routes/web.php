@@ -5,6 +5,7 @@
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\Web\HomePageController;
 use App\Http\Controllers\Web\RegisterController;
+use App\Http\Middleware\AuthAndCartMiddleware;
 use App\Http\Middleware\AuthMiddleware;
 use App\Http\Middleware\ChangeLangForWeb;
 use Illuminate\Support\Facades\Route;
@@ -44,10 +45,9 @@ Route::group(['middleware' => [ChangeLangForWeb::class]], function () {
     Route::get('/contact', [HomePageController::class, 'contact'])->name('contact');
     Route::get('/about-us', [HomePageController::class, 'aboutUs'])->name('about-us');
     Route::get('/terms-condition', [HomePageController::class, 'termsCondition'])->name('terms-condition');
-    Route::get('/shopping-cart', [HomePageController::class, 'shoppingCart']);
+    Route::get('/shopping-cart', [HomePageController::class, 'shoppingCart'])->name('shoppingCart');
 //        ->middleware('auth:user');
-    Route::get('/checkout', [HomePageController::class, 'checkout']);
-//        ->middleware('auth:user');
+    Route::get('/checkout', [HomePageController::class, 'checkout'])->name('checkout')->middleware(AuthAndCartMiddleware::class);
     Route::get('/wishlist', [HomePageController::class, 'wishlist'])->name('wishlist');
     Route::get('/checkout-thankyou', [HomePageController::class, 'checkoutThankyou'])->middleware('auth:user');
     Route::get('/product-detail/{id}', [HomePageController::class, 'productDetail'])->name('productDetail');

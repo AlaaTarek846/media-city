@@ -7,6 +7,7 @@ use App\Http\Requests\Web\CartRequest;
 use App\Http\Resources\Web\CartResource;
 use App\Models\Cart;
 use App\Models\Product;
+use App\Models\ProductVariant;
 use Illuminate\Http\Request;
 
 class CartController extends Controller
@@ -104,6 +105,220 @@ class CartController extends Controller
         return responseJson(
             null,
             __('messages.Product removed from cart successfully'),
+            200
+        );
+    }
+
+    /**
+     * Add a single product to cart
+     * 
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function addSingleProduct(Request $request)
+    {
+        $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'variant_id' => 'nullable|exists:product_variants,id',
+            'quantity' => 'nullable|integer|min:1'
+        ]);
+
+        $user = auth('user')->user();
+        $productId = $request->product_id;
+        $variantId = $request->variant_id;
+        $quantity = $request->quantity ?? 1;
+
+        // Get product variant or first variant
+        if ($variantId) {
+            $variant = ProductVariant::findOrFail($variantId);
+        } else {
+            $variant = Product::findOrFail($productId)->variants()->first();
+            if (!$variant) {
+                return responseJson(
+                    null,
+                    __('messages.Product variant not found'),
+                    404
+                );
+            }
+        }
+
+        if ($variant->status != 1 || $variant->product->status != 1) {
+            return responseJson(
+                null,
+                __('messages.Product is not available'),
+                404
+            );
+        }
+
+        if ($quantity > $variant->quantity) {
+            return responseJson(
+                null,
+                __('messages.Quantity exceeds available stock'),
+                400
+            );
+        }
+
+        // Check if cart item already exists
+        $cartItem = $user->carts()
+            ->where('product_id', $productId)
+            ->where('product_variant_id', $variant->id)
+            ->first();
+
+        if ($cartItem) {
+            // Update quantity
+            $newQuantity = $cartItem->quantity + $quantity;
+            if ($newQuantity > $variant->quantity) {
+                return responseJson(
+                    null,
+                    __('messages.Quantity exceeds available stock'),
+                    400
+                );
+            }
+            $cartItem->increment('quantity', $quantity);
+            $cartItem->update(['price' => $variant->price]);
+        } else {
+            // Create new cart item
+            $user->carts()->create([
+                'product_id' => $productId,
+                'quantity' => $quantity,
+                'product_variant_id' => $variant->id,
+                'price' => $variant->price,
+            ]);
+        }
+
+        return responseJson(
+            null,
+            __('messages.Product added to cart successfully'),
+            200
+        );
+    }
+
+    /**
+     * Sync cart from localStorage after login
+     * 
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function syncCart(Request $request)
+    {
+        $request->validate([
+            'products' => 'required|array',
+            'products.*.product_id' => 'required|exists:products,id',
+            'products.*.variant_id' => 'nullable|exists:product_variants,id',
+            'products.*.quantity' => 'required|integer|min:1'
+        ]);
+
+        $user = auth('user')->user();
+        $products = $request->products;
+        $added = 0;
+        $skipped = 0;
+
+        foreach ($products as $productData) {
+            $productId = $productData['product_id'];
+            $variantId = $productData['variant_id'] ?? null;
+            $quantity = $productData['quantity'] ?? 1;
+
+            // Get product variant
+            if ($variantId) {
+                $variant = ProductVariant::find($variantId);
+            } else {
+                $variant = Product::find($productId)?->variants()->first();
+            }
+
+            if (!$variant || $variant->status != 1 || $variant->product->status != 1) {
+                $skipped++;
+                continue;
+            }
+
+            // Check if cart item already exists
+            $cartItem = $user->carts()
+                ->where('product_id', $productId)
+                ->where('product_variant_id', $variant->id)
+                ->first();
+
+            if ($cartItem) {
+                // Update quantity if needed
+                $newQuantity = max($cartItem->quantity, $quantity);
+                if ($newQuantity <= $variant->quantity) {
+                    $cartItem->update([
+                        'quantity' => $newQuantity,
+                        'price' => $variant->price
+                    ]);
+                    $added++;
+                } else {
+                    $skipped++;
+                }
+            } else {
+                // Create new cart item
+                if ($quantity <= $variant->quantity) {
+                    $user->carts()->create([
+                        'product_id' => $productId,
+                        'quantity' => $quantity,
+                        'product_variant_id' => $variant->id,
+                        'price' => $variant->price,
+                    ]);
+                    $added++;
+                } else {
+                    $skipped++;
+                }
+            }
+        }
+
+        return responseJson(
+            [
+                'added' => $added,
+                'skipped' => $skipped
+            ],
+            __('messages.Cart synced successfully'),
+            200
+        );
+    }
+
+    /**
+     * Get cart items with full product details
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getCartItems()
+    {
+        $user = auth('user')->user();
+        
+        $cartItems = $user->carts()
+            ->with([
+                'product.translation',
+                'product.images',
+                'productVariant'
+            ])
+            ->get();
+
+        $formattedItems = $cartItems->map(function($item) {
+            $translation = $item->product->translation ?? $item->product->translations->first();
+            $variant = $item->productVariant;
+            
+            return [
+                'id' => $item->id,
+                'product_id' => $item->product_id,
+                'variant_id' => $item->product_variant_id,
+                'title' => $translation->title ?? '',
+                'slug' => $translation->slug ?? '',
+                'image' => $item->product->image,
+                'quantity' => $item->quantity,
+                'price' => $item->price,
+                'total' => $item->price * $item->quantity,
+                'unit' => $variant->unit ?? '',
+            ];
+        });
+
+        $total = $formattedItems->sum('total');
+        $itemsCount = $formattedItems->sum('quantity');
+
+        return responseJson(
+            [
+                'items' => $formattedItems,
+                'total' => $total,
+                'items_count' => $itemsCount
+            ],
+            __('messages.Cart items fetched successfully'),
             200
         );
     }
