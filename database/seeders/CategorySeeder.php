@@ -9,134 +9,146 @@ class CategorySeeder extends Seeder
 {
     /**
      * Run the database seeds.
+     * 
+     * Note: Images should be placed in public/upload/general/
+     * All images should have similar dimensions to Cinema-camera.png
      */
     public function run(): void
     {
         // Schema::disableForeignKeyConstraints();
         Category::truncate();
 
+        // DSLR Cameras Category
         $Category = Category::create([
-            'image'   => '01.png',
+            'image'   => 'Cinema-camera1.png', // TODO: Replace with DSLR camera icon
         ]);
 
         $Category->setTranslations([
             'ar' => [
-                'title' => 'أزياء الرجال',
+                'title' => 'كاميرات DSLR',
             ],
             'en' => [
-                'title'       => 'Men Fashion',
+                'title'       => 'DSLR Cameras',
             ],
 
         ]);
 
+         // Mirrorless Cameras Category
          $Category = Category::create([
-            'image'   => '02.png',
+            'image'   => 'Cinema-camera2.png', // TODO: Replace with Mirrorless camera icon
         ]);
 
         $Category->setTranslations([
             'ar' => [
-                'title' => 'أزياء النساء',
+                'title' => 'كاميرات Mirrorless',
             ],
             'en' => [
-                'title'       => 'Women',
+                'title'       => 'Mirrorless Cameras',
             ],
 
         ]);
 
+        // Video Cameras Category
         $Category = Category::create([
-            'image'   => '03.png',
+            'image'   => 'Cinema-camera3.png', // TODO: Replace with Video camera icon
         ]);
 
         $Category->setTranslations([
             'ar' => [
-                'title' => 'أزياء الأطفال',
+                'title' => 'كاميرات الفيديو',
             ],
             'en' => [
-                'title'       => 'Kids Fashion',
+                'title'       => 'Video Cameras',
             ],
 
         ]);
 
+         // Lenses Category
          $Category = Category::create([
-            'image'   => '05.png',
+            'image'   => 'lenses.png', // Image already appropriate for lenses
         ]);
 
         $Category->setTranslations([
             'ar' => [
-                'title' => 'قمصان',
+                'title' => 'العدسات',
             ],
             'en' => [
-                'title'       => 'Shirts',
+                'title'       => 'Lenses',
             ],
 
         ]);
 
+        // Lighting Equipment Category
         $Category = Category::create([
-            'image'   => '07.png',
+            'image'   => 'illumination.png', // Image already appropriate for lighting
         ]);
 
         $Category->setTranslations([
             'ar' => [
-                'title' => 'فساتين',
+                'title' => 'الإضاءة',
             ],
             'en' => [
-                'title' => 'Dresses',
+                'title' => 'Lighting Equipment',
             ],
 
         ]);
 
+        // Tripods & Stands Category
         $Category = Category::create([
-            'image'   => '09.png',
+            'image'   => 'tripod1.png', // Image already appropriate for tripods
         ]);
 
         $Category->setTranslations([
             'ar' => [
-                'title' => 'أحذية',
+                'title' => 'الحاملات والستاندات',
             ],
             'en' => [
-                'title' => 'Shoes',
+                'title' => 'Tripods & Stands',
             ],
 
         ]);
 
+        // Tripod Category
         $Category = Category::create([
-            'image'   => '10.png',
+            'image'   => 'tripod.png', // Image already appropriate for tripod
         ]);
 
         $Category->setTranslations([
             'ar' => [
-                'title' => 'حقائب',
+                'title' => 'الحاملات',
             ],
             'en' => [
-                'title' => 'Bags',
+                'title' => 'Tripod',
             ],
 
         ]);
 
+        // Microphones Category
         $Category = Category::create([
-            'image'   => '11.png',
+            'image'   => 'mic.png', // Image already appropriate for microphones
         ]);
 
         $Category->setTranslations([
             'ar' => [
-                'title' => 'ساعات',
+                'title' => 'الميكروفونات',
             ],
             'en' => [
-                'title' => 'Watches',
+                'title' => 'Mic',
             ],
 
         ]);
 
+        // Cinema Camera Category
         $Category = Category::create([
-            'image'   => '12.png',
+            'image'   => 'Cinema-camera.png', // Image already appropriate for cinema camera
         ]);
 
         $Category->setTranslations([
             'ar' => [
-                'title' => 'ملابس علوية',
+                'title' => 'كاميرات السينما',
             ],
             'en' => [
-                'title' => 'Top wear',
+                'title' => 'Cinema Camera',
             ],
 
         ]);

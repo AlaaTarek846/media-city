@@ -450,19 +450,31 @@ $(".bg-overlay").click(function () {
 });
 
 (function(){
-  const perDay = parseFloat(document.getElementById('unitPrice').dataset.pricePerDay || '0');
+  // Check if elements exist before accessing them
+  const unitPriceEl = document.getElementById('unitPrice');
+  if (!unitPriceEl) {
+    return; // Exit if element doesn't exist
+  }
+  
+  const perDay = parseFloat(unitPriceEl.dataset.pricePerDay || '0');
   const priceUnitSel = document.getElementById('priceUnit');
   const durationVal = document.getElementById('durationValue');
   const durationUnit = document.getElementById('durationUnit');
   const qty = document.getElementById('qty');
   const totalEl = document.getElementById('totalEstimate');
+  
+  // Check if all required elements exist
+  if (!priceUnitSel || !durationVal || !durationUnit || !qty || !totalEl) {
+    return; // Exit if any required element is missing
+  }
 
   const toDays = unit => ({ day:1, week:7, month:30 }[unit] || 1);
 
   function updateUnitPrice() {
+    if (!unitPriceEl) return;
     const u = priceUnitSel.value;
     const unitPrice = perDay * toDays(u);
-    document.getElementById('unitPrice').textContent = unitPrice.toFixed(2);
+    unitPriceEl.textContent = unitPrice.toFixed(2);
     updateTotal();
   }
 
@@ -481,14 +493,17 @@ $(".bg-overlay").click(function () {
   updateUnitPrice();
 
   const form = document.getElementById('rentForm');
-  form.addEventListener('submit', function(e){
+  if (form) {
+    form.addEventListener('submit', function(e){
     if(!form.checkValidity()){
       e.preventDefault();
       e.stopPropagation();
     }else{
       e.preventDefault();
       const data = Object.fromEntries(new FormData(form).entries());
-      data.estimate = document.getElementById('totalEstimate').textContent;
+      if (totalEl) {
+        data.estimate = totalEl.textContent;
+      }
       console.log('Rent request:', data); // TODO: send via fetch() to your endpoint
       alert('Your rental request was sent. We will contact you shortly.');
       const modal = bootstrap.Modal.getInstance(document.getElementById('view'));
@@ -497,7 +512,8 @@ $(".bg-overlay").click(function () {
       updateUnitPrice();
     }
     form.classList.add('was-validated');
-  });
+    });
+  }
 })();
 
 

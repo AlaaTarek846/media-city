@@ -1,7 +1,7 @@
 @extends('website.layouts.layoutPage')
 @section('pageTitle',__('messages.wishlist'))
 @push("headStyle")
-    @vite(['resources/js/single-components.js'])
+
 @endpush
 @section('body')
 
@@ -15,11 +15,11 @@
                         <nav>
                             <ol class="breadcrumb mb-0">
                                 <li class="breadcrumb-item">
-                                    <a href="{{route('web.home')}}">>
+                                    <a href="{{route('web.home')}}">
                                         <i class="fa-solid fa-house"></i>
                                     </a>
                                 </li>
-                                <li class="breadcrumb-item active" aria-current="page">Wishlist</li>
+                                <li class="breadcrumb-item active mx-1" aria-current="page">Wishlist</li>
                             </ol>
                         </nav>
                     </div>

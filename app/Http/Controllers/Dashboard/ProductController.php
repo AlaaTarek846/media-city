@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Dashboard\ProductRequest;
 use App\Http\Resources\Dashboard\ProductResource;
 use App\Http\Resources\Dashboard\ShowProductResource;
+use App\Models\DepartmentCategory;
 use App\Models\Product;
 use App\Models\ProductAttributeValue;
 use App\Models\ProductFeature;
@@ -29,7 +30,10 @@ class ProductController extends Controller implements HasMiddleware
 
     public function index(Request $request)
     {
-        $products = Product::searchAndFilter()->latest()->paginate(10);
+        $products = Product::with(['department', 'category', 'brand', 'variants'])
+            ->searchAndFilter()
+            ->latest()
+            ->paginate(10);
 
         return responseJson(ProductResource::collection($products->items()),'',200,getPaginates($products));
     }
@@ -38,11 +42,29 @@ class ProductController extends Controller implements HasMiddleware
 
     public function store(ProductRequest $request)
     {
-
         $data = $request->validated();
         $data['image'] = store_single_image($request->image);
+        
+        // الحصول على department_category_id إذا كان موجوداً
+        $departmentCategory = DepartmentCategory::where('department_id', $data['department_id'])
+            ->where('category_id', $data['category_id'])
+            ->first();
+        
+        if ($departmentCategory) {
+            $data['department_category_id'] = $departmentCategory->id;
+        }
+        
         $product = Product::create($data);
         $product->setTranslations($request->translations);
+        
+        // حفظ Product Features
+        $product_feature = ProductFeature::create([
+            'product_id' => $product->id,
+        ]);
+        $product_feature->setTranslations($request->features);
+        
+    
+        // حفظ الصور الإضافية
         if($request->hasFile('groupImages')){
             foreach ($request->groupImages as $image) {
                 $url = store_single_image($image);
@@ -51,36 +73,38 @@ class ProductController extends Controller implements HasMiddleware
                 ]);
             }
         }
-        $product_feature = ProductFeature::create([
-            'product_id' => $product->id,
-        ]);
-        $product_feature->setTranslations($request->features);
 
-
-        if (isset($data['attributes']) && is_array($data['attributes'])) {
-            foreach ($data['attributes'] as $attribute) {
-                ProductAttributeValue::create([
-                    'product_id' => $product->id,
-                    'attribute_id' => $attribute['attribute_id'],
-                    'options' => is_array($attribute['options']) ? implode(' , ', $attribute['options']) : $attribute['options'],
-                ]);
-            }
-        }
-
-
+        // حفظ Variants
         foreach ($request->variant as $variant) {
-            $product->variants()->create([
-                'sku' => $variant['sku'],
-                'attribute_values' => $variant['attribute_values'],
-                'price_before_discount' => $variant['price_before_discount'],
-                'discount_percentage' => $variant['discount_percentage'],
-                'price' => $variant['price'],
-                'quantity' => $variant['quantity'],
-                'status' => $variant['status'],
-            ]);
+            $variantData = [
+                'sku' => $variant['sku'] ?? '',
+                'attribute_values' => $variant['attribute_values'] ?? '',
+                'discount_percentage' => $variant['discount_percentage'] ?? 0,
+                'quantity' => $variant['quantity'] ?? 0,
+                'status' => $variant['status'] ?? true,
+            ];
+            
+            // إضافة الحقول حسب department_id
+            if ($data['department_id'] == 1 || $data['department_id'] == 2) {
+                $price = floatval($variant['price'] ?? 0);
+                $discountPercentage = floatval($variant['discount_percentage'] ?? 0);
+                
+                // إعادة حساب السعر والسعر قبل الخصم
+                if ($discountPercentage > 0 && $discountPercentage <= 100 && $price > 0) {
+                    // حساب السعر قبل الخصم: السعر قبل الخصم = السعر + (السعر × نسبة الخصم / 100)
+                    $discountAmount = ($price * $discountPercentage) / 100;
+                    $priceBeforeDiscount = $price + $discountAmount;
+                } else {
+                    // إذا لم يكن هناك خصم، السعر قبل الخصم = 0
+                    $priceBeforeDiscount = 0;
+                }
+                
+                $variantData['price'] = $price;
+                $variantData['price_before_discount'] = $priceBeforeDiscount;
+            }
+            
+            $product->variant()->create($variantData);
         }
-
-
 
         return responseJson([],'Created Successfully',200);
     }
@@ -102,8 +126,27 @@ class ProductController extends Controller implements HasMiddleware
             unlink_image_by_path($product->getAttributes()['image']);
             $data['image'] = store_single_image($request->image);
         }
+        
+        // الحصول على department_category_id إذا كان موجوداً
+        $departmentCategory = DepartmentCategory::where('department_id', $data['department_id'])
+            ->where('category_id', $data['category_id'])
+            ->first();
+        
+        if ($departmentCategory) {
+            $data['department_category_id'] = $departmentCategory->id;
+        }
+        
         $product->update($data);
         $product->setTranslations($request->translations);
+        
+        // حفظ Product Features
+        $product->features()->delete();
+        $product_feature = ProductFeature::create([
+            'product_id' => $product->id,
+        ]);
+        $product_feature->setTranslations($request->features);
+        
+        // حفظ الصور الإضافية
         if($request->hasFile('groupImages')){
             foreach($product->images as $image) {
                 unlink_image_by_path($image->getAttributes()['image']);
@@ -116,64 +159,38 @@ class ProductController extends Controller implements HasMiddleware
                 ]);
             }
         }
-        $product->features()->delete();
-        $product_feature = ProductFeature::create([
-            'product_id' => $product->id,
-        ]);
-        $product_feature->setTranslations($request->features);
 
-        // Delete old attribute values not present in the new data
-        if (isset($data['attributes']) && is_array($data['attributes'])) {
-            $attributeIds = array_column($data['attributes'], 'attribute_id');
-            ProductAttributeValue::where('product_id', $product->id)
-            ->whereNotIn('attribute_id', $attributeIds)
-            ->delete();
-
-            foreach ($data['attributes'] as $attribute) {
-                $attributeValue = ProductAttributeValue::where('product_id', $product->id)
-                    ->where('attribute_id', $attribute['attribute_id'])
-                    ->first();
-
-                if ($attributeValue) {
-                    $attributeValue->update([
-                        'options' => is_array($attribute['options']) ? implode(' , ', $attribute['options']) : $attribute['options'],
-                    ]);
-                } else {
-                    ProductAttributeValue::create([
-                        'product_id' => $product->id,
-                        'attribute_id' => $attribute['attribute_id'],
-                        'options' => is_array($attribute['options']) ? implode(' , ', $attribute['options']) : $attribute['options'],
-                    ]);
-                }
-            }
-        } else {
-            // If no attributes sent, remove all
-            ProductAttributeValue::where('product_id', $product->id)->delete();
-        }
-
-        // Update or create variants
+        // حفظ Variants
         foreach ($request->variant as $variant) {
-            $existingVariant = $product->variants()->where('attribute_values', $variant['attribute_values'])->first();
-            if ($existingVariant) {
-                $existingVariant->update([
-                    'attribute_values' => $variant['attribute_values'],
-                    'price_before_discount' => $variant['price_before_discount'],
-                    'discount_percentage' => $variant['discount_percentage'],
-                    'price' => $variant['price'],
-                    'quantity' => $variant['quantity'],
-                    'status' => $variant['status'],
-                ]);
-            } else {
-                $product->variants()->create([
-                    'sku' => $variant['sku'],
-                    'attribute_values' => $variant['attribute_values'],
-                    'price_before_discount' => $variant['price_before_discount'],
-                    'discount_percentage' => $variant['discount_percentage'],
-                    'price' => $variant['price'],
-                    'quantity' => $variant['quantity'],
-                    'status' => $variant['status'],
-                ]);
+            $variantData = [
+                'sku' => $variant['sku'] ?? '',
+                'attribute_values' => $variant['attribute_values'] ?? '',
+                'discount_percentage' => $variant['discount_percentage'] ?? 0,
+                'quantity' => $variant['quantity'] ?? 0,
+                'status' => $variant['status'] ?? true,
+            ];
+            
+            // إضافة الحقول حسب department_id
+            if ($data['department_id'] == 1 || $data['department_id'] == 2) {
+                $price = floatval($variant['price'] ?? 0);
+                $discountPercentage = floatval($variant['discount_percentage'] ?? 0);
+                
+                // إعادة حساب السعر والسعر قبل الخصم
+                if ($discountPercentage > 0 && $discountPercentage <= 100 && $price > 0) {
+                    // حساب السعر قبل الخصم: السعر قبل الخصم = السعر + (السعر × نسبة الخصم / 100)
+                    $discountAmount = ($price * $discountPercentage) / 100;
+                    $priceBeforeDiscount = $price + $discountAmount;
+                } else {
+                    // إذا لم يكن هناك خصم، السعر قبل الخصم = 0
+                    $priceBeforeDiscount = 0;
+                }
+                
+                $variantData['price'] = $price;
+                $variantData['price_before_discount'] = $priceBeforeDiscount;
             }
+            
+
+            $product->variant()->update($variantData);
         }
 
         return responseJson($product,'Updated Successfully',200);

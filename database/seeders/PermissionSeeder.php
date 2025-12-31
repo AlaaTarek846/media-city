@@ -110,6 +110,11 @@ class PermissionSeeder extends Seeder
             ['name' => 'product edit'  ,  'category' => 'Products'],
             ['name' => 'product delete',  'category' => 'Products'],
 
+            ['name' => 'department read'  ,  'category' => 'Departments'],
+            ['name' => 'department create',  'category' => 'Departments'],
+            ['name' => 'department edit'  ,  'category' => 'Departments'],
+            ['name' => 'department delete',  'category' => 'Departments'],
+
             ['name' => 'shop by instagram read'  ,  'category' => 'Shop By Instagram'],
             ['name' => 'shop by instagram create',  'category' => 'Shop By Instagram'],
             ['name' => 'shop by instagram edit'  ,  'category' => 'Shop By Instagram'],

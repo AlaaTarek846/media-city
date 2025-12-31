@@ -27,6 +27,7 @@ use App\Models\Area;
 use App\Models\ReturnPolicy;
 use App\Models\Setting;
 use App\Models\ShippingInformation;
+use App\Models\Department;
 use App\Http\Requests\Website\AddAddressRequest;
 use App\Http\Requests\Website\ChangePasswordRequest;
 use App\Http\Requests\Website\UpdateProfileRequest;
@@ -164,8 +165,6 @@ class HomePageController extends Controller
 
     public function wishlist()
     {
-//        $user = auth('user')->user();
-//        $favorites = $user->favorites()->with(['variants', 'translation'])->get();
         return view('website.wishlist');
     }
 
@@ -266,7 +265,11 @@ class HomePageController extends Controller
 
     public function productDetail($id)
     {
-        $product = Product::with(['translation','variants', 'features.translation', 'images', 'attributes.attribute.translation', 'category.translation', 'brand.translation','reviews.user'])->findOrFail($id);
+        $product = Product::
+        with(['translation','variants', 'features.translation', 'images', 'attributes.attribute.translation', 'category.translation', 'brand.translation','reviews.user'])
+        ->whereHas('translations',function ($q) use($id){
+            $q->where('slug',$id);
+        })->firstOrFail();
         $products = Product::whereStatus(1)->where('category_id', $product->category_id)->where('id', '!=', $product->id)
             ->with(['variants', 'translation'])
             ->inRandomOrder()
@@ -327,76 +330,330 @@ class HomePageController extends Controller
         return view('website.terms-condition', compact('termsCondition'));
     }
 
-     public function shop(Request $request){
-        $categories = Category::whereStatus(1)
-            ->withCount('products')
-            ->latest()
-            ->get();
-        $maxPrice = ProductVariant::max('price');
-        $minPrice = ProductVariant::min('price');
-        $attributes = [];
+     /**
+      * Display shop page with products filtered by department and/or category slugs
+      *
+      * Supports SEO-friendly URLs: /shop/{department-slug}/{category-slug}
+      * Also supports legacy query parameters for backward compatibility
+      *
+      * @param Request $request
+      * @param string|null $department Department slug from route
+      * @param string|null $category Category slug from route
+      * @return \Illuminate\View\View
+      */
+     public function shop(Request $request, $department = null, $category = null){
+        // Get department and category IDs from slugs if provided
+        // Slug is generated from title using Str::slug()
+        $departmentId = null;
 
-        $attributeValues = ProductAttributeValue::with('attribute')->get();
-
-        foreach ($attributeValues as $value) {
-            $attrName = $value->attribute->current_translation?->title ?? '';
-            $attrId = $value->attribute->id;
-
-            // Split options by comma and trim spaces
-            $optionsArray = array_map('trim', explode(',', $value->options));
-
-            // Find if attribute already exists in $attributes
-            $found = false;
-            foreach ($attributes as &$attribute) {
-                if ($attribute['name'] === $attrName) {
-                    // Merge and deduplicate options
-                    $attribute['options'] = array_unique(array_merge($attribute['options'], $optionsArray));
-                    $found = true;
+        if ($department) {
+            // Find department by comparing slug of translation title with provided slug
+            $departments = Department::with('translations')->get();
+            foreach ($departments as $dept) {
+                if (strtolower($dept->slug) === strtolower($department)) {
+                    $departmentId = $dept->id;
                     break;
                 }
             }
-            unset($attribute);
+        }
 
-            // If not found, add new attribute
-            if (!$found) {
-                $attributes[] = [
-                    'id' => $attrId,
-                    'name' => $attrName,
-                    'options' => $optionsArray,
-                ];
+        // Get all categories for sidebar (filtered by department if provided)
+        $categoriesQuery = Category::whereStatus(1)->withCount(['products' => function($q) use ($departmentId) {
+            $q->where('department_id', $departmentId);
+        }]);
+
+        if ($departmentId) {
+            $categoriesQuery->whereHas('departments', function($q) use ($departmentId) {
+                $q->where('departments.id', $departmentId);
+            });
+        }
+
+        $categories = $categoriesQuery->latest()->get();
+
+        $brands = Brand::whereStatus(1)->latest()->get();
+
+        return view('website.shop', compact(
+            'categories',
+            'brands'
+        ));
+    }
+
+    /**
+     * Get product data for quick view modal
+     *
+     * @param int $id Product ID
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getProductForModal($id)
+    {
+        $product = Product::where('products.status', 1)
+            ->with([
+                'translation',
+                'translations',
+                'variants',
+                'images',
+                'category.translation',
+                'category.translations',
+                'brand.translation',
+                'brand.translations',
+                'department.translation',
+                'department.translations',
+                'features.translation',
+                'features.translations'
+            ])
+            ->findOrFail($id);
+
+        $translation = $product->translation ?? $product->translations->first();
+        $variant = $product->variants->first();
+        $category = $product->category;
+        $brand = $product->brand;
+        $department = $product->department;
+        $feature = $product->features;
+
+        // Format product images for slider
+        $images = $product->images->map(function($image) {
+            return [
+                'id' => $image->id,
+                'url' => $image->image,
+                'alt' => $image->alt ?? ''
+            ];
+        });
+
+        // If no images, use main product image
+        if ($images->isEmpty()) {
+            $images->push([
+                'id' => 0,
+                'url' => $product->image,
+                'alt' => $translation->title ?? ''
+            ]);
+        }
+
+        // Calculate rating
+        $reviews = $product->reviews;
+        $rating = $reviews->avg('rating') ?? 0;
+        $reviewCount = $reviews->count();
+
+        return responseJson([
+            'id' => $product->id,
+            'title' => $translation->title ?? '',
+            'description' => $translation->description ?? '',
+            'slug' => $translation->slug,
+            'condition' => $product->condition,
+            'images' => $images,
+            'price' => $variant->price ?? 0,
+            'discount_price' => $variant->discount_price ?? null,
+            'discount_percentage' => $variant->discount_percentage ?? 0,
+            'price_before_discount' => $variant->price_before_discount ?? 0,
+            'sku' => $variant->sku ?? '',
+            'quantity' => $variant->quantity ?? 0,
+            'category' => [
+                'id' => $category->id ?? null,
+                'name' => $category->translation->title ?? ($category->translations->first()->title ?? ''),
+            ],
+            'brand' => [
+                'id' => $brand->id ?? null,
+                'name' => $brand->translation->title ?? ($brand->translations->first()->title ?? ''),
+            ],
+            'department' => [
+                'id' => $department->id ?? null,
+                'name' => $department->translation->title ?? ($department->translations->first()->title ?? ''),
+            ],
+            'feature' => $feature ? [
+                'title' => $feature->translation->title ?? ($feature->translations->first()->title ?? ''),
+                'description' => $feature->translation->description ?? ($feature->translations->first()->description ?? ''),
+            ] : null,
+            'rating' => round($rating, 1),
+            'review_count' => $reviewCount,
+            'detail_url' => route('productDetail', $translation->slug),
+        ], 'Product data fetched successfully', 200);
+    }
+
+    /**
+     * Get shop products via AJAX with filters
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getShopProducts(Request $request)
+    {
+        $departmentId = null;
+        $categoryId = null;
+
+        // Get department from slug
+        if ($request->department) {
+            $departments = Department::with('translations')->get();
+            foreach ($departments as $dept) {
+                if (strtolower($dept->slug) === strtolower($request->department)) {
+                    $departmentId = $dept->id;
+                    break;
+                }
             }
         }
 
-        $brands = Brand::whereStatus(1)->withCount('products')->latest()->get();
+        // Get category from slug
+        if ($request->category) {
+            $categories = Category::whereStatus(1)->with('translations')->get();
+            foreach ($categories as $cat) {
+                if (strtolower($cat->slug) === strtolower($request->category)) {
+                    $categoryId = $cat->id;
+                    break;
+                }
+            }
+        }
 
-        $products = Product::whereStatus(1)
-            ->when($request->category_id, function ($query) use ($request) {
-                $query->where('category_id', $request->category_id);
-            })
-            ->when($request->categories, function ($query) use ($request) {
-                $query->whereIn('category_id', $request->categories);
-            })
-            ->when($request->min_price && $request->max_price, function ($query) use ($request) {
-                $query->whereHas('variants', function ($q) use ($request) {
-                    $q->whereBetween('price', [$request->min_price, $request->max_price]);
-                });
-            })
-            ->when($request->attribute, function ($query) use ($request) {
-                $query->whereHas('variants', function ($q) use ($request) {
+        // Build products query
+        // Use products.status explicitly to avoid ambiguity when joining with other tables
+        $productsQuery = Product::where('products.status', 1)
+            ->with(['variants', 'translation', 'department', 'category', 'brand']);
+
+        // Filter by department
+        if ($departmentId) {
+            $productsQuery->where('department_id', $departmentId);
+        } elseif ($request->department_id) {
+            $productsQuery->where('department_id', $request->department_id);
+        }
+
+        // Filter by category
+        if ($categoryId) {
+            $productsQuery->where('category_id', $categoryId);
+        } elseif ($request->category_id) {
+            $productsQuery->where('category_id', $request->category_id);
+        }
+
+        // Filter by multiple categories
+        if ($request->categories && is_array($request->categories)) {
+            $productsQuery->whereIn('category_id', $request->categories);
+        }
+
+        // Filter by condition (new, used, rent)
+        if ($request->condition) {
+            $productsQuery->where('condition', $request->condition);
+        }
+
+        // Filter by brands
+        if ($request->brands && is_array($request->brands)) {
+            $productsQuery->whereIn('brand_id', $request->brands);
+        }
+
+        // Search filter
+        if ($request->search) {
+            $search = $request->search;
+            $productsQuery->whereHas('translations', function($q) use ($search) {
+                $q->where('title', 'LIKE', "%{$search}%")
+                  ->orWhere('description', 'LIKE', "%{$search}%");
+            });
+        }
+
+
+        // Attribute filter
+        if ($request->attribute && is_array($request->attribute)) {
+            $productsQuery->whereHas('variants', function ($q) use ($request) {
                     foreach ($request->attribute as $attrId => $value) {
                         $q->where('attribute_values', 'LIKE', '%' . $value . '%')
                         ->orWhere('attribute_values', 'LIKE', '%' . strrev($value) . '%');
                     }
                 });
-            })->when($request->brands, function ($query) use ($request) {
-                $query->whereIn('brand_id', $request->brands);
-            })
-            ->with(['variants', 'translation'])
-            ->latest()->paginate(9);
-            // return $products;
-            $productData = $products->getCollection();
+        }
 
-        return view('website.shop',compact('categories','maxPrice','minPrice','attributes','brands','products','productData'));
+        // Sort by
+        $sortBy = $request->sort_by ?? 'latest';
+        $locale = app()->getLocale();
+
+        switch ($sortBy) {
+            case 'price_low':
+                // Sort by minimum variant price
+                $productsQuery->select('products.*')
+                    ->leftJoin('product_variants', 'products.id', '=', 'product_variants.product_id')
+                    ->selectRaw('MIN(product_variants.price) as variant_min_price')
+                    ->groupBy('products.id')
+                    ->orderBy('variant_min_price', 'asc');
+                break;
+            case 'price_high':
+                // Sort by maximum variant price
+                $productsQuery->select('products.*')
+                    ->leftJoin('product_variants', 'products.id', '=', 'product_variants.product_id')
+                    ->selectRaw('MAX(product_variants.price) as variant_max_price')
+                    ->groupBy('products.id')
+                    ->orderBy('variant_max_price', 'desc');
+                break;
+            case 'name_asc':
+                // Sort by translation title
+                $productsQuery->select('products.*')
+                    ->leftJoin('sys_language_translations', function($join) use ($locale) {
+                        $join->on('products.id', '=', 'sys_language_translations.model_id')
+                             ->where('sys_language_translations.model_type', '=', 'App\\Models\\Product')
+                             ->where('sys_language_translations.locale', '=', $locale);
+                    })
+                    ->groupBy('products.id', 'sys_language_translations.title')
+                    ->orderBy('sys_language_translations.title', 'asc');
+                break;
+            case 'name_desc':
+                // Sort by translation title desc
+                $productsQuery->select('products.*')
+                    ->leftJoin('sys_language_translations', function($join) use ($locale) {
+                        $join->on('products.id', '=', 'sys_language_translations.model_id')
+                             ->where('sys_language_translations.model_type', '=', 'App\\Models\\Product')
+                             ->where('sys_language_translations.locale', '=', $locale);
+                    })
+                    ->groupBy('products.id', 'sys_language_translations.title')
+                    ->orderBy('sys_language_translations.title', 'desc');
+                break;
+            default:
+                $productsQuery->latest();
+        }
+
+        $perPage = $request->per_page ?? 12;
+        $products = $productsQuery->paginate($perPage);
+
+        // Format products data
+        $formattedProducts = $products->getCollection()->map(function($product) {
+            $translation = $product->translation ?? $product->translations->first();
+            $department = $product->department;
+            $category = $product->category;
+            $brand = $product->brand;
+            $variant = $product->variants->first();
+
+            return [
+                'id' => $product->id,
+                'title' => $translation->title ?? '',
+                'description' => $translation->description ?? '',
+                'image' => $product->image,
+                'slug' => $translation->slug,
+                'condition' => $product->condition, // new, used, rent
+                'department' => [
+                    'id' => $department->id ?? null,
+                    'name' => $department->translation->title ?? ($department->translations->first()->title ?? ''),
+                    'slug' => $department->slug ?? '',
+                ],
+                'category' => [
+                    'id' => $category->id ?? null,
+                    'name' => $category->translation->title ?? ($category->translations->first()->title ?? ''),
+                    'slug' => $category->slug ?? '',
+                ],
+                'brand' => $brand ? [
+                    'id' => $brand->id,
+                    'name' => $brand->translation->title ?? ($brand->translations->first()->title ?? ''),
+                ] : null,
+                'price' => $variant->price ?? 0,
+                'discount_price' => $variant->discount_price ?? null,
+                'discount_percentage' => $variant->discount_percentage ?? 0,
+                'is_favorite' => $product->is_favorite,
+                'rate' => $product->rate,
+                'review_count' => $product->review_count,
+            ];
+        });
+
+        return responseJson([
+            'products' => $formattedProducts,
+            'pagination' => [
+                'current_page' => $products->currentPage(),
+                'last_page' => $products->lastPage(),
+                'per_page' => $products->perPage(),
+                'total' => $products->total(),
+                'from' => $products->firstItem(),
+                'to' => $products->lastItem(),
+            ],
+        ], 'Products fetched successfully', 200);
     }
 
     /**

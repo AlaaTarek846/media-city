@@ -1,13 +1,13 @@
 <template>
-    <div class="container-fluid">
-        <!-- Page Header -->
-        <div class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
-            <h1 class="page-title fw-semibold fs-18 mb-0">{{ $t('global.products') }}</h1>
+    <div>
+              <!-- Page Header -->
+              <div class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
+            <h1 class="page-title fw-semibold fs-18 mb-0">{{ $t('global.departments') }}</h1>
             <div class="ms-md-1 ms-0">
                 <nav>
                     <ol class="breadcrumb mb-0">
                         <li class="breadcrumb-item"><router-link :to="{name: 'dashboard'}">{{$t('global.home')}}</router-link></li>
-                        <li class="breadcrumb-item active" aria-current="page">{{ $t('global.products') }}</li>
+                        <li class="breadcrumb-item active" aria-current="page">{{ $t('global.departments') }}</li>
                     </ol>
                 </nav>
             </div>
@@ -22,7 +22,7 @@
                         <search-and-filters @search="(val) => search.searchKey = val" />
 
                         <div class="prism-toggle">
-                            <button v-if="permission.includes('product create')" @click="showModelCreate" class="btn btn-sm btn-primary-light" data-bs-toggle="modal" data-bs-target="#category-service">
+                            <button v-if="permission.includes('department create')" @click="showModelCreate" class="btn btn-sm btn-primary-light" data-bs-toggle="modal" data-bs-target="#banner-modal">
                                 <i class="ri-add-line me-1 fw-semibold align-middle"></i>{{ $t('global.add') }}
                             </button>
                         </div>
@@ -33,15 +33,10 @@
                                 <thead>
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th scope="col">{{ $t('label.image') }}</th>
+                                    <th scope="col">{{ $t('global.image') }}</th>
                                     <th scope="col">{{ $t('label.title') }}</th>
-                                    <th scope="col">{{ $t('global.brand') }}</th>
-                                    <th scope="col">{{ $t('global.category') }}</th>
-                                    <th scope="col">{{ $t('global.department') }}</th>
-                                    <th scope="col">{{ $t('global.condition') }}</th>
-                                    <th scope="col">{{ $t('global.price') }}</th>
-                                    <th scope="col">{{ $t('global.quantity') }}</th>
-                                    <th scope="col">{{ $t('label.status') }}</th>
+                                    <th scope="col">{{ $t('global.categories') }}</th>
+                                    <th scope="col">{{ $t('global.status') }}</th>
                                     <th scope="col">{{ $t('global.action') }}</th>
                                 </tr>
                                 </thead>
@@ -51,43 +46,37 @@
                                     <td>
                                         <div class="d-flex align-items-center">
                                             <div class="me-3">
-                                                <span class="avatar avatar-lg bg-light">
-                                                    <img :src="item.image" alt="" style="width: 100%; height: 100%">
+                                                <span class="avatar  bg-light">
+                                                    <img :src='item.image' alt="" style="width: auto; height: 100%">
                                                 </span>
                                             </div>
                                         </div>
                                     </td>
                                     <td>{{item.title}}</td>
-                                    <td>{{item.brand}}</td>
-                                    <td>{{item.category}}</td>
-                                    <td>{{item.department}}</td>
-                                    <td>{{ $t('global.' + item.condition) }}</td>
-                                    <td>{{item.price}}</td>
-                                    <td>{{item.quantity}}</td>
+                                    <td>
+                                        <span class="badge rounded-pill bg-info-transparent">{{item.categories_count || 0}}</span>
+                                    </td>
                                     <td>
                                         <span class="badge rounded-pill bg-success-transparent" v-if="item.status">{{$t('global.activated')}}</span>
                                         <span class="badge rounded-pill bg-danger-transparent" v-else>{{$t('global.Inactive')}}</span>
                                     </td>
                                     <td>
                                         <div class="hstack gap-2 fs-15">
-                                            <button v-if="permission.includes('product edit')"
+                                            <button v-if="permission.includes('department edit')"
                                                 @click.prevent="showEditMode(item)"
-                                                data-bs-toggle="modal" data-bs-target="#category-service"
-                                                    class="btn btn-icon btn-sm btn-primary-transparent rounded-pill"
-                                                    :title="$t('global.update')">
-                                                <i class="ri-edit-line"></i>
-                                            </button>
-
-                                            <!-- <a href="#" @click.prevent="deleteData(item.id,index)" v-if="permission.includes('product delete')"
+                                                data-bs-toggle="modal" data-bs-target="#banner-modal"
+                                               class="btn btn-icon btn-sm btn-info-transparent rounded-pill"><i
+                                                class="ri-edit-line"></i></button>
+                                            <a href="#" @click.prevent="deleteData(item.id,index)" v-if="permission.includes('department delete')"
                                                class="btn btn-icon btn-sm btn-danger-transparent rounded-pill"><i
-                                                class="ri-delete-bin-line"></i></a> -->
+                                                class="ri-delete-bin-line"></i></a>
                                         </div>
                                     </td>
                                 </tr>
                                 </tbody>
                                 <tbody v-else>
                                     <tr>
-                                        <th class="text-center" colspan="11">{{ $t('global.NoDataFound') }}</th>
+                                        <th class="text-center" colspan="6">{{ $t('global.NoDataFound') }}</th>
                                     </tr>
                                 </tbody>
                             </table>
@@ -105,50 +94,43 @@
             </div>
         </div>
         <!-- End:: data table -->
-        <ModalCreateAndUpdate v-model="modalShow" :type="type" :dataRow="dataRow" @created="getData(pagePaginate)"/>
+        <ModalCreateAndUpdate v-model="modalShow" :type="type" :dataRow="dataRow" @created="getData(pagePaginate)" />
     </div>
 </template>
 
 <script>
-import {onBeforeMount,inject,watch,ref,computed} from "vue";
-import ModalCreateAndUpdate from "./ModalCreateAndUpdate.vue"
+import {onBeforeMount,inject,toRefs} from "vue";
 import crud from "../../../composable/crud_structure";
+import ModalCreateAndUpdate from "./ModalCreateAndUpdate.vue"
 
 export default {
     name: "index",
     components:{
         ModalCreateAndUpdate
     },
-    setup(){
+    setup(props){
         const emitter = inject('emitter');
-
-        const {getData,loading,data,dataPaginate,permission,uri,showModelCreate,showEditMode,showModelReason,deleteData,search,type,dataRow,modalShow,reasonShow,pagePaginate} = crud();
+        const {getData,loading,data,dataPaginate,permission,uri,showModelCreate,showEditMode,deleteData,search,type,dataRow,modalShow,filter,pagePaginate} = crud();
 
         search.value = {
             searchKey : '',
             searchInTranslations: true,
             columns: ['id'],
             searchInRelations: [
-                {
-                    relation: 'category',
-                    columns: ['id'],
-                    searchInRelationTranslations:true
-                },
-                {
-                    relation: 'brand',
-                    columns: ['id'],
-                    searchInRelationTranslations:true
-                }
+                // {
+                //     relation: 'roles',
+                //     columns: ['name'],
+                //     searchInRelationTranslations:false
+                // }
             ]
         }
-
         onBeforeMount(() => {
-            uri.value = 'products';
+            uri.value = 'departments';
             getData();
         });
 
 
-        return {getData,loading,search,permission,deleteData,showEditMode,showModelCreate,showModelReason,data,dataPaginate,type,dataRow,modalShow,reasonShow,pagePaginate};
+        return {getData,loading,search,permission,deleteData,showEditMode,showModelCreate,data,dataPaginate,type,dataRow,modalShow,pagePaginate};
 
     }
 }

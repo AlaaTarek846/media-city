@@ -14,6 +14,7 @@ use App\Http\Controllers\Dashboard\ContactMessageController;
 use App\Http\Controllers\Dashboard\ContactUsController;
 use App\Http\Controllers\Dashboard\CountryController;
 use App\Http\Controllers\Dashboard\DashboardStatisticsController;
+use App\Http\Controllers\Dashboard\DepartmentController;
 use App\Http\Controllers\Dashboard\DiscountCouponController;
 use App\Http\Controllers\Dashboard\FrequentlyAskedQuestionController;
 use App\Http\Controllers\Dashboard\HistoryController;
@@ -38,6 +39,8 @@ use App\Http\Controllers\Dashboard\ShippingInformationController;
 use App\Http\Controllers\Dashboard\ShopByInstagramController;
 use App\Http\Controllers\Dashboard\TeamController;
 use App\Http\Controllers\Dashboard\VisionController;
+use App\Http\Controllers\Web\CartController;
+use App\Http\Controllers\Web\FavoriteController;
 use App\Http\Controllers\Web\HomePageController;
 use App\Http\Controllers\Web\RegisterController;
 use App\Http\Middleware\ChangeLang;
@@ -68,6 +71,8 @@ Route::group(['prefix' => 'web', 'middleware' => [ChangeLang::class,StartSession
     Route::post('password/reset',[RegisterController::class,'reset'])->middleware(['guest:user']);
     
      Route::get('/show-product/{id}', [HomePageController::class, 'showProduct']);
+     Route::get('/product-modal/{id}', [HomePageController::class, 'getProductForModal']); // AJAX endpoint for quick view modal
+     Route::get('/shop-products', [HomePageController::class, 'getShopProducts']); // AJAX endpoint for shop filtering
      Route::post('/add-favorite/{id}', [HomePageController::class, 'addFavorite'])->middleware('auth:user');
      Route::post('/proceed-to-checkout', [HomePageController::class, 'proceedToCheckout'])->middleware('auth:user');
      Route::post('/check-coupon', [HomePageController::class, 'checkCoupon'])->middleware('auth:user');
@@ -82,8 +87,19 @@ Route::group(['prefix' => 'web', 'middleware' => [ChangeLang::class,StartSession
      Route::post('/updateProfile', [HomePageController::class, 'updateProfile'])->middleware('auth:user');
      Route::post('/change-password', [HomePageController::class, 'changePassword'])->middleware('auth:user');
 
-     Route::post('/add-cart', [HomePageController::class, 'addCart'])->middleware('auth:user');
-    // Route::get('terms',[WebPagesController::class,'terms']);
+    // new
+    Route::get('/get-favorites', [FavoriteController::class, 'index'])->middleware('auth:user');
+    Route::post('/add-favorites', [FavoriteController::class, 'store'])->middleware('auth:user');
+    Route::delete('/delete-favorite/{id}', [FavoriteController::class, 'destroy'])->middleware('auth:user');
+    
+    // Wishlist routes
+    Route::post('/wishlist/add', [FavoriteController::class, 'addToWishlist'])->middleware('auth:user');
+    Route::post('/wishlist/sync', [FavoriteController::class, 'syncWishlist'])->middleware('auth:user');
+    Route::get('/wishlist/check/{productId}', [FavoriteController::class, 'checkWishlist'])->middleware('auth:user');
+
+    Route::get('/get-carts', [CartController::class, 'index'])->middleware('auth:user');
+    Route::post('/add-carts', [CartController::class, 'store'])->middleware('auth:user');
+    Route::delete('/delete-cart/{id}', [CartController::class, 'destroy'])->middleware('auth:user');    // Route::get('terms',[WebPagesController::class,'terms']);
     // Route::get('privacy',[WebPagesController::class,'privacy']);
 });
 
@@ -146,6 +162,10 @@ Route::group(['prefix' => 'dashboard', 'middleware' => [ChangeLang::class]], fun
         // Category
         Route::get('categories-dropdown',[CategoryController::class,'dropdown']);
         Route::apiResource('category', CategoryController::class);
+
+        // Department
+        Route::get('departments-dropdown',[DepartmentController::class,'dropdown']);
+        Route::apiResource('departments', DepartmentController::class);
 
         // JoinUs
         Route::apiResource('join-us', JoinUsController::class);

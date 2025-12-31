@@ -37,6 +37,7 @@ import returnPolicy from "./adminRoute/returnPolicy.js";
 import termsCondition from "./adminRoute/termsCondition.js";
 import shippingInformation from "./adminRoute/shippingInformation.js";
 import order from "./adminRoute/order.js";
+import department from "./adminRoute/department.js";
 
 
 
@@ -98,6 +99,7 @@ const routes = [
             ...termsCondition,
             ...shippingInformation,
             ...order,
+            ...department,
             ...article,
             ...articleClient
 

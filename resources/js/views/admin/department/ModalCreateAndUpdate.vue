@@ -45,28 +45,28 @@
                         </div>
 
                         <div class="col-md-12 mt-3">
-                            <label class="form-label">{{ $t('global.departments') }}</label>
+                            <label class="form-label">{{ $t('global.categories') }}</label>
                             <div class="mb-2">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" :id="'selectAllDepartments'" 
-                                           :checked="isAllDepartmentsSelected" @change="toggleSelectAllDepartments">
-                                    <label class="form-check-label" :for="'selectAllDepartments'">
+                                    <input class="form-check-input" type="checkbox" :id="'selectAllCategories'" 
+                                           :checked="isAllCategoriesSelected" @change="toggleSelectAllCategories">
+                                    <label class="form-check-label" :for="'selectAllCategories'">
                                         {{ $t('global.selectAll') }}
                                     </label>
                                 </div>
                             </div>
                             <MultiSelect 
-                                v-model="data.departments" 
-                                :options="departments" 
+                                v-model="data.categories" 
+                                :options="categories" 
                                 optionLabel="title" 
                                 optionValue="id"
                                 :filter="true"
-                                :placeholder="$t('global.departments')"
+                                :placeholder="$t('global.selectCategory')"
                                 display="chip"
-                                :class="['w-full w-100', { 'is-invalid': errors[`departments`], 'is-valid': !errors[`departments`] }]">
+                                :class="['w-full w-100', { 'is-invalid': errors[`categories`], 'is-valid': !errors[`categories`] }]">
                             </MultiSelect>
-                            <template v-if="errors['departments']">
-                                <error-message v-for="(errorMessage, index) in errors['departments']" :key="index">
+                            <template v-if="errors['categories']">
+                                <error-message v-for="(errorMessage, index) in errors['categories']" :key="index">
                                     {{ errorMessage }}
                                 </error-message>
                             </template>
@@ -140,7 +140,7 @@ import adminApi from "../../../api/adminAxios";
 import MultiSelect from 'primevue/multiselect';
 
 export default {
-    name: "CategoryModal",
+    name: "DepartmentModal",
     components: {
         MultiSelect
     },
@@ -170,34 +170,34 @@ export default {
         let is_disabled = ref(false);
         const {t} = useI18n({});
         const id = ref(null);
-        const departments = ref([]);
-        const isAllDepartmentsSelected = computed(() => {
-            if (!submitdata.data.departments || departments.value.length === 0) {
+        const categories = ref([]);
+        const isAllCategoriesSelected = computed(() => {
+            if (!submitdata.data.categories || categories.value.length === 0) {
                 return false;
             }
-            return submitdata.data.departments.length === departments.value.length;
+            return submitdata.data.categories.length === categories.value.length;
         });
 
         onMounted(()=>{
             languages.value=JSON.parse(localStorage.getItem('languages'));
-            getDepartments();
+            getCategories();
         });
 
-        function getDepartments() {
-            adminApi.get('dashboard/departments-dropdown')
+        function getCategories() {
+            adminApi.get('dashboard/categories-dropdown')
                 .then((res) => {
-                    departments.value = res.data.data;
+                    categories.value = res.data.data;
                 })
                 .catch((err) => {
                     console.log(err);
                 });
         }
 
-        function toggleSelectAllDepartments(event) {
+        function toggleSelectAllCategories(event) {
             if (event.target.checked) {
-                submitdata.data.departments = departments.value.map(dept => dept.id);
+                submitdata.data.categories = categories.value.map(cat => cat.id);
             } else {
-                submitdata.data.departments = [];
+                submitdata.data.categories = [];
             }
         }
 
@@ -213,7 +213,7 @@ export default {
 
            submitdata.data.date = '';
            submitdata.data.status = true;
-           submitdata.data.departments = [];
+           submitdata.data.categories = [];
            imageUpload.value = '';
            is_disabled.value = false;
            image.value=null
@@ -226,7 +226,7 @@ export default {
                 if (props.type != 'edit') {
                 } else {
                     id.value = props.dataRow.id;
-                    adminApi.get(`dashboard/category/${id.value}`)
+                    adminApi.get(`dashboard/departments/${id.value}`)
                     .then((res) => {
                         loading.value = true;
                         let l = res.data.data;
@@ -236,7 +236,7 @@ export default {
                             }
                         });
                         submitdata.data.status = l.status==1;
-                        submitdata.data.departments = l.departments_ids || [];
+                        submitdata.data.categories = l.categories_ids || [];
                         imageUpload.value = l.image
                     })
                     .catch((err) => {
@@ -259,7 +259,7 @@ export default {
         let submitdata =  reactive({
             data:{
                 status: true,
-                departments: []
+                categories: []
             }
         });
 
@@ -325,7 +325,7 @@ export default {
         const v$ = useVuelidate(rules,submitdata.data);
 
         return {t,id,
-            loading,is_disabled,languages,departments,isAllDepartmentsSelected,toggleSelectAllDepartments,
+            loading,is_disabled,languages,categories,isAllCategoriesSelected,toggleSelectAllCategories,
             resetModal,empty,preview,resetModalHidden,
             imageUpload,image,...toRefs(submitdata),
             v$,numberOfImage,requiredn,errors};
@@ -342,9 +342,9 @@ export default {
            formData.append(`translations[${el.code}][title]`, this.data[el.code].title);
        })
         formData.append('status', this.data.status ? 1 : 0);
-        if (this.data.departments && this.data.departments.length > 0) {
-            this.data.departments.forEach((departmentId) => {
-                formData.append('departments[]', departmentId);
+        if (this.data.categories && this.data.categories.length > 0) {
+            this.data.categories.forEach((categoryId) => {
+                formData.append('categories[]', categoryId);
             });
         }
         if (this.image) {
@@ -354,7 +354,7 @@ export default {
             if (!this.v$.$error && this.numberOfImage) {
                 this.is_disabled = false;
                 this.loading = true;
-                adminApi.post(`dashboard/category`, formData)
+                adminApi.post(`dashboard/departments`, formData)
                     .then((res) => {
                         Swal.fire({
                             icon: 'success',
@@ -388,7 +388,7 @@ export default {
             this.is_disabled = false;
             this.loading = true;
             formData.append('_method','PUT');
-            adminApi.post(`dashboard/category/${this.id}`,formData)
+            adminApi.post(`dashboard/departments/${this.id}`,formData)
                 .then((res) => {
                     Swal.fire({
                         icon: 'success',

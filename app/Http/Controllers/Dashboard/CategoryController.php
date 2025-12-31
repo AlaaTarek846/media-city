@@ -36,15 +36,25 @@ class CategoryController extends Controller implements HasMiddleware
     {
         $data = $request->validated();
         $data['image'] = store_single_image($request->image);
+        $departments = $data['departments'] ?? [];
+        unset($data['departments']);
+        
         $category=Category::create($data);
         $category->setTranslations($request->translations);
+        
+        if (!empty($departments)) {
+            // إضافة العلاقات الجديدة (في حالة create لا توجد علاقات موجودة)
+            $category->departments()->attach($departments);
+        }
+        
         return responseJson([],'Created Successfully',200);
     }
 
 
     public function show($id)
     {
-        $category = Category::with('translations')->find($id);
+        $category = Category::with(['translations', 'departments'])->find($id);
+        $category->departments_ids = $category->departments->pluck('id')->toArray();
         return responseJson($category,'Data exited successfully',200);
     }
 
@@ -55,8 +65,22 @@ class CategoryController extends Controller implements HasMiddleware
             unlink_image_by_path($category->getAttributes()['image']);
             $data['image'] = store_single_image($request->image);
         }
+        $departments = $data['departments'] ?? [];
+        unset($data['departments']);
+        
         $category->update($data);
         $category->setTranslations($request->translations);
+        
+        // إضافة فقط العلاقات الجديدة بدون حذف الموجودة
+        if (!empty($departments)) {
+            $existingDepartments = $category->departments->pluck('id')->toArray();
+            $newDepartments = array_diff($departments, $existingDepartments);
+            
+            if (!empty($newDepartments)) {
+                $category->departments()->attach($newDepartments);
+            }
+        }
+        
         return responseJson($category,'Updated Successfully',200);
     }
 
@@ -67,13 +91,21 @@ class CategoryController extends Controller implements HasMiddleware
         return responseJson([],'Deleted Successfully',200);
     }
 
-     public function dropdown()
+     public function dropdown(Request $request)
     {
-        $categories = Category::select('id')
+        $query = Category::select('id')
             ->with(['translations' => function($query) {
                 $query->where('locale', app()->getLocale());
-            }])
-            ->get()
+            }]);
+
+        // إذا تم إرسال department_id، جلب الفئات المرتبطة بهذا القسم فقط
+        if ($request->has('department_id') && $request->department_id) {
+            $query->whereHas('departments', function($q) use ($request) {
+                $q->where('departments.id', $request->department_id);
+            });
+        }
+
+        $categories = $query->get()
             ->map(function ($category) {
                 return [
                     'id' => $category->id,

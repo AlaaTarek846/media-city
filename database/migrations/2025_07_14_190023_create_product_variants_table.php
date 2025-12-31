@@ -19,6 +19,8 @@ return new class extends Migration
             $table->json('attribute_values')->nullable();
             $table->decimal('price_before_discount', 10, 2)->default(0);
             $table->decimal('discount_percentage', 10, 2)->default(0);
+            $table->decimal('price_day', 10, 2)->default(0);
+            $table->integer('count_day')->default(0);
             $table->decimal('price', 10, 2)->default(0);
             $table->integer('quantity')->default(0);
             $table->boolean('status')->default(true);
