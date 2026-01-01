@@ -633,6 +633,9 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                     'Accept': 'application/json'
                 },
+                xhrFields: {
+                    withCredentials: true
+                },
                 data: {
                     product_id: productId
                 },
@@ -697,6 +700,9 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                     'Accept': 'application/json'
                 },
+                xhrFields: {
+                    withCredentials: true
+                },
                 data: {
                     product_ids: wishlist
                 },
@@ -744,6 +750,9 @@
                     type: 'GET',
                     headers: {
                         'Accept': 'application/json'
+                    },
+                    xhrFields: {
+                        withCredentials: true
                     },
                     success: function(response) {
                         var $button = $('.add-to-wishlist[data-product-id="' + productId + '"]');
@@ -803,6 +812,7 @@
 
                 // Sync localStorage wishlist after login (if any)
                 syncWishlistAfterLogin();
+
             } else {
                initGuestWishlistIcons();
             }
@@ -1036,6 +1046,9 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                         'Accept': 'application/json'
                     },
+                    xhrFields: {
+                        withCredentials: true
+                    },
                     success: function(response) {
                         $element.closest('.product-box-contain').fadeOut('slow', function() {
                             $(this).remove();
@@ -1224,6 +1237,9 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                     'Accept': 'application/json'
                 },
+                xhrFields: {
+                    withCredentials: true
+                },
                 data: {
                     products: cart
                 },
@@ -1256,6 +1272,9 @@
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                         'Accept': 'application/json'
+                    },
+                    xhrFields: {
+                        withCredentials: true
                     },
                     data: {
                         product_id: productId,
@@ -1304,6 +1323,9 @@
                     type: 'GET',
                     headers: {
                         'Accept': 'application/json'
+                    },
+                    xhrFields: {
+                        withCredentials: true
                     },
                     success: function(response) {
                         if (response.data && response.data.items) {
@@ -1537,6 +1559,9 @@
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                             'Accept': 'application/json'
                         },
+                        xhrFields: {
+                            withCredentials: true
+                        },
                         success: function(response) {
                             showNotification(response.message || '{{ __("messages.Product removed from cart successfully") }}', 'success');
                             updateCartDisplay();
@@ -1755,6 +1780,9 @@
                     type: 'GET',
                     headers: {
                         'Accept': 'application/json'
+                    },
+                    xhrFields: {
+                        withCredentials: true
                     },
                     success: function(response) {
                         if (response.data && response.data.items) {
@@ -2026,6 +2054,9 @@
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                         'Accept': 'application/json'
+                    },
+                    xhrFields: {
+                        withCredentials: true
                     },
                     data: {
                         quantity: quantity

@@ -1,7 +1,7 @@
 @extends('website.layouts.layoutPage')
 @section('pageTitle', __('messages.HomePage'))
 @push("headStyle")
-    @vite(['resources/js/single-components.js'])
+
 @endpush
 @push("headScript")
     <script>
@@ -9,7 +9,7 @@
             // Check if user just registered, logged in, or reset password
             var urlParams = new URLSearchParams(window.location.search);
             var message = '';
-            
+
             if (urlParams.get('registered') === 'success') {
                 message = '{{ __("messages.Registration successful") }}';
             } else if (urlParams.get('logged') === 'success') {
@@ -17,7 +17,7 @@
             } else if (urlParams.get('password_reset') === 'success') {
                 message = '{{ __("messages.Password reset successful") }}';
             }
-            
+
             if (message) {
                 // Create success message
                 var messageDiv = document.createElement('div');
@@ -25,9 +25,9 @@
                 messageDiv.setAttribute('role', 'alert');
                 messageDiv.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 9999; min-width: 300px; max-width: 500px;';
                 messageDiv.innerHTML = '<strong>{{ __("messages.Success") }}!</strong> ' + message + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
-                
+
                 document.body.appendChild(messageDiv);
-                
+
                 // Auto remove after 5 seconds
                 setTimeout(function() {
                     if (messageDiv.parentNode) {
@@ -37,7 +37,7 @@
                         }, 300);
                     }
                 }, 5000);
-                
+
                 // Clean URL
                 window.history.replaceState({}, document.title, window.location.pathname);
             }

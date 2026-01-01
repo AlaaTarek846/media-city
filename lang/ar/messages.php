@@ -1079,4 +1079,13 @@ return [
     "Recommended deals for you"=>"عروض موصى بها لك",
     "No deals available"=>"لا توجد عروض متاحة",
     "Check back soon"=>"تحقق مرة أخرى قريباً",
+    "Company name"=>"اسم الشركة",
+    "Studio name"=>"اسم الاستديو",
+    "Invalid Egyptian mobile number"=>"رقم الهاتف المحمول غير صحيح. يرجى إدخال رقم صحيح يبدأ بـ 01 أو 201 أو +20",
+    "Invalid Egyptian WhatsApp number"=>"رقم واتساب غير صحيح. يرجى إدخال رقم صحيح يبدأ بـ 01 أو 201 أو +20",
+    "Please agree to Terms and Privacy"=>"يرجى الموافقة على الشروط والخصوصية للمتابعة",
+    "Name must be at least 3 characters"=>"يجب أن يكون الاسم 3 أحرف على الأقل",
+    "Message must be at least 10 characters"=>"يجب أن تكون الرسالة 10 أحرف على الأقل",
+    "Subject must be at least 3 characters"=>"يجب أن يكون الموضوع 3 أحرف على الأقل",
+    "Please enter a valid email address"=>"يرجى إدخال عنوان بريد إلكتروني صحيح",
 ];
