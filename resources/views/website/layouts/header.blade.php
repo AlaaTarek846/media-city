@@ -153,7 +153,7 @@
                                         </div>
                                         <div class="delivery-detail">
                                             <h6>{{ __('messages.24/7 Delivery') }}</h6>
-                                            <h5>
+                                            <h5 style="direction: ltr;">
                                                 @if(isset($contactUs) && $contactUs && $contactUs->mobile)
                                                     {{ $contactUs->mobile }}
                                                 @else
@@ -455,14 +455,19 @@
 
                     <div class="right-nav">
                         <div class="nav-number">
+                            @if (app()->getLocale() == 'en')
                             <img src="{{asset('website/images/icon/music.png')}}" class="img-fluid blur-up lazyload" alt="">
-                            <span>
+                            @endif
+                            <span style="display: inline-block;direction: ltr;">
                                 @if(isset($contactUs) && $contactUs && $contactUs->mobile)
                                     {{ $contactUs->mobile }}
                                 @else
                                     {{ __('messages.Phone') }}
                                 @endif
                             </span>
+                            @if (app()->getLocale() == 'ar')
+                                <img src="{{asset('website/images/icon/music.png')}}" class="img-fluid blur-up lazyload mx-2" style="display: inline-block;">
+                            @endif
                         </div>
                         <a href="javascript:void(0)" class="btn theme-bg-color ms-3 fire-button"
                            data-bs-toggle="modal" data-bs-target="#deal-box">

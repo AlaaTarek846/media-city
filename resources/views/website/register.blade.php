@@ -1,11 +1,54 @@
 @extends('website.layouts.layoutPage')
 @section('pageTitle',__('messages.register_new_account'))
 @push("headScript")
+    <style>
+        .account-type-option .check-icon {
+            display: none;
+        }
+        .btn-check:checked + .account-type-option .check-icon {
+            display: block;
+        }
+        #termsError {
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+        #terms.is-invalid {
+            border-color: #dc3545;
+        }
+        .form-check #terms.is-invalid + label {
+            color: #dc3545;
+        }
+    </style>
     <script>
         (function () {
             function setBusinessVisibility(accountType) {
                 var isPerson = accountType === 'person';
                 var isCompany = accountType === 'company';
+
+                // Update full name label based on account type
+                var fullNameLabel = document.getElementById('fullNameLabel');
+                var fullNameInput = document.getElementById('fullName');
+                if (fullNameLabel && fullNameInput) {
+                    var labelText = '';
+                    var placeholderText = '';
+
+                    if (accountType === 'person') {
+                        labelText = fullNameLabel.getAttribute('data-person');
+                        placeholderText = fullNameLabel.getAttribute('data-person');
+                    } else if (accountType === 'company') {
+                        labelText = fullNameLabel.getAttribute('data-company');
+                        placeholderText = fullNameLabel.getAttribute('data-company');
+                    } else if (accountType === 'studio') {
+                        labelText = fullNameLabel.getAttribute('data-studio');
+                        placeholderText = fullNameLabel.getAttribute('data-studio');
+                    }
+
+                    if (labelText) {
+                        fullNameLabel.textContent = labelText + ' *';
+                        fullNameInput.setAttribute('placeholder', placeholderText);
+                    }
+                }
             }
 
             var accountRadios = document.querySelectorAll('input[name="accountType"]');
@@ -14,17 +57,74 @@
                 return checked ? checked.value : 'person';
             }
 
+            // Function to update check icons visibility
+            function updateCheckIcons() {
+                accountRadios.forEach(function (radio) {
+                    var label = document.querySelector('label[for="' + radio.id + '"]');
+                    var checkIcon = label ? label.querySelector('.check-icon') : null;
+                    if (checkIcon) {
+                        if (radio.checked) {
+                            checkIcon.style.display = 'block';
+                        } else {
+                            checkIcon.style.display = 'none';
+                        }
+                    }
+                });
+                // Re-initialize feather icons after visibility change
+                if (typeof feather !== 'undefined') {
+                    feather.replace();
+                }
+            }
+
             accountRadios.forEach(function (r) {
                 r.addEventListener('change', function () {
                     setBusinessVisibility(getSelectedType());
+                    updateCheckIcons();
                 });
             });
             setBusinessVisibility(getSelectedType());
+            updateCheckIcons();
+
+            // Add event listener to terms checkbox to hide error when checked
+            var termsCheckbox = document.getElementById('terms');
+            var termsError = document.getElementById('termsError');
+            if (termsCheckbox) {
+                termsCheckbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        if (termsError) {
+                            termsError.style.display = 'none';
+                        }
+                        this.classList.remove('is-invalid');
+                    }
+                });
+            }
 
             var form = document.getElementById('registerForm');
             if (form) {
                 form.addEventListener('submit', function (e) {
                     e.preventDefault();
+
+                    // Validate terms checkbox
+                    var termsCheckbox = document.getElementById('terms');
+                    var termsError = document.getElementById('termsError');
+                    if (!termsCheckbox.checked) {
+                        if (termsError) {
+                            termsError.style.display = 'block';
+                        }
+                        if (termsCheckbox) {
+                            termsCheckbox.classList.add('is-invalid');
+                        }
+                        form.classList.add('was-validated');
+                        termsCheckbox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                        return;
+                    } else {
+                        if (termsError) {
+                            termsError.style.display = 'none';
+                        }
+                        if (termsCheckbox) {
+                            termsCheckbox.classList.remove('is-invalid');
+                        }
+                    }
 
                     if (!form.checkValidity()) {
                         form.classList.add('was-validated');
@@ -50,6 +150,33 @@
                             messageDiv.innerHTML = '<strong>{{ __("messages.Error") }}!</strong> {{ __("messages.Password confirmation does not match") }}';
                             messageDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                         }
+                        return;
+                    }
+
+                    // Validate Egyptian phone numbers
+                    var mobile = document.getElementById('mobile').value.trim();
+                    var whatsapp = document.getElementById('whatsapp').value.trim();
+                    var egyptianPhoneRegex = /^(01[0-9]{9}|201[0-9]{8}|\+20[0-9]{10})$/;
+
+                    if (!egyptianPhoneRegex.test(mobile)) {
+                        if (messageDiv) {
+                            messageDiv.classList.remove('d-none');
+                            messageDiv.classList.add('alert-danger');
+                            messageDiv.innerHTML = '<strong>{{ __("messages.Error") }}!</strong> {{ __("messages.Invalid Egyptian mobile number") }}';
+                            messageDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                        }
+                        document.getElementById('mobile').focus();
+                        return;
+                    }
+
+                    if (!egyptianPhoneRegex.test(whatsapp)) {
+                        if (messageDiv) {
+                            messageDiv.classList.remove('d-none');
+                            messageDiv.classList.add('alert-danger');
+                            messageDiv.innerHTML = '<strong>{{ __("messages.Error") }}!</strong> {{ __("messages.Invalid Egyptian WhatsApp number") }}';
+                            messageDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                        }
+                        document.getElementById('whatsapp').focus();
                         return;
                     }
 
@@ -182,7 +309,6 @@
                                 <div class="col-12">
                                     <div class="mb-2">
                                         <strong>{{ __('messages.Account type') }}</strong>
-                                        <div class="required-hint">* {{ __('messages.Required') }}</div>
                                     </div>
 
                                     <div class="account-type-grid">
@@ -196,7 +322,7 @@
                                                         <small>{{ __('messages.Individual') }}</small>
                                                     </div>
                                                 </div>
-                                                <i data-feather="check"></i>
+                                                <i class="check-icon" data-feather="check"></i>
                                             </label>
                                         </div>
 
@@ -210,7 +336,7 @@
                                                         <small>{{ __('messages.Business') }}</small>
                                                     </div>
                                                 </div>
-                                                <i data-feather="check"></i>
+                                                <i class="check-icon" data-feather="check"></i>
                                             </label>
                                         </div>
 
@@ -224,7 +350,7 @@
                                                         <small>{{ __('messages.Production') }}</small>
                                                     </div>
                                                 </div>
-                                                <i data-feather="check"></i>
+                                                <i class="check-icon" data-feather="check"></i>
                                             </label>
                                         </div>
                                     </div>
@@ -233,21 +359,23 @@
                                 <div class="col-md-12">
                                     <div class="form-floating theme-form-floating">
                                         <input type="text" class="form-control" id="fullName" placeholder="{{ __('messages.Full name') }}" required>
-                                        <label for="fullName">{{ __('messages.Full name') }} *</label>
+                                        <label for="fullName" id="fullNameLabel" data-person="{{ __('messages.Full name') }}" data-company="{{ __('messages.Company name') }}" data-studio="{{ __('messages.Studio name') }}">{{ __('messages.Full name') }} *</label>
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="form-floating theme-form-floating">
-                                        <input type="tel" class="form-control" id="mobile" placeholder="{{ __('messages.Mobile number') }}" required>
+                                        <input type="tel" class="form-control" id="mobile" placeholder="{{ __('messages.Mobile number') }}" pattern="^(01[0-9]{9}|201[0-9]{8}|\+20[0-9]{10})$" required>
                                         <label for="mobile">{{ __('messages.Mobile number') }} *</label>
+                                        <div class="invalid-feedback">{{ __('messages.Invalid Egyptian mobile number') }}</div>
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="form-floating theme-form-floating">
-                                        <input type="tel" class="form-control" id="whatsapp" placeholder="{{ __('messages.WhatsApp number') }}" required>
+                                        <input type="tel" class="form-control" id="whatsapp" placeholder="{{ __('messages.WhatsApp number') }}" pattern="^(01[0-9]{9}|201[0-9]{8}|\+20[0-9]{10})$" required>
                                         <label for="whatsapp">{{ __('messages.WhatsApp number') }} *</label>
+                                        <div class="invalid-feedback">{{ __('messages.Invalid Egyptian WhatsApp number') }}</div>
                                     </div>
                                 </div>
 
@@ -292,7 +420,14 @@
                                 <div class="col-12">
                                     <div class="form-check ps-0 m-0 remember-box">
                                         <input class="checkbox_animated check-box" type="checkbox" id="terms" required>
-                                        <label class="form-check-label" for="terms">{{ __('messages.I agree with Terms and Privacy') }}</label>
+                                        <label class="form-check-label" for="terms">
+                                            <a href="{{ route('terms-condition') }}" target="_blank">
+                                                {{ __('messages.I agree with Terms and Privacy') }}
+                                            </a>
+                                        </label>
+                                        <div class="invalid-feedback d-block" id="termsError" style="display: none !important;">
+                                            {{ __('messages.Please agree to Terms and Privacy') }}
+                                        </div>
                                     </div>
                                 </div>
 

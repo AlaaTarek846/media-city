@@ -22670,7 +22670,7 @@ header .offcanvas-backdrop {
 
 .contact-box-section .right-sidebar-box .custom-form .custom-input i {
     position: absolute;
-    top: 0;
+    top: 30px;
     left: 0;
     height: 100%;
     padding: 0 calc(14px + (20 - 14) * ((100vw - 320px) / (1920 - 320)));

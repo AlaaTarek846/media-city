@@ -1069,4 +1069,13 @@ return [
     "Recommended deals for you"=>"Recommended deals for you",
     "No deals available"=>"No deals available",
     "Check back soon"=>"Check back soon",
+    "Company name"=>"Company name",
+    "Studio name"=>"Studio name",
+    "Invalid Egyptian mobile number"=>"Invalid Egyptian mobile number. Please enter a valid number starting with 01, 201, or +20",
+    "Invalid Egyptian WhatsApp number"=>"Invalid Egyptian WhatsApp number. Please enter a valid number starting with 01, 201, or +20",
+    "Please agree to Terms and Privacy"=>"Please agree to Terms and Privacy to continue",
+    "Name must be at least 3 characters"=>"Name must be at least 3 characters",
+    "Message must be at least 10 characters"=>"Message must be at least 10 characters",
+    "Subject must be at least 3 characters"=>"Subject must be at least 3 characters",
+    "Please enter a valid email address"=>"Please enter a valid email address",
 ];
