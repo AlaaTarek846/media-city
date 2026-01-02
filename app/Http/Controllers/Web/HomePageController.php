@@ -12,6 +12,7 @@ use App\Models\Brand;
 use App\Models\Category;
 use App\Models\ContactMessage;
 use App\Models\ContactUs;
+use App\Events\ContactMessageNotification;
 use App\Models\News;
 use App\Models\Article;
 use App\Models\ArticleSlugRedirect;
@@ -739,7 +740,11 @@ class HomePageController extends Controller
     }
 
     public function contactUsForm(ContactUsRequest $request){
-        ContactMessage::create($request->validated());
+        $contactMessage = ContactMessage::create($request->validated());
+        
+        // Broadcast the notification event
+        event(new ContactMessageNotification($contactMessage));
+        
         return responseJson('',__('messages.Thanks for contacting us, we will get back to you soon'),200);
     }
 

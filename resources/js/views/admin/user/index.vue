@@ -39,7 +39,10 @@
                                 <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">{{ $t('global.name') }}</th>
-                                    <th scope="col">{{ $t('global.phone') }}</th>
+                                    <th scope="col">{{ $t('global.user_type') }}</th>
+                                    <th scope="col">{{ $t('global.mobile') }}</th>
+                                    <th scope="col">{{ $t('global.whatsapp') }}</th>
+                                    <th scope="col">{{ $t('global.how_did_you_hear_about_us') }}</th>
                                     <th scope="col">{{ $t('global.email') }}</th>
                                     <th scope="col">{{ $t('label.status') }}</th>
                                     <th scope="col">{{ $t('global.created_at') }}</th>
@@ -51,7 +54,15 @@
                                 <tr v-for="(item, index) in data" :key="item.id">
                                     <td scope="row">{{ index + 1 }}</td>
                                     <td>{{ item.name }}</td>
-                                    <td><span dir="ltr">{{ item.phone }}</span> </td>
+                                    <td>
+                                        <span class="badge rounded-pill bg-info-transparent" v-if="item.user_type === 'person'">{{ $t('global.person') }}</span>
+                                        <span class="badge rounded-pill bg-primary-transparent" v-else-if="item.user_type === 'company'">{{ $t('global.company') }}</span>
+                                        <span class="badge rounded-pill bg-success-transparent" v-else-if="item.user_type === 'studio'">{{ $t('global.studio') }}</span>
+                                        <span v-else>-</span>
+                                    </td>
+                                    <td><span dir="ltr">{{ item.mobile || '-' }}</span> </td>
+                                    <td><span dir="ltr">{{ item.whatsapp || '-' }}</span> </td>
+                                    <td>{{ item.how_did_you_hear_about_us || '-' }}</td>
                                     <td>{{ item.email }}</td>
                                     <td>
                                         <span class="badge rounded-pill bg-success-transparent"
@@ -91,7 +102,7 @@
                             </tbody>
                             <tbody v-else>
                                 <tr>
-                                    <th class="text-center" colspan="8">{{ $t('global.NoDataFound') }}</th>
+                                    <th class="text-center" colspan="11">{{ $t('global.NoDataFound') }}</th>
                                 </tr>
                             </tbody>
                         </table>
@@ -136,7 +147,7 @@ export default {
         search.value = {
             searchKey: '',
             searchInTranslations: true,
-            columns: ['id', 'name','phone', 'email'],
+            columns: ['id', 'name','mobile', 'whatsapp', 'email', 'user_type', 'how_did_you_hear_about_us'],
             searchInRelations: [
                 // {
                 //     relation: 'roles',

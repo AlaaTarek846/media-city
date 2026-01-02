@@ -26,8 +26,8 @@ class AdminProfileRequest extends FormRequest
         $admin = auth()->guard('admin_api')?->user();
         return [
             'name' => 'required|string',
-            'email' => 'required|string|email|unique:sys_admins,email,' . $admin->id,
-            'phone' => 'required|string|unique:sys_admins,phone,' .$admin->id,
+            'email' => 'required|string|email|unique:admins,email,' . $admin->id,
+            'phone' => 'required|string|unique:admins,phone,' .$admin->id,
             'password' => 'nullable|string|min:8',
             'confirmation' => 'nullable|same:password',
         ];

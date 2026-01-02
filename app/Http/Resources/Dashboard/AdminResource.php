@@ -17,7 +17,8 @@ class AdminResource extends JsonResource
             'status' => $this->status,
             'phone' => $this->phone,
             'image' => $this->image,
-            'role_name' => $role?->name ?? null,
+            'role_name' => $role?->id ?? null, // Return role ID for dropdown compatibility
+            'role_name_text' => $role?->name ?? null, // Keep role name for display if needed
         ];
     }
 }

@@ -27,6 +27,7 @@ class AreaRequest extends FormRequest
             "translations"         => "nullable|array",
             "translations.*.title" => "required|string",
             "status" =>  "required|boolean",
+            "shipping_price" => "required|numeric|min:0",
         ];
     }
 }

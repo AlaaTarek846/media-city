@@ -196,6 +196,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => [ChangeLang::class]], fun
 
         // contact-message
         Route::apiResource('contact-message', ContactMessageController::class);
+        Route::post('contact-message/{id}/read', [ContactMessageController::class, 'markAsRead']);
 
         // newsletter
         Route::apiResource('newsletter', NewsletterController::class);
@@ -224,7 +225,22 @@ Route::group(['prefix' => 'dashboard', 'middleware' => [ChangeLang::class]], fun
             Route::get('getNotNotRead', 'getNotNotRead');
             Route::post('clearItem/{id}', 'clearItem');
             Route::post('getNotNotRead', 'clearAll');
+            
+            // Contact Messages Notifications
+            Route::get('notifications', 'getContactMessages');
+            Route::post('notifications/{id}/read', 'markAsRead');
+            Route::get('notifications/unread-count', 'getUnreadCount');
         });
+
+        // Pusher Test Routes
+        Route::post('test-pusher', [\App\Http\Controllers\Dashboard\PusherTestController::class, 'testPusher']);
+        Route::post('test-pusher-private', [\App\Http\Controllers\Dashboard\PusherTestController::class, 'testPrivateChannel'])->middleware('auth:admin_api');
+        
+        // Contact Message Test Routes
+        Route::post('test-contact-message', [\App\Http\Controllers\Dashboard\TestContactMessageController::class, 'testContactMessage'])->middleware('auth:admin_api');
+        Route::get('test-notification-flow', [\App\Http\Controllers\Dashboard\TestNotificationController::class, 'testCompleteFlow'])->middleware('auth:admin_api');
+        Route::get('test-all-messages', [\App\Http\Controllers\Dashboard\TestNotificationController::class, 'getAllMessages'])->middleware('auth:admin_api');
+        Route::post('test-event-dispatch', [\App\Http\Controllers\Dashboard\TestNotificationController::class, 'testEventDispatch'])->middleware('auth:admin_api');
 
         Route::put('update-admin-profile', [ProfileController::class,'updateAdminProfile']);
 

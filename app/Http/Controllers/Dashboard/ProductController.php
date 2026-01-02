@@ -76,9 +76,18 @@ class ProductController extends Controller implements HasMiddleware
 
         // حفظ Variants
         foreach ($request->variant as $variant) {
+            $attributeValues = $variant['attribute_values'] ?? '';
+            // Convert empty string to null for JSON column
+            if ($attributeValues === '' || $attributeValues === null) {
+                $attributeValues = null;
+            } else {
+                // If it's a string, convert it to array for JSON storage
+                $attributeValues = is_string($attributeValues) ? [$attributeValues] : $attributeValues;
+            }
+            
             $variantData = [
                 'sku' => $variant['sku'] ?? '',
-                'attribute_values' => $variant['attribute_values'] ?? '',
+                'attribute_values' => $attributeValues,
                 'discount_percentage' => $variant['discount_percentage'] ?? 0,
                 'quantity' => $variant['quantity'] ?? 0,
                 'status' => $variant['status'] ?? true,
@@ -161,10 +170,22 @@ class ProductController extends Controller implements HasMiddleware
         }
 
         // حفظ Variants
+        // حذف جميع variants القديمة وإنشاء جديدة
+        $product->variants()->delete();
+        
         foreach ($request->variant as $variant) {
+            $attributeValues = $variant['attribute_values'] ?? '';
+            // Convert empty string to null for JSON column
+            if ($attributeValues === '' || $attributeValues === null) {
+                $attributeValues = null;
+            } else {
+                // If it's a string, convert it to array for JSON storage
+                $attributeValues = is_string($attributeValues) ? [$attributeValues] : $attributeValues;
+            }
+            
             $variantData = [
                 'sku' => $variant['sku'] ?? '',
-                'attribute_values' => $variant['attribute_values'] ?? '',
+                'attribute_values' => $attributeValues,
                 'discount_percentage' => $variant['discount_percentage'] ?? 0,
                 'quantity' => $variant['quantity'] ?? 0,
                 'status' => $variant['status'] ?? true,
@@ -189,8 +210,7 @@ class ProductController extends Controller implements HasMiddleware
                 $variantData['price_before_discount'] = $priceBeforeDiscount;
             }
             
-
-            $product->variant()->update($variantData);
+            $product->variants()->create($variantData);
         }
 
         return responseJson($product,'Updated Successfully',200);

@@ -11,12 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('brands', function (Blueprint $table) {
-            $table->id();
-            $table->string('image')->nullable();
-            $table->boolean('status')->default(true);
-            $table->softDeletes();
-            $table->timestamps();
+        Schema::table('contact_messages', function (Blueprint $table) {
+            $table->boolean('is_read')->default(false)->after('message');
+            $table->timestamp('read_at')->nullable()->after('is_read');
         });
     }
 
@@ -25,6 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('brands');
+        Schema::table('contact_messages', function (Blueprint $table) {
+            $table->dropColumn(['is_read', 'read_at']);
+        });
     }
 };

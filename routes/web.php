@@ -12,6 +12,26 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('change-language/{locale}', [LanguageController::class, 'changeLanguage'])->name('change.language');
 
+// Pusher Test Page
+Route::get('pusher-test', function () {
+    return view('pusher-test');
+})->name('pusher.test');
+
+// Contact Form Test Page
+Route::get('test-contact-form', function () {
+    return view('test-contact-form');
+})->name('test.contact.form');
+
+// Notification Debug Test Page
+Route::get('test-notification-debug', function () {
+    return view('test-notification-debug');
+})->name('test.notification.debug');
+
+// Simple Notification Test Page
+Route::get('test-notification-simple', function () {
+    return view('test-notification-simple');
+})->name('test.notification.simple');
+
 // Dashboard admin
 Route::group(['middleware' => [ChangeLangForWeb::class]], function () {
 

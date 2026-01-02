@@ -14,12 +14,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Spatie\Permission\Models\Role;
 class AdminController extends Controller implements HasMiddleware
 {
 
     public static function middleware(): array
     {
-        return [];
         return [
             new Middleware('can:admin read', only: ['index']),
             new Middleware('can:admin create', only: ['store']),
@@ -55,14 +55,27 @@ class AdminController extends Controller implements HasMiddleware
             $data['image'] = store_single_image($request->image);
         $data['password'] = bcrypt($request->password);
         $admin = Admin::create($data);
-        $admin->assignRole($request->input('role_name'));
+
+        // Handle role assignment - role_name can be ID or name
+        $roleName = $request->input('role_name');
+        if (is_numeric($roleName)) {
+            // If it's numeric, find role by ID
+            $role = Role::where('id', $roleName)->where('guard_name', 'admin_api')->first();
+            if ($role) {
+                $admin->syncRoles([$role->name]);
+            }
+        } else {
+            // If it's a string, use it directly as role name
+            $admin->syncRoles([$roleName]);
+        }
+
         return responseJson([],'Created Successfully',200);
     }
 
     public function edit(Admin $admin)
     {
         $roles = DB::table('sys_roles')->whereGuardName('admin_api')->whereStatus(1)->whereNotIn('name',['SuperAdmin'])->get();
-        return responseJson(['admin' => $admin, 'roles' => $roles],'',200);
+        return responseJson(['admin' => new AdminResource($admin), 'roles' => $roles],'',200);
     }
 
 
@@ -86,7 +99,18 @@ class AdminController extends Controller implements HasMiddleware
         $admin->update(collect($data)->filter()->toArray());
         $admin->update(['status'=>$request->status]);
 
-        $admin->assignRole($request->input('role_name'));
+        // Handle role assignment - role_name can be ID or name
+        $roleName = $request->input('role_name');
+        if (is_numeric($roleName)) {
+            // If it's numeric, find role by ID
+            $role = Role::where('id', $roleName)->where('guard_name', 'admin_api')->first();
+            if ($role) {
+                $admin->syncRoles([$role->name]);
+            }
+        } else {
+            // If it's a string, use it directly as role name
+            $admin->syncRoles([$roleName]);
+        }
 
         return responseJson([],'Updated Successfully',200);
     }

@@ -29,7 +29,7 @@ class BannerRequest extends FormRequest
             "translations.*.title" => "required|string",
             "translations.*.description" => "required|string",
             "status" =>  "required|boolean",
-            'image' => $this->method() == 'PUT' ? 'nullable'.($this->hasFile('image')?'|file|mimes:jpeg,jpg,png,svg,webp':'') : 'required|file|mimes:png,svg,webp,jpg,jpeg' ,
+            'image' => $this->method() == 'PUT' ? 'nullable'.($this->hasFile('image')?'|file|mimes:jpeg,jpg,png,svg,webp':'') : 'nullable|file|mimes:png,svg,webp,jpg,jpeg' ,
         ];
     }
 }

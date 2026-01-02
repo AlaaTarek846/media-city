@@ -1,4 +1,5 @@
 import './bootstrap';
+import './echo'; // Initialize Laravel Echo with Pusher
 import { createApp } from 'vue';
 import i18n from './lang/admin.js';
 import router  from './router/adminRoute';
