@@ -294,6 +294,20 @@ class CartController extends Controller
         $formattedItems = $cartItems->map(function($item) {
             $translation = $item->product->translation ?? $item->product->translations->first();
             $variant = $item->productVariant;
+            $category = $item->product->category;
+            
+            // Use discount price if available, otherwise use regular price
+            $price = $item->price;
+            $discountPrice = null;
+            $discountPercentage = 0;
+            $priceBeforeDiscount = $price;
+            
+            if ($variant && $variant->discount_price && $variant->discount_percentage > 0) {
+                $discountPrice = $variant->discount_price;
+                $discountPercentage = $variant->discount_percentage;
+                $priceBeforeDiscount = $variant->price_before_discount ?? $variant->price;
+                $price = $discountPrice; // Use discount price
+            }
             
             return [
                 'id' => $item->id,
@@ -303,9 +317,13 @@ class CartController extends Controller
                 'slug' => $translation->slug ?? '',
                 'image' => $item->product->image,
                 'quantity' => $item->quantity,
-                'price' => $item->price,
-                'total' => $item->price * $item->quantity,
+                'price' => $price,
+                'discount_price' => $discountPrice,
+                'discount_percentage' => $discountPercentage,
+                'price_before_discount' => $priceBeforeDiscount,
+                'total' => $price * $item->quantity,
                 'unit' => $variant->unit ?? '',
+                'category' => $category->translation->title ?? ($category->translations->first()->title ?? ''),
             ];
         });
 
@@ -319,6 +337,57 @@ class CartController extends Controller
                 'items_count' => $itemsCount
             ],
             __('messages.Cart items fetched successfully'),
+            200
+        );
+    }
+
+    /**
+     * Update cart item quantity
+     * 
+     * @param Request $request
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateQuantity(Request $request, $id)
+    {
+        $request->validate([
+            'quantity' => 'required|integer|min:0'
+        ]);
+
+        $user = auth('user')->user();
+        $cartItem = $user->carts()->findOrFail($id);
+        $quantity = $request->quantity;
+
+        // If quantity is 0, delete the item
+        if ($quantity <= 0) {
+            $cartItem->delete();
+            return responseJson(
+                null,
+                __('messages.Product removed from cart successfully'),
+                200
+            );
+        }
+
+        // Check if quantity exceeds available stock
+        if ($cartItem->productVariant && $quantity > $cartItem->productVariant->quantity) {
+            return responseJson(
+                null,
+                __('messages.Quantity exceeds available stock'),
+                400
+            );
+        }
+
+        // Update quantity
+        $cartItem->update(['quantity' => $quantity]);
+
+        return responseJson(
+            [
+                'id' => $cartItem->id,
+                'quantity' => $cartItem->quantity,
+                'price' => $cartItem->price,
+                'total' => $cartItem->price * $cartItem->quantity
+            ],
+            __('messages.Cart updated successfully'),
             200
         );
     }

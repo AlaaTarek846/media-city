@@ -23,7 +23,7 @@
             <div class="row">
                 <div class="col-12">
                     <div class="breadscrumb-contain">
-                        <h2>{{ $translation->title ?? __('messages.About Us') }}</h2>
+                        <h2>{{ __('messages.About Us') }}</h2>
                         <nav>
                             <ol class="breadcrumb mb-0">
                                 <li class="breadcrumb-item">
@@ -31,7 +31,7 @@
                                         <i class="fa-solid fa-house"></i>
                                     </a>
                                 </li>
-                                <li class="breadcrumb-item active mx-1" aria-current="page">{{ $translation->title ?? __('messages.About Us') }}</li>
+                                <li class="breadcrumb-item active mx-1" aria-current="page">{{ __('messages.About Us') }}</li>
                             </ol>
                         </nav>
                     </div>
@@ -53,12 +53,12 @@
                             <div class="fresh-image-2">
                                 <div>
                                     @if($aboutUs->image_1)
-                                        <img src="{{ $aboutUs->image_1 }}" 
-                                             class="bg-img blur-up lazyload" 
+                                        <img src="{{ $aboutUs->image_1 }}"
+                                             class="bg-img blur-up lazyload"
                                              alt="{{ $translation->title ?? 'About Us' }}">
                                     @else
                                         <img src="{{asset('website/images/151.jpeg')}}"
-                                             class="bg-img blur-up lazyload" 
+                                             class="bg-img blur-up lazyload"
                                              alt="{{ $translation->title ?? 'About Us' }}">
                                     @endif
                                 </div>
@@ -70,12 +70,12 @@
                             <div class="fresh-image">
                                 <div>
                                     @if($aboutUs->image_2)
-                                        <img src="{{ $aboutUs->image_2 }}" 
-                                             class="bg-img blur-up lazyload" 
+                                        <img src="{{ $aboutUs->image_2 }}"
+                                             class="bg-img blur-up lazyload"
                                              alt="{{ $translation->title ?? 'About Us' }}">
                                     @else
                                         <img src="{{asset('website/images/151.jpeg')}}"
-                                             class="bg-img blur-up lazyload" 
+                                             class="bg-img blur-up lazyload"
                                              alt="{{ $translation->title ?? 'About Us' }}">
                                     @endif
                                 </div>
@@ -115,12 +115,12 @@
                                                     <div class="delivery-box">
                                                         <div class="delivery-icon">
                                                             @if($feature->icon)
-                                                                <img src="{{ $feature->icon }}" 
-                                                                     class="blur-up lazyload" 
+                                                                <img src="{{ $feature->icon }}"
+                                                                     class="blur-up lazyload"
                                                                      alt="{{ $featureTranslation->title ?? 'Feature Icon' }}">
                                                             @else
-                                                                <img src="{{asset('website/svg/3/delivery.svg')}}" 
-                                                                     class="blur-up lazyload" 
+                                                                <img src="{{asset('website/svg/3/delivery.svg')}}"
+                                                                     class="blur-up lazyload"
                                                                      alt="{{ $featureTranslation->title ?? 'Feature Icon' }}">
                                                             @endif
                                                         </div>
@@ -165,12 +165,12 @@
                                         <div class="clint-contain">
                                             <div class="client-icon">
                                                 @if($statistic->icon)
-                                                    <img src="{{ $statistic->icon }}" 
-                                                         class="blur-up lazyload" 
+                                                    <img src="{{ $statistic->icon }}"
+                                                         class="blur-up lazyload"
                                                          alt="{{ $statisticTranslation->title ?? 'Statistic Icon' }}">
                                                 @else
-                                                    <img src="{{asset('website/svg/3/work.svg')}}" 
-                                                         class="blur-up lazyload" 
+                                                    <img src="{{asset('website/svg/3/work.svg')}}"
+                                                         class="blur-up lazyload"
                                                          alt="{{ $statisticTranslation->title ?? 'Statistic Icon' }}">
                                                 @endif
                                             </div>

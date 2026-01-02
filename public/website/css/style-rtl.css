@@ -20975,7 +20975,7 @@ header .offcanvas-backdrop {
 
 .contact-box-section .right-sidebar-box .custom-form .custom-input i {
     position: absolute;
-    top: 0;
+    top: 30px;
     right: 0;
     height: 100%;
     padding: 0 calc(14px + (20 - 14) * ((100vw - 320px) / (1920 - 320)));
@@ -28369,4 +28369,10 @@ header .offcanvas-backdrop {
 .ms-3 {
     margin-right: 1rem !important;
     margin-left: unset !important;
+}
+
+.btn-dark {
+    color: #fff;
+    background-color: #1c1f23;
+    border-color: #1a1e21;
 }

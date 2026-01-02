@@ -6,7 +6,13 @@
                 <div class="col-xxl-3 d-xxl-block d-none">
                     <div class="top-left-header">
                         <i class="iconly-Location icli text-white"></i>
-                        <span class="text-white">1418 Riverwood Drive, CA 96052, US</span>
+                        <span class="text-white">
+                            @if(isset($contactUs) && $contactUs)
+                                {!! $contactUs->address !!}
+                            @else
+                                {{ __('messages.Address') }}
+                            @endif
+                        </span>
                     </div>
                 </div>
 
@@ -15,18 +21,9 @@
                         <div class="notification-slider">
                             <div>
                                 <div class="timer-notification">
-                                    <h6><strong class="me-1">Welcome to Fastkart!</strong>Wrap new offers/gift
-                                        every signle day on Weekends.<strong class="ms-1">New Coupon Code: Fast024
-                                        </strong>
-                                    </h6>
-                                </div>
-                            </div>
-
-                            <div>
-                                <div class="timer-notification">
-                                    <h6>Something you love is now on sale!
-                                        <a href="{{route('shop')}}" class="text-white">Buy Now
-                                            !</a>
+                                    <h6>{{ __('messages.Something you love is now on sale') }}!
+                                        <a href="{{route('shop')}}" class="text-white">{{ __('messages.Buy Now') }}!
+                                        </a>
                                     </h6>
                                 </div>
                             </div>
@@ -81,7 +78,7 @@
                                     <span class="input-group-text">
                                         <i data-feather="search" class="font-light"></i>
                                     </span>
-                                <input type="text" class="form-control search-type" placeholder="Search here..">
+                                <input type="text" class="form-control search-type" placeholder="{{ __('messages.Search here') }}..">
                                 <span class="input-group-text close-search">
                                         <i data-feather="x" class="font-light"></i>
                                     </span>
@@ -91,11 +88,13 @@
                         <div class="middle-box">
                             <div class="center-box">
                                 <div class="searchbar-box order-xl-1 d-none d-xl-block">
-                                    <input type="search" class="form-control" id="exampleFormControlInput1"
-                                           placeholder="search for product, delivered to your door...">
-                                    <button class="btn search-button">
-                                        <i class="iconly-Search icli"></i>
-                                    </button>
+                                    <form action="{{ route('shop') }}">
+                                        <input type="search" name="search" class="form-control" id="exampleFormControlInput1"
+                                               placeholder="{{ __('messages.search for product, delivered to your door') }}...">
+                                        <button class="btn search-button" type="submit">
+                                            <i class="iconly-Search icli"></i>
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -112,7 +111,7 @@
                                                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                                             </svg>
                                         </span>
-                                    <input type="text" class="form-control search-type" placeholder="Search here..">
+                                    <input type="text" class="form-control search-type" placeholder="{{ __('messages.Search here') }}..">
                                     <span class="input-group-text close-search">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -153,8 +152,14 @@
                                             </svg>
                                         </div>
                                         <div class="delivery-detail">
-                                            <h6>24/7 Delivery</h6>
-                                            <h5>+91 888 104 2340</h5>
+                                            <h6>{{ __('messages.24/7 Delivery') }}</h6>
+                                            <h5 style="direction: ltr;">
+                                                @if(isset($contactUs) && $contactUs && $contactUs->mobile)
+                                                    {{ $contactUs->mobile }}
+                                                @else
+                                                    {{ __('messages.Phone') }}
+                                                @endif
+                                            </h5>
                                         </div>
                                     </a>
                                 </li>
@@ -183,8 +188,8 @@
                                                     d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6">
                                                 </path>
                                             </svg>
-                                            <span class="position-absolute top-0 start-100 translate-middle badge">2
-                                                    <span class="visually-hidden">unread messages</span>
+                                            <span class="position-absolute top-0 start-100 translate-middle badge cart-items-count">0
+                                                    <span class="visually-hidden">{{ __('messages.unread messages') }}</span>
                                                 </span>
                                         </button>
 
@@ -200,9 +205,9 @@
 
                                                         <div class="drop-contain">
                                                             <a href="{{route('productDetail',1)}}">
-                                                                <h5>Fantasy Crunchy Choco Chip Cookies</h5>
+                                                                <h5>{{ __('messages.Product') }}</h5>
                                                             </a>
-                                                            <h6><span>1 x</span> EGP80.58</h6>
+                                                            <h6><span>1 x</span> {{ __('messages.currency') }} 0.00</h6>
                                                             <button class="close-button close_button">
                                                                 <i class="fa-solid fa-xmark"></i>
                                                             </button>
@@ -213,8 +218,8 @@
                                             </ul>
 
                                             <div class="price-box">
-                                                <h5>Total :</h5>
-                                                <h4 class="theme-color fw-bold">EGP106.58</h4>
+                                                <h5>{{ __('messages.Total') }} :</h5>
+                                                <h4 class="theme-color fw-bold">{{ __('messages.currency') }} 0.00</h4>
                                             </div>
 
                                             <div class="button-group">
@@ -308,12 +313,12 @@
                     <div class="header-nav-left">
                         <button class="dropdown-category dropdown-category-2">
                             <i class="iconly-Category icli"></i>
-                            <span>New arrival</span>
+                            <span>{{ __('messages.New arrival') }}</span>
                         </button>
 
                         <div class="category-dropdown">
                             <div class="category-title">
-                                <h5>New arrival</h5>
+                                <h5>{{ __('messages.New arrival') }}</h5>
                                 <button type="button" class="btn p-0 close-button text-content">
                                     <i class="fa-solid fa-xmark"></i>
                                 </button>
@@ -404,9 +409,9 @@
                     <div class="main-nav navbar navbar-expand-xl navbar-light navbar-sticky">
                         <div class="offcanvas offcanvas-collapse order-xl-2" id="primaryMenu">
                             <div class="offcanvas-header navbar-shadow">
-                                <h5>Menu</h5>
+                                <h5>{{ __('messages.Menu') }}</h5>
                                 <button class="btn-close lead" type="button" data-bs-dismiss="offcanvas"
-                                        aria-label="Close"></button>
+                                        aria-label="{{ __('messages.Close') }}"></button>
                             </div>
                             <div class="offcanvas-body">
                                 <ul class="navbar-nav">
@@ -425,17 +430,23 @@
                                         </li>
                                         @endif
                                     @endforeach
+                                    @foreach($headerDepartments as $department)
+                                        @if($department->id == 2)
+                                            <li class="nav-item">
+                                                <a class="nav-link ps-xl-2 ps-0" href="{{ url('/shop/' . $department->slug) }}">
+                                                    {{ __('messages.Best Seller') }}
+                                                </a>
+                                            </li>
+                                        @endif
+                                    @endforeach
                                     <li class="nav-item">
-                                        <a class="nav-link ps-xl-2 ps-0" href="{{route('best-seller')}}">Best Seller </a>
+                                        <a class="nav-link ps-xl-2 ps-0" href="{{route('about-us')}}">{{ __('messages.About Us') }}</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link ps-xl-2 ps-0" href="{{route('about-us')}}">About Us</a>
+                                        <a class="nav-link ps-xl-2 ps-0" href="{{route('blog')}}">{{ __('messages.Blogs') }}</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link ps-xl-2 ps-0" href="{{route('blog')}}">Blogs</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link ps-xl-2 ps-0" href="{{route('contact')}}">Contact Us</a>
+                                        <a class="nav-link ps-xl-2 ps-0" href="{{route('contact')}}">{{ __('messages.Contact Us') }}</a>
                                     </li>
                                 </ul>
                             </div>
@@ -444,15 +455,26 @@
 
                     <div class="right-nav">
                         <div class="nav-number">
+                            @if (app()->getLocale() == 'en')
                             <img src="{{asset('website/images/icon/music.png')}}" class="img-fluid blur-up lazyload" alt="">
-                            <span>(123) 456 7890</span>
+                            @endif
+                            <span style="display: inline-block;direction: ltr;">
+                                @if(isset($contactUs) && $contactUs && $contactUs->mobile)
+                                    {{ $contactUs->mobile }}
+                                @else
+                                    {{ __('messages.Phone') }}
+                                @endif
+                            </span>
+                            @if (app()->getLocale() == 'ar')
+                                <img src="{{asset('website/images/icon/music.png')}}" class="img-fluid blur-up lazyload mx-2" style="display: inline-block;">
+                            @endif
                         </div>
                         <a href="javascript:void(0)" class="btn theme-bg-color ms-3 fire-button"
                            data-bs-toggle="modal" data-bs-target="#deal-box">
                             <div class="fire">
                                 <img src="{{asset('website/images/icon/hot-sale.png')}}" class="img-fluid" alt="">
                             </div>
-                            <span>Hot Deals</span>
+                            <span>{{ __('messages.Hot Deals') }}</span>
                         </a>
                     </div>
                 </div>
@@ -468,35 +490,35 @@
         <li class="active">
             <a href="{{route('web.home')}}">
                 <i class="iconly-Home icli"></i>
-                <span>Home</span>
+                <span>{{ __('messages.home') }}</span>
             </a>
         </li>
 
         <li class="mobile-category">
             <a href="javascript:void(0)">
                 <i class="iconly-Category icli js-link"></i>
-                <span>Category</span>
+                <span>{{ __('messages.Category') }}</span>
             </a>
         </li>
 
         <li>
             <a href="search.html" class="search-box">
                 <i class="iconly-Search icli"></i>
-                <span>Search</span>
+                <span>{{ __('messages.Search') }}</span>
             </a>
         </li>
 
         <li>
             <a href="{{route('wishlist')}}" class="notifi-wishlist">
                 <i class="iconly-Heart icli"></i>
-                <span>My Wish</span>
+                <span>{{ __('messages.My Wish') }}</span>
             </a>
         </li>
 
         <li>
-            <a href="cart.html">
+            <a href="{{ route('shoppingCart') }}">
                 <i class="iconly-Bag-2 icli fly-cate"></i>
-                <span>Cart</span>
+                <span>{{ __('messages.Cart') }}</span>
             </a>
         </li>
     </ul>
