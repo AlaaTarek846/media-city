@@ -170,6 +170,131 @@
 </footer>
 <!-- Footer End -->
 
+<style>
+    /* Rent Fields Styling for Modal */
+    .rent-fields-wrapper-modal {
+        background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+        border: 2px solid #e9ecef;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        margin-top: 15px;
+    }
+
+    .rent-fields-wrapper-modal:hover {
+        border-color: var(--theme-color, #0da487);
+        box-shadow: 0 6px 20px rgba(13, 164, 135, 0.15);
+    }
+
+    .rent-header-modal {
+        border-bottom: 2px solid #e9ecef;
+        padding-bottom: 12px;
+        margin-bottom: 15px;
+    }
+
+    .rent-title-modal {
+        color: var(--theme-color, #0da487);
+        font-weight: 600;
+        font-size: 1.1rem;
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+    }
+
+    .rent-title-modal i {
+        color: var(--theme-color, #0da487);
+        font-size: 1rem;
+    }
+
+    .form-group-rent-modal {
+        position: relative;
+        margin-bottom: 1rem;
+    }
+
+    .rent-label-modal {
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        font-size: 0.9rem;
+    }
+
+    .rent-label-modal i {
+        color: var(--theme-color, #0da487);
+        font-size: 0.85rem;
+    }
+
+    .input-wrapper-rent-modal {
+        position: relative;
+    }
+
+    .rent-input-modal {
+        border: 2px solid #dee2e6;
+        border-radius: 8px;
+        padding: 10px 40px 10px 12px;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        background: #fff;
+        width: 100%;
+    }
+
+    .rent-input-modal:focus {
+        border-color: var(--theme-color, #0da487);
+        box-shadow: 0 0 0 0.2rem rgba(13, 164, 135, 0.15);
+        outline: none;
+    }
+
+    .rent-input-modal.is-invalid {
+        border-color: #dc3545;
+    }
+
+    .rent-input-modal.is-valid {
+        border-color: #28a745;
+    }
+
+    .input-icon-modal {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6c757d;
+        pointer-events: none;
+        font-size: 0.85rem;
+    }
+
+    .textarea-icon-modal {
+        top: 18px;
+        transform: none;
+    }
+
+    .rent-input-modal[type="date"]::-webkit-calendar-picker-indicator {
+        opacity: 0;
+        position: absolute;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+    }
+
+    .rent-input-modal[type="number"]::-webkit-inner-spin-button,
+    .rent-input-modal[type="number"]::-webkit-outer-spin-button {
+        opacity: 1;
+        margin-right: 5px;
+    }
+
+    @media (max-width: 768px) {
+        .rent-fields-wrapper-modal {
+            padding: 15px;
+        }
+
+        .rent-title-modal {
+            font-size: 1rem;
+        }
+    }
+</style>
+
 <!-- Quick View Modal Box Start -->
 <div class="modal fade theme-modal view-modal" id="view" tabindex="-1" aria-labelledby="exampleModalLabel"
      aria-hidden="true">

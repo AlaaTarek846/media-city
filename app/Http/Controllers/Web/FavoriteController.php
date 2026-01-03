@@ -79,14 +79,14 @@ class FavoriteController extends Controller
 
         return responseJson(
             null,
-            __('messages.Item removed from cart successfully'),
+            __('messages.Product removed from wishlist'),
             200
         );
     }
 
     /**
      * Add product to wishlist (for authenticated users)
-     * 
+     *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
@@ -113,7 +113,7 @@ class FavoriteController extends Controller
         // Add product to favorites
         try {
             $user->favorites()->attach($productId);
-            
+
             return responseJson(
                 ['status' => 'added'],
                 __('messages.Product added to wishlist successfully'),
@@ -128,7 +128,7 @@ class FavoriteController extends Controller
                     200
                 );
             }
-            
+
             return responseJson(
                 ['status' => 'error'],
                 __('messages.Error adding product to wishlist'),
@@ -139,7 +139,7 @@ class FavoriteController extends Controller
 
     /**
      * Sync wishlist from localStorage after login
-     * 
+     *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
@@ -158,7 +158,7 @@ class FavoriteController extends Controller
         foreach ($productIds as $productId) {
             // Check if product already exists
             $isFavorite = $user->favorites()->where('product_id', $productId)->exists();
-            
+
             if (!$isFavorite) {
                 try {
                     $user->favorites()->attach($productId);
@@ -184,7 +184,7 @@ class FavoriteController extends Controller
 
     /**
      * Check if product is in wishlist
-     * 
+     *
      * @param int $productId
      * @return \Illuminate\Http\JsonResponse
      */
@@ -202,13 +202,13 @@ class FavoriteController extends Controller
 
     /**
      * Get wishlist products for authenticated user
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function getWishlistProducts()
     {
         $user = auth('user')->user();
-        
+
         $products = $user->favorites()
             ->where('products.status', 1)
             ->with([
@@ -235,6 +235,7 @@ class FavoriteController extends Controller
                 'title' => $translation->title ?? '',
                 'slug' => $translation->slug ?? '',
                 'image' => $product->image,
+                'condition' => $product->condition ?? 'new',
                 'category' => [
                     'id' => $category->id ?? null,
                     'name' => $category->translation->title ?? ($category->translations->first()->title ?? ''),
@@ -243,11 +244,16 @@ class FavoriteController extends Controller
                     'id' => $brand->id,
                     'name' => $brand->translation->title ?? ($brand->translations->first()->title ?? ''),
                 ] : null,
+                'department' => $department ? [
+                    'id' => $department->id,
+                    'name' => $department->translation->title ?? ($department->translations->first()->title ?? ''),
+                ] : null,
                 'price' => $variant->price ?? 0,
                 'discount_price' => $variant->discount_price ?? null,
                 'discount_percentage' => $variant->discount_percentage ?? 0,
                 'price_before_discount' => $variant->price_before_discount ?? $variant->price ?? 0,
                 'unit' => $variant->unit ?? '',
+                'variant_id' => $variant->id ?? null,
                 'rate' => $product->rate ?? 0,
                 'review_count' => $product->review_count ?? 0,
             ];
@@ -262,7 +268,7 @@ class FavoriteController extends Controller
 
     /**
      * Get products by IDs (for guest users from localStorage)
-     * 
+     *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
@@ -301,6 +307,7 @@ class FavoriteController extends Controller
                 'title' => $translation->title ?? '',
                 'slug' => $translation->slug ?? '',
                 'image' => $product->image,
+                'condition' => $product->condition ?? 'new',
                 'category' => [
                     'id' => $category->id ?? null,
                     'name' => $category->translation->title ?? ($category->translations->first()->title ?? ''),
@@ -309,11 +316,17 @@ class FavoriteController extends Controller
                     'id' => $brand->id,
                     'name' => $brand->translation->title ?? ($brand->translations->first()->title ?? ''),
                 ] : null,
+                'department' => $department ? [
+                    'id' => $department->id,
+                    'name' => $department->translation->title ?? ($department->translations->first()->title ?? ''),
+                ] : null,
                 'price' => $variant->price ?? 0,
                 'discount_price' => $variant->discount_price ?? null,
                 'discount_percentage' => $variant->discount_percentage ?? 0,
+                'department_id' => $department->id,
                 'price_before_discount' => $variant->price_before_discount ?? $variant->price ?? 0,
                 'unit' => $variant->unit ?? '',
+                'variant_id' => $variant->id ?? null,
                 'rate' => $product->rate ?? 0,
                 'review_count' => $product->review_count ?? 0,
             ];

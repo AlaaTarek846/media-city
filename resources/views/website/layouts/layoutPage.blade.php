@@ -219,6 +219,58 @@
                         '<div class="product-rating" id="modal-product-rating"></div>' +
                         '<div class="product-detail" id="modal-product-description"></div>' +
                         '<ul class="brand-list" id="modal-product-info"></ul>' +
+                        // Rent fields (only for rent products)
+                        '<div id="modal-rent-fields" style="display: none;" class="rent-fields-wrapper-modal mb-3">' +
+                            '<div class="rent-header-modal mb-3">' +
+                                '<h5 class="rent-title-modal">' +
+                                    '<i class="fa-solid fa-calendar-days me-2"></i>' +
+                                    '{{ __("messages.Rental Period") }}' +
+                                '</h5>' +
+                                '<p class="text-content mb-0" style="font-size: 0.9rem;">{{ __("messages.Please select your rental period") }}</p>' +
+                            '</div>' +
+                            '<div class="rent-fields-content-modal">' +
+                                '<div class="row g-3">' +
+                                    '<div class="col-md-6">' +
+                                        '<div class="form-group-rent-modal">' +
+                                            '<label for="modal-start-date" class="form-label rent-label-modal">' +
+                                                '<i class="fa-solid fa-calendar-check me-2"></i>' +
+                                                '{{ __("messages.Start Date") }} <span class="text-danger">*</span>' +
+                                            '</label>' +
+                                            '<div class="input-wrapper-rent-modal">' +
+                                                '<input type="date" class="form-control rent-input-modal" id="modal-start-date" name="start_date" required>' +
+                                                '<i class="fa-solid fa-calendar input-icon-modal"></i>' +
+                                            '</div>' +
+                                            '<div class="invalid-feedback">{{ __("messages.Start date is required") }}</div>' +
+                                        '</div>' +
+                                    '</div>' +
+                                    '<div class="col-md-6">' +
+                                        '<div class="form-group-rent-modal">' +
+                                            '<label for="modal-count-day" class="form-label rent-label-modal">' +
+                                                '<i class="fa-solid fa-calendar-day me-2"></i>' +
+                                                '{{ __("messages.Count Days") }} <span class="text-danger">*</span>' +
+                                            '</label>' +
+                                            '<div class="input-wrapper-rent-modal">' +
+                                                '<input type="number" class="form-control rent-input-modal" id="modal-count-day" name="count_day" min="1" required>' +
+                                                '<i class="fa-solid fa-hashtag input-icon-modal"></i>' +
+                                            '</div>' +
+                                            '<div class="invalid-feedback">{{ __("messages.Count days is required") }}</div>' +
+                                        '</div>' +
+                                    '</div>' +
+                                    '<div class="col-12">' +
+                                        '<div class="form-group-rent-modal">' +
+                                            '<label for="modal-note" class="form-label rent-label-modal">' +
+                                                '<i class="fa-solid fa-note-sticky me-2"></i>' +
+                                                '{{ __("messages.Note") }} <span class="text-muted">({{ __("messages.Optional") }})</span>' +
+                                            '</label>' +
+                                            '<div class="input-wrapper-rent-modal">' +
+                                                '<textarea class="form-control rent-input-modal" id="modal-note" name="note" rows="3" placeholder="{{ __("messages.Note (Optional)") }}"></textarea>' +
+                                                '<i class="fa-solid fa-comment input-icon-modal textarea-icon-modal"></i>' +
+                                            '</div>' +
+                                        '</div>' +
+                                    '</div>' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>' +
                         '<div class="modal-button">' +
                             '<button class="btn btn-md add-cart-button icon" id="modal-add-to-cart-btn">' +
                                 '{{ __("messages.Add") }} {{ __("messages.To Cart") }}' +
@@ -306,10 +358,22 @@
                 $('#modal-view-details-btn').attr('href', product.detail_url);
             }
 
+            // Show/hide rent fields based on product condition
+            var isRent = product.condition === 'rent';
+            if (isRent) {
+                $('#modal-rent-fields').show();
+                // Set minimum date to today
+                var today = new Date().toISOString().split('T')[0];
+                $('#modal-start-date').attr('min', today);
+            } else {
+                $('#modal-rent-fields').hide();
+            }
+
             // Set add to cart button
             $('#modal-add-to-cart-btn')
                 .attr('data-product-id', product.id)
                 .attr('data-variant-id', product.variant_id || '')
+                .attr('data-condition', product.condition || 'new')
                 .addClass('addcart-button');
 
             // Render product images slider
@@ -959,7 +1023,7 @@
         }
 
         /**
-         * Render wishlist products
+         * Render wishlist products (same style as shop.blade.php)
          */
         function renderWishlistProducts(products) {
             var html = '';
@@ -967,62 +1031,85 @@
             products.forEach(function(product) {
                 var productUrl = '{{ route("productDetail", ":slug") }}'.replace(':slug', product.slug || product.id);
                 var priceHtml = '';
+                var conditionLabel = '';
+                var conditionClass = '';
+                var conditionBadge = '';
 
+                // Format price
                 if (product.discount_price && product.discount_percentage > 0) {
                     priceHtml = '<span class="theme-color">{{ __("messages.currency") }} ' + parseFloat(product.discount_price).toFixed(2) + '</span>' +
-                                '<del>{{ __("messages.currency") }} ' + parseFloat(product.price_before_discount).toFixed(2) + '</del>';
+                                '<del>{{ __("messages.currency") }} ' + parseFloat(product.price_before_discount || product.price).toFixed(2) + '</del>';
                 } else {
                     priceHtml = '<span class="theme-color">{{ __("messages.currency") }} ' + parseFloat(product.price).toFixed(2) + '</span>';
                 }
 
-                html += '<div class="col-xxl-2 col-lg-3 col-md-4 col-6 product-box-contain" data-product-id="' + product.id + '">' +
-                    '<div class="product-box-3 h-100">' +
-                    '<div class="product-header">' +
-                    '<div class="product-image">' +
-                    '<a href="' + productUrl + '">' +
-                    '<img src="' + product.image + '" class="img-fluid blur-up lazyload" alt="' + (product.title || '') + '">' +
-                    '</a>' +
-                    '<div class="product-header-top">' +
-                    '<button class="btn wishlist-button close_button" data-product-id="' + product.id + '">' +
-                    '<i data-feather="x"></i>' +
-                    '</button>' +
-                    '</div>' +
-                    '</div>' +
-                    '</div>' +
-                    '<div class="product-footer">' +
-                    '<div class="product-detail">' +
-                    '<span class="span-name">' + (product.category ? product.category.name : '') + '</span>' +
-                    '<a href="' + productUrl + '">' +
-                    '<h5 class="name">' + (product.title || '') + '</h5>' +
-                    '</a>';
-
-                if (product.unit) {
-                    html += '<h6 class="unit mt-1">' + product.unit + '</h6>';
+                // Condition badge logic (same as shop.blade.php)
+                if (product.department) {
+                    if (product.department.id === 2) {
+                        // Buying department: show new/used badge
+                        if (product.condition === 'new') {
+                            conditionLabel = '{{ __("messages.New") }}';
+                            conditionClass = 'bg-success';
+                            conditionBadge = '<div class="label-tag ' + conditionClass + '"><span>' + conditionLabel + '</span></div>';
+                        } else if (product.condition === 'used') {
+                            conditionLabel = '{{ __("messages.Used") }}';
+                            conditionClass = 'bg-info';
+                            conditionBadge = '<div class="label-tag ' + conditionClass + '"><span>' + conditionLabel + '</span></div>';
+                        }
+                    } else if (product.department.id === 1 && product.condition === 'rent') {
+                        // Renting department: show rent badge
+                        conditionLabel = '{{ __("messages.Rent") }}';
+                        conditionClass = 'bg-warning';
+                        conditionBadge = '<div class="label-tag ' + conditionClass + '"><span>' + conditionLabel + '</span></div>';
+                    }
                 }
 
-                html += '<h5 class="price">' + priceHtml + '</h5>' +
-                    '<div class="add-to-cart-box bg-white mt-2">' +
-                    '<button class="btn btn-add-cart addcart-button" data-product-id="' + product.id + '" data-variant-id="' + (product.variant_id || '') + '">{{ __("messages.Add") }}' +
-                    '<span class="add-icon bg-light-gray">' +
-                    '<i class="fa-solid fa-plus"></i>' +
-                    '</span>' +
-                    '</button>' +
-                    '<div class="cart_qty qty-box">' +
-                    '<div class="input-group bg-white">' +
-                    '<button type="button" class="qty-left-minus bg-gray" data-type="minus" data-field="">' +
-                    '<i class="fa fa-minus" aria-hidden="true"></i>' +
-                    '</button>' +
-                    '<input class="form-control input-number qty-input" type="text" name="quantity" value="0">' +
-                    '<button type="button" class="qty-right-plus bg-gray" data-type="plus" data-field="">' +
-                    '<i class="fa fa-plus" aria-hidden="true"></i>' +
-                    '</button>' +
+                html += '<div>' +
+                    '<div class="product-box-3 h-100 wow fadeInUp" style="position: relative;">' +
+                        '<button type="button" class="wishlist-delete-btn close_button" data-product-id="' + product.id + '" title="{{ __("messages.Remove from wishlist") }}">' +
+                            '<i class="fa-solid fa-xmark"></i>' +
+                        '</button>' +
+                        '<div class="product-header product-box">' +
+                            conditionBadge +
+                            '<div class="product-image">' +
+                                '<a href="' + productUrl + '">' +
+                                    '<img src="' + product.image + '" class="img-fluid blur-up lazyload" alt="' + (product.title || '') + '">' +
+                                '</a>' +
+                                '<ul class="product-option">' +
+                                    '<li data-bs-toggle="tooltip" data-bs-placement="top" title="{{ __("messages.View") }}">' +
+                                        '<a href="javascript:void(0)" class="view-product-btn" data-bs-toggle="modal" data-bs-target="#view" data-product-id="' + product.id + '">' +
+                                            '<i data-feather="eye"></i>' +
+                                        '</a>' +
+                                    '</li>' +
+                                    '<li data-bs-toggle="tooltip" data-bs-placement="top" title="{{ __("messages.Remove from wishlist") }}">' +
+                                        '<a href="javascript:void(0)" class="add-to-wishlist wishlist-button close_button" data-product-id="' + product.id + '">' +
+                                            '<i data-feather="heart" class="fill"></i>' +
+                                        '</a>' +
+                                    '</li>' +
+                                '</ul>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="product-footer">' +
+                            '<div class="product-detail">' +
+                                '<span class="span-name">' + (product.category ? product.category.name : '') + '</span>' +
+                                '<a href="' + productUrl + '">' +
+                                    '<h5 class="name">' + (product.title || '') + '</h5>' +
+                                '</a>' +
+                                '<h5 class="price">' + priceHtml + '</h5>' +
+                                '<div class="add-to-cart-box bg-white mt-2">' +
+                                    '<button class="btn btn-add-cart addcart-button" ' +
+                                        'data-product-id="' + product.id + '" ' +
+                                        'data-variant-id="' + (product.variant_id || '') + '" ' +
+                                        'data-condition="' + (product.condition || 'new') + '">{{ __("messages.Add") }}' +
+                                        '<span class="add-icon bg-light-gray">' +
+                                            '<i class="fa-solid fa-plus"></i>' +
+                                        '</span>' +
+                                    '</button>' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>' +
                     '</div>' +
-                    '</div>' +
-                    '</div>' +
-                    '</div>' +
-                    '</div>' +
-                    '</div>' +
-                    '</div>';
+                '</div>';
             });
 
             $('#wishlist-products-container').html(html);
@@ -1030,6 +1117,14 @@
             // Reinitialize feather icons
             if (typeof feather !== 'undefined') {
                 feather.replace();
+            }
+
+            // Reinitialize tooltips
+            if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip) {
+                var tooltipTriggerList = [].slice.call($('#wishlist-products-container').find('[data-bs-toggle="tooltip"]'));
+                tooltipTriggerList.map(function (tooltipTriggerEl) {
+                    return new bootstrap.Tooltip(tooltipTriggerEl);
+                });
             }
         }
 
@@ -1050,11 +1145,34 @@
                         withCredentials: true
                     },
                     success: function(response) {
-                        $element.closest('.product-box-contain').fadeOut('slow', function() {
+                        // Find the product container (works with both old and new structure)
+                        var $productContainer = $element.closest('.product-box-contain');
+                        
+                        // If not found, try to find the parent div containing product-box-3 (new structure)
+                        if ($productContainer.length === 0) {
+                            $productContainer = $element.closest('div').parent();
+                            // Make sure it contains product-box-3
+                            if (!$productContainer.find('.product-box-3').length) {
+                                $productContainer = $element.closest('.product-box-3').parent();
+                            }
+                        }
+
+                        // If still not found, find any parent div that's a direct child of wishlist container
+                        if ($productContainer.length === 0 || $productContainer.hasClass('product-list-section') || $productContainer.attr('id') === 'wishlist-products-container') {
+                            $productContainer = $element.closest('div:has(.product-box-3)');
+                        }
+
+                        if ($productContainer.length === 0) {
+                            // Fallback: find the closest div that's a direct child of the container
+                            $productContainer = $element.closest('#wishlist-products-container > div');
+                        }
+
+                        $productContainer.fadeOut('slow', function() {
                             $(this).remove();
 
-                            // Check if wishlist is empty
-                            if ($('#wishlist-products-container .product-box-contain').length === 0) {
+                            // Check if wishlist is empty (works with both structures)
+                            var remainingProducts = $('#wishlist-products-container .product-box-3, #wishlist-products-container .product-box-contain').length;
+                            if (remainingProducts === 0) {
                                 $('#wishlist-products-container').html(
                                     '<div class="col-12">' +
                                     '<div class="text-center py-5">' +
@@ -1064,7 +1182,25 @@
                                     '</div>'
                                 );
                             }
+
+                            // Update wishlist icons on page
+                            $('.add-to-wishlist[data-product-id="' + productId + '"]').each(function() {
+                                updateHeartIcon($(this), false);
+                            });
                         });
+
+                        // Show success message
+                        if (typeof Swal !== 'undefined') {
+                            Swal.fire({
+                                icon: 'success',
+                                title: '{{ __("messages.Success") }}',
+                                text: response.message || '{{ __("messages.Product removed from wishlist") }}',
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                        }
                     },
                     error: function(xhr) {
                         console.error('Error removing product from wishlist:', xhr);
@@ -1087,7 +1223,30 @@
             } else {
                 // Remove from localStorage
                 removeFromLocalStorageWishlist(productId);
-                $element.closest('.product-box-contain').fadeOut('slow', function() {
+                
+                // Find the product container (works with both old and new structure)
+                var $productContainer = $element.closest('.product-box-contain');
+                
+                // If not found, try to find the parent div containing product-box-3 (new structure)
+                if ($productContainer.length === 0) {
+                    $productContainer = $element.closest('div').parent();
+                    // Make sure it contains product-box-3
+                    if (!$productContainer.find('.product-box-3').length) {
+                        $productContainer = $element.closest('.product-box-3').parent();
+                    }
+                }
+
+                // If still not found, find any parent div that's a direct child of wishlist container
+                if ($productContainer.length === 0 || $productContainer.hasClass('product-list-section') || $productContainer.attr('id') === 'wishlist-products-container') {
+                    $productContainer = $element.closest('div:has(.product-box-3)');
+                }
+
+                if ($productContainer.length === 0) {
+                    // Fallback: find the closest div that's a direct child of the container
+                    $productContainer = $element.closest('#wishlist-products-container > div');
+                }
+
+                $productContainer.fadeOut('slow', function() {
                     $(this).remove();
 
                     // Reload wishlist if empty
@@ -1101,8 +1260,29 @@
                             '</div>' +
                             '</div>'
                         );
+                    } else {
+                        // Reload products from localStorage
+                        loadGuestWishlistProducts();
                     }
+
+                    // Update wishlist icons on page
+                    $('.add-to-wishlist[data-product-id="' + productId + '"]').each(function() {
+                        updateHeartIcon($(this), false);
+                    });
                 });
+
+                // Show success message
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: '{{ __("messages.Success") }}',
+                        text: '{{ __("messages.Product removed from wishlist") }}',
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                }
             }
         }
 
@@ -1115,18 +1295,43 @@
                 loadGuestWishlistProducts();
             }
 
-            // Handle remove button click
-            $(document).on('click', '.close_button', function(e) {
+            // Handle remove button click (wishlist page)
+            // This handles both the close_button class, wishlist-button in product-option, and wishlist-delete-btn
+            $(document).on('click', '.wishlist-button.close_button, .add-to-wishlist.wishlist-button.close_button, .wishlist-delete-btn.close_button, .close_button[data-product-id]', function(e) {
                 e.preventDefault();
+                e.stopPropagation();
                 var $button = $(this);
                 var productId = $button.data('product-id');
 
+                // Try to find product ID from various sources
                 if (!productId) {
+                    // Try from closest product-box-contain (old structure)
                     productId = $button.closest('.product-box-contain').data('product-id');
+                }
+                if (!productId) {
+                    // Try from closest element with data-product-id
+                    productId = $button.closest('[data-product-id]').data('product-id');
+                }
+                if (!productId) {
+                    // Find product ID from parent container (new structure in wishlist page)
+                    var $productBox = $button.closest('.product-box-3');
+                    if ($productBox.length) {
+                        var $parentDiv = $productBox.closest('div');
+                        var $productLink = $parentDiv.find('a[href*="/product/"], a[href*="/product-detail/"]');
+                        if ($productLink.length) {
+                            var href = $productLink.attr('href');
+                            var match = href.match(/\/(\d+)$/);
+                            if (match) {
+                                productId = parseInt(match[1]);
+                            }
+                        }
+                    }
                 }
 
                 if (productId) {
                     removeFromWishlist(productId, $button);
+                } else {
+                    console.error('Product ID not found for wishlist removal', $button);
                 }
             });
         });
@@ -1176,26 +1381,64 @@
          * @param {number} variantId - Variant ID (optional)
          * @param {number} quantity - Quantity (default: 1)
          */
-        function addToLocalStorageCart(productId, variantId, quantity) {
+        /**
+         * Add product to localStorage cart (Guest users)
+         * @param {number} productId - Product ID
+         * @param {number} variantId - Variant ID (optional)
+         * @param {number} quantity - Quantity (default: 1)
+         * @param {string} condition - Product condition (buy/rent)
+         * @param {object} rentData - Rent data (start_date, count_day, note) - only for rent products
+         */
+        function addToLocalStorageCart(productId, variantId, quantity, condition, rentData) {
             quantity = quantity || 1;
+            condition = condition || 'new';
+            rentData = rentData || {};
             var cart = getCartFromStorage();
 
-            // Check if product already exists
-            var existingItem = cart.find(function(item) {
-                return item.product_id == productId &&
-                       (variantId ? item.variant_id == variantId : !item.variant_id);
-            });
+            // For rent products, check if product already exists (rent products can only be added once)
+            if (condition === 'rent') {
+                // Check if this rent product already exists in cart
+                var existingRentItem = cart.find(function(item) {
+                    return item.product_id == productId &&
+                           (variantId ? item.variant_id == variantId : !item.variant_id) &&
+                           item.type === 'rent';
+                });
 
-            if (existingItem) {
-                // Update quantity
-                existingItem.quantity = (existingItem.quantity || 0) + quantity;
-            } else {
-                // Add new item
+                if (existingRentItem) {
+                    // Rent product already exists, return false to prevent adding
+                    return false;
+                }
+
+                // Add new rent item
                 cart.push({
                     product_id: productId,
                     variant_id: variantId || null,
-                    quantity: quantity
+                    quantity: quantity,
+                    type: 'rent',
+                    start_date: rentData.start_date,
+                    count_day: rentData.count_day,
+                    note: rentData.note || null
                 });
+            } else {
+                // For buy products, check if product already exists
+                var existingItem = cart.find(function(item) {
+                    return item.product_id == productId &&
+                           (variantId ? item.variant_id == variantId : !item.variant_id) &&
+                           item.type !== 'rent';
+                });
+
+                if (existingItem) {
+                    // Update quantity
+                    existingItem.quantity = (existingItem.quantity || 0) + quantity;
+                } else {
+                    // Add new item
+                    cart.push({
+                        product_id: productId,
+                        variant_id: variantId || null,
+                        quantity: quantity,
+                        type: 'buy'
+                    });
+                }
             }
 
             saveCartToStorage(cart);
@@ -1260,41 +1503,164 @@
          * @param {number} productId - Product ID
          * @param {number} variantId - Variant ID (optional)
          * @param {number} quantity - Quantity (default: 1)
+         * @param {string} condition - Product condition (buy/rent)
+         * @param {object} rentData - Rent data (start_date, count_day, note) - only for rent products
          */
-        function addToCart(productId, variantId, quantity) {
+        function addToCart(productId, variantId, quantity, condition, rentData) {
             quantity = quantity || 1;
+            condition = condition || 'new';
+            rentData = rentData || {};
+
+            // Validate rent fields if product is rent
+            if (condition === 'rent') {
+                if (!rentData.start_date || !rentData.count_day) {
+                    showNotification('{{ __("messages.Start date is required") }} / {{ __("messages.Count days is required") }}', 'error');
+                    return;
+                }
+                if (parseInt(rentData.count_day) < 1) {
+                    showNotification('{{ __("messages.Count days must be at least 1") }}', 'error');
+                    return;
+                }
+            }
 
             if (isAuth) {
-                // Add to database
-                $.ajax({
-                    url: '/api/web/cart/add-single',
-                    type: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                        'Accept': 'application/json'
-                    },
-                    xhrFields: {
-                        withCredentials: true
-                    },
-                    data: {
+                // For rent products, check if already exists in cart before adding
+                if (condition === 'rent') {
+                    // Check if rent product already exists in cart
+                    $.ajax({
+                        url: '/api/web/cart/items',
+                        type: 'GET',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                            'Accept': 'application/json'
+                        },
+                        xhrFields: {
+                            withCredentials: true
+                        },
+                        success: function(response) {
+                            if (response.data && response.data.items) {
+                                var existingRentItem = response.data.items.find(function(item) {
+                                    return item.product_id == productId &&
+                                           (variantId ? item.variant_id == variantId : !item.variant_id) &&
+                                           item.type === 'rent';
+                                });
+
+                                if (existingRentItem) {
+                                    showNotification('{{ __("messages.Rent product already in cart") }}', 'error');
+                                    return;
+                                }
+                            }
+
+                            // Product doesn't exist, proceed with adding
+                            var data = {
+                                product_id: productId,
+                                variant_id: variantId || null,
+                                quantity: quantity,
+                                type: 'rent'
+                            };
+
+                            // Add rent fields
+                            data.start_date = rentData.start_date;
+                            data.count_day = rentData.count_day;
+                            data.note = rentData.note || null;
+
+                            $.ajax({
+                                url: '/api/web/cart/add-single',
+                                type: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                                    'Accept': 'application/json'
+                                },
+                                xhrFields: {
+                                    withCredentials: true
+                                },
+                                data: data,
+                                success: function(response) {
+                                    showNotification(response.message || '{{ __("messages.Product added to cart successfully") }}', 'success');
+                                    updateCartDisplay();
+                                },
+                                error: function(xhr) {
+                                    var message = xhr.responseJSON?.message || '{{ __("messages.Error adding product to cart") }}';
+                                    showNotification(message, 'error');
+                                }
+                            });
+                        },
+                        error: function(xhr) {
+                            console.error('Error checking cart:', xhr);
+                            // Proceed with adding anyway
+                            var data = {
+                                product_id: productId,
+                                variant_id: variantId || null,
+                                quantity: quantity,
+                                type: 'rent'
+                            };
+
+                            data.start_date = rentData.start_date;
+                            data.count_day = rentData.count_day;
+                            data.note = rentData.note || null;
+
+                            $.ajax({
+                                url: '/api/web/cart/add-single',
+                                type: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                                    'Accept': 'application/json'
+                                },
+                                xhrFields: {
+                                    withCredentials: true
+                                },
+                                data: data,
+                                success: function(response) {
+                                    showNotification(response.message || '{{ __("messages.Product added to cart successfully") }}', 'success');
+                                    updateCartDisplay();
+                                },
+                                error: function(xhr) {
+                                    var message = xhr.responseJSON?.message || '{{ __("messages.Error adding product to cart") }}';
+                                    showNotification(message, 'error');
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    // For buy products, add directly
+                    var data = {
                         product_id: productId,
                         variant_id: variantId || null,
-                        quantity: quantity
-                    },
-                    success: function(response) {
-                        showNotification(response.message || '{{ __("messages.Product added to cart successfully") }}', 'success');
-                        updateCartDisplay();
-                    },
-                    error: function(xhr) {
-                        var message = xhr.responseJSON?.message || '{{ __("messages.Error adding product to cart") }}';
-                        showNotification(message, 'error');
-                    }
-                });
+                        quantity: quantity,
+                        type: 'buy'
+                    };
+
+                    $.ajax({
+                        url: '/api/web/cart/add-single',
+                        type: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                            'Accept': 'application/json'
+                        },
+                        xhrFields: {
+                            withCredentials: true
+                        },
+                        data: data,
+                        success: function(response) {
+                            showNotification(response.message || '{{ __("messages.Product added to cart successfully") }}', 'success');
+                            updateCartDisplay();
+                        },
+                        error: function(xhr) {
+                            var message = xhr.responseJSON?.message || '{{ __("messages.Error adding product to cart") }}';
+                            showNotification(message, 'error');
+                        }
+                    });
+                }
             } else {
                 // Add to localStorage
-                addToLocalStorageCart(productId, variantId, quantity);
-                showNotification('{{ __("messages.Product added to cart successfully") }}', 'success');
-                updateCartDisplay();
+                var added = addToLocalStorageCart(productId, variantId, quantity, condition, rentData);
+                if (added === false) {
+                    // Rent product already exists
+                    showNotification('{{ __("messages.Rent product already in cart") }}', 'error');
+                } else {
+                    showNotification('{{ __("messages.Product added to cart successfully") }}', 'success');
+                    updateCartDisplay();
+                }
             }
         }
 
@@ -1640,14 +2006,121 @@
             var $qtyInput = $cartBox.find('.qty-input');
             var quantity = parseInt($qtyInput.val()) || 1;
 
+            // Get product condition
+            var condition = $button.data('condition') || 'new';
+
+            // Get rent data if product is rent
+            var rentData = {};
+            if (condition === 'rent') {
+                // Check if we're in modal or product detail page
+                var $rentFields = $('#modal-rent-fields');
+                if ($rentFields.length && $rentFields.is(':visible')) {
+                    // Modal - get data from modal fields
+                    rentData.start_date = $('#modal-start-date').val();
+                    rentData.count_day = $('#modal-count-day').val();
+                    rentData.note = $('#modal-note').val() || null;
+                } else {
+                    // Check if we're on product detail page
+                    var $productRentFields = $('#product-rent-fields');
+                    if ($productRentFields.length && $productRentFields.is(':visible') && $button.data('model-custom') == 'page') {
+                        // Product detail page
+                        rentData.start_date = $('#product-start-date').val();
+                        rentData.count_day = $('#product-count-day').val();
+                        rentData.note = $('#product-note').val() || null;
+                    } else {
+                        // Product is rent but fields are not visible (shop page or related products)
+                        // Open modal to get rent data
+                        if (productId) {
+                            // First, try to find view product button in the same product box
+                            var $productBox = $button.closest('.product-box-3');
+                            var $viewBtn = $productBox.find('.view-product-btn[data-product-id="' + productId + '"]');
+
+                            // If not found in same box, search globally
+                            if ($viewBtn.length === 0) {
+                                $viewBtn = $('.view-product-btn[data-product-id="' + productId + '"]');
+                            }
+
+                            if ($viewBtn.length > 0) {
+                                // Trigger click on view button to open modal
+                                $viewBtn.first().trigger('click');
+                                // Show notification after a short delay to ensure modal is opening
+                                setTimeout(function() {
+                                    showNotification('{{ __("messages.Please fill in the rental period in the modal") }}', 'info');
+                                }, 500);
+                                return;
+                            } else {
+                                // If view button not found, try to open modal directly
+                                var modalElement = document.getElementById('view');
+                                if (modalElement) {
+                                    // Show loading first
+                                    $('#modal-loading').show();
+                                    $('#modal-product-content').hide();
+
+                                    // Get or create modal instance and open it first
+                                    var modal = bootstrap.Modal.getInstance(modalElement);
+                                    if (!modal) {
+                                        modal = new bootstrap.Modal(modalElement);
+                                    }
+                                    // Open modal immediately
+                                    modal.show();
+
+                                    // Load product data
+                                    $.ajax({
+                                        url: '/api/web/product-modal/' + productId,
+                                        type: 'GET',
+                                        dataType: 'json',
+                                        headers: {
+                                            'X-Requested-With': 'XMLHttpRequest',
+                                            'Accept': 'application/json'
+                                        },
+                                        success: function(response) {
+                                            if (response.status === 200 && response.data) {
+                                                var product = response.data;
+                                                // Render product in modal (this function already exists)
+                                                if (typeof renderProductModal === 'function') {
+                                                    renderProductModal(product);
+                                                }
+                                                setTimeout(function() {
+                                                    showNotification('{{ __("messages.Please fill in the rental period in the modal") }}', 'info');
+                                                }, 500);
+                                            } else if (response.data) {
+                                                // Fallback: check if data exists even without status
+                                                var product = response.data;
+                                                if (typeof renderProductModal === 'function') {
+                                                    renderProductModal(product);
+                                                }
+                                                setTimeout(function() {
+                                                    showNotification('{{ __("messages.Please fill in the rental period in the modal") }}', 'info');
+                                                }, 500);
+                                            } else {
+                                                showNotification('{{ __("messages.Error loading product") }}', 'error');
+                                            }
+                                        },
+                                        error: function() {
+                                            showNotification('{{ __("messages.Error loading product") }}', 'error');
+                                        }
+                                    });
+                                    return;
+                                } else {
+                                    showNotification('{{ __("messages.Modal not found") }}', 'error');
+                                    return;
+                                }
+                            }
+                        }
+                        // If we can't open modal, show error
+                        showNotification('{{ __("messages.Please fill in the rental period") }}', 'error');
+                        return;
+                    }
+                }
+            }
+
             if (!productId) {
-                console.error('Product ID not found');
                 showNotification('{{ __("messages.Product ID not found") }}', 'error');
                 return;
             }
 
             // Add to cart
-            addToCart(productId, variantId, quantity);
+            addToCart(productId, variantId, quantity, condition, rentData);
 
             // Reset quantity input
             $qtyInput.val('0');
@@ -1723,7 +2196,6 @@
                 var cart = localStorage.getItem(cartStorageKey);
                 return cart ? JSON.parse(cart) : [];
             } catch (e) {
-                console.error('Error reading cart from localStorage:', e);
                 return [];
             }
         }
@@ -1766,12 +2238,28 @@
         /**
          * Load and render cart items
          */
+        /**
+         * Load cart items and separate them into Buy and Rent
+         */
         function loadCartItems() {
-            var $container = $('#cart-items-container');
-            if ($container.length === 0) return;
+            var $buyContainer = $('#cart-buy-items-container');
+            var $rentContainer = $('#cart-rent-items-container');
 
-            // Show loading
-            $container.html('<tr><td colspan="5" class="text-center py-5"><div class="spinner-border" role="status"><span class="visually-hidden">{{ __("messages.Loading") }}...</span></div></td></tr>');
+            // Check if we're on shopping cart page
+            if ($buyContainer.length === 0 && $rentContainer.length === 0) {
+                // Fallback to old container if exists
+                var $container = $('#cart-items-container');
+                if ($container.length === 0) return;
+                $container.html('<tr><td colspan="5" class="text-center py-5"><div class="spinner-border" role="status"><span class="visually-hidden">{{ __("messages.Loading") }}...</span></div></td></tr>');
+            } else {
+                // Show loading in both containers
+                if ($buyContainer.length > 0) {
+                    $buyContainer.html('<tr><td colspan="5" class="text-center py-5"><div class="spinner-border" role="status"><span class="visually-hidden">{{ __("messages.Loading") }}...</span></div></td></tr>');
+                }
+                if ($rentContainer.length > 0) {
+                    $rentContainer.html('<tr><td colspan="6" class="text-center py-5"><div class="spinner-border" role="status"><span class="visually-hidden">{{ __("messages.Loading") }}...</span></div></td></tr>');
+                }
+            }
 
             if (isAuth) {
                 // Load from database
@@ -1786,7 +2274,15 @@
                     },
                     success: function(response) {
                         if (response.data && response.data.items) {
-                            renderCartItems(response.data.items, response.data.total);
+                            // Separate items into buy and rent
+                            var buyItems = response.data.items.filter(function(item) {
+                                return item.department_id == 2;
+                            });
+                            var rentItems = response.data.items.filter(function(item) {
+                                return item.department_id == 1;
+                            });
+
+                            renderCartItems(buyItems, rentItems, response.data.total);
                         } else {
                             renderEmptyCart();
                         }
@@ -1832,6 +2328,7 @@
                                         id: cartItem.product_id,
                                         product_id: cartItem.product_id,
                                         variant_id: cartItem.variant_id,
+                                        department_id: product.department_id,
                                         title: product.title,
                                         slug: product.slug,
                                         image: product.image,
@@ -1845,8 +2342,30 @@
                                 return null;
                             }).filter(function(item) { return item !== null; });
 
+                            // Separate items into buy and rent
+                            var buyItems = items.filter(function(item) {
+                                return item.department_id == 2;
+                            });
+                            var rentItems = items.filter(function(item) {
+                                return item.department_id == 1;
+                            });
+
+                            // Add rent data from localStorage
+                            rentItems = rentItems.map(function(item) {
+                                var cartItem = cart.find(function(c) {
+                                    return c.product_id == item.product_id && c.type === 'rent';
+                                });
+                                if (cartItem) {
+                                    item.start_date = cartItem.start_date;
+                                    item.count_day = cartItem.count_day;
+                                    item.note = cartItem.note;
+                                    item.total = item.price * (cartItem.count_day || 1);
+                                }
+                                return item;
+                            });
+
                             var total = items.reduce(function(sum, item) { return sum + (item.total || 0); }, 0);
-                            renderCartItems(items, total);
+                            renderCartItems(buyItems, rentItems, total);
                         } else {
                             renderEmptyCart();
                         }
@@ -1860,11 +2379,33 @@
         }
 
         /**
-         * Render cart items in table
+         * Render cart items in tables (Buy and Rent separated)
+         * @param {Array} buyItems - Buy items array
+         * @param {Array} rentItems - Rent items array
+         * @param {number} total - Total amount
          */
-        function renderCartItems(items, total) {
+        function renderCartItems(buyItems, rentItems, total) {
+            buyItems = buyItems || [];
+            rentItems = rentItems || [];
+
+            // Check if we're on shopping cart page (new layout)
+            var $buyContainer = $('#cart-buy-items-container');
+            var $rentContainer = $('#cart-rent-items-container');
+
+            if ($buyContainer.length > 0 || $rentContainer.length > 0) {
+                // New layout: separate tables
+                renderBuyItems(buyItems);
+                renderRentItems(rentItems);
+                updateCartSummary(total);
+                return;
+            }
+
+            // Fallback: old layout (single table)
             var $container = $('#cart-items-container');
-            if (items.length === 0) {
+            if ($container.length === 0) return;
+
+            var allItems = buyItems.concat(rentItems);
+            if (allItems.length === 0) {
                 renderEmptyCart();
                 return;
             }
@@ -1976,6 +2517,202 @@
 
             $container.html(html);
             updateCartSummary(total);
+        }
+
+        /**
+         * Render buy items in buy table
+         */
+        function renderBuyItems(items) {
+            var $container = $('#cart-buy-items-container');
+            var $empty = $('#cart-buy-empty');
+
+            if (!$container.length) return;
+
+            if (items.length === 0) {
+                $container.html('');
+                $empty.show();
+                return;
+            }
+
+            $empty.hide();
+
+            var html = '';
+            items.forEach(function(item) {
+                html += renderBuyItemRow(item);
+            });
+
+            $container.html(html);
+        }
+
+        /**
+         * Render rent items in rent table
+         */
+        function renderRentItems(items) {
+            var $container = $('#cart-rent-items-container');
+            var $empty = $('#cart-rent-empty');
+
+            if (!$container.length) return;
+
+            if (items.length === 0) {
+                $container.html('');
+                $empty.show();
+                return;
+            }
+
+            $empty.hide();
+
+            var html = '';
+            items.forEach(function(item) {
+                html += renderRentItemRow(item);
+            });
+
+            $container.html(html);
+        }
+
+        /**
+         * Render a single buy item row
+         */
+        function renderBuyItemRow(item) {
+            var productUrl = '{{ route("productDetail", ":slug") }}'.replace(':slug', item.slug || item.product_id);
+            var priceHtml = '';
+            var savingHtml = '';
+            var displayPrice = item.price;
+
+            if (item.discount_price && item.discount_percentage > 0) {
+                priceHtml = '<span class="theme-color">{{ __("messages.currency") }} ' + parseFloat(item.discount_price).toFixed(2) + '</span>' +
+                            '<del class="text-content">{{ __("messages.currency") }} ' + parseFloat(item.price_before_discount || item.price).toFixed(2) + '</del>';
+                var saving = (item.price_before_discount || item.price) - item.discount_price;
+                savingHtml = '<h6 class="theme-color">{{ __("messages.You Save") }} : {{ __("messages.currency") }} ' + parseFloat(saving).toFixed(2) + '</h6>';
+                displayPrice = item.discount_price;
+            } else {
+                priceHtml = '<span>{{ __("messages.currency") }} ' + parseFloat(item.price).toFixed(2) + '</span>';
+            }
+
+            var total = item.price * item.quantity;
+            if (item.discount_price) {
+                total = item.discount_price * item.quantity;
+            }
+
+            return '<tr class="product-box-contain" data-cart-item-id="' + (item.id || item.product_id) + '" data-product-id="' + item.product_id + '" data-variant-id="' + (item.variant_id || '') + '" data-price="' + displayPrice + '">' +
+                '<td class="product-detail">' +
+                '<div class="product border-0">' +
+                '<a href="' + productUrl + '" class="product-image">' +
+                '<img src="' + item.image + '" class="img-fluid blur-up lazyload" alt="' + (item.title || '') + '">' +
+                '</a>' +
+                '<div class="product-detail">' +
+                '<ul>' +
+                '<li class="name"><a href="' + productUrl + '">' + (item.title || '') + '</a></li>' +
+                '<li class="text-content"><span class="text-title">{{ __("messages.Items") }}:</span> ' + (item.category || '') + '</li>' +
+                (item.unit ? '<li class="text-content"><span class="text-title">{{ __("messages.Quantity") }}</span> - ' + item.unit + '</li>' : '') +
+                '<li><h5 class="text-content d-inline-block">{{ __("messages.Price") }} :</h5>' + priceHtml + '</li>' +
+                (savingHtml ? '<li><h5 class="saving theme-color">' + savingHtml.replace('<h6', '<h5').replace('</h6>', '</h5>') + '</h5></li>' : '') +
+                '</ul>' +
+                '</div>' +
+                '</div>' +
+                '</td>' +
+                '<td class="price">' +
+                '<h4 class="table-title text-content">{{ __("messages.Price") }}</h4>' +
+                '<h5>' + priceHtml + '</h5>' +
+                (savingHtml ? savingHtml : '') +
+                '</td>' +
+                '<td class="quantity">' +
+                '<h4 class="table-title text-content">{{ __("messages.Qty") }}</h4>' +
+                '<div class="quantity-price">' +
+                '<div class="cart_qty">' +
+                '<div class="input-group">' +
+                '<button type="button" class="btn qty-left-minus" data-type="minus" data-field="" data-cart-item-id="' + (item.id || item.product_id) + '">' +
+                '<i class="fa fa-minus ms-0" aria-hidden="true"></i>' +
+                '</button>' +
+                '<input class="form-control input-number qty-input" type="text" name="quantity" value="' + item.quantity + '" data-cart-item-id="' + (item.id || item.product_id) + '">' +
+                '<button type="button" class="btn qty-right-plus" data-type="plus" data-field="" data-cart-item-id="' + (item.id || item.product_id) + '">' +
+                '<i class="fa fa-plus ms-0" aria-hidden="true"></i>' +
+                '</button>' +
+                '</div>' +
+                '</div>' +
+                '</div>' +
+                '</td>' +
+                '<td class="subtotal">' +
+                '<h4 class="table-title text-content">{{ __("messages.Total") }}</h4>' +
+                '<h5 class="item-total">{{ __("messages.currency") }} ' + parseFloat(total).toFixed(2) + '</h5>' +
+                '</td>' +
+                '<td class="save-remove">' +
+                '<h4 class="table-title text-content">{{ __("messages.Action") }}</h4>' +
+                '<a class="remove close-cart-item-btn" href="javascript:void(0)" data-cart-item-id="' + (item.id || item.product_id) + '" data-product-id="' + item.product_id + '" data-variant-id="' + (item.variant_id || '') + '">' +
+                '{{ __("messages.Remove") }}' +
+                '</a>' +
+                '</td>' +
+                '</tr>';
+        }
+
+        /**
+         * Render a single rent item row
+         */
+        function renderRentItemRow(item) {
+            var productUrl = '{{ route("productDetail", ":slug") }}'.replace(':slug', item.slug || item.product_id);
+            var priceHtml = '';
+            var savingHtml = '';
+            var displayPrice = item.price;
+
+            if (item.discount_price && item.discount_percentage > 0) {
+                priceHtml = '<span class="theme-color">{{ __("messages.currency") }} ' + parseFloat(item.discount_price).toFixed(2) + '</span>' +
+                            '<del class="text-content">{{ __("messages.currency") }} ' + parseFloat(item.price_before_discount || item.price).toFixed(2) + '</del>';
+                var saving = (item.price_before_discount || item.price) - item.discount_price;
+                savingHtml = '<h6 class="theme-color">{{ __("messages.You Save") }} : {{ __("messages.currency") }} ' + parseFloat(saving).toFixed(2) + '</h6>';
+                displayPrice = item.discount_price;
+            } else {
+                priceHtml = '<span>{{ __("messages.currency") }} ' + parseFloat(item.price).toFixed(2) + '</span>';
+            }
+
+            var countDay = item.count_day || 1;
+            var total = item.price * countDay;
+            if (item.discount_price) {
+                total = item.discount_price * countDay;
+            }
+
+            var startDate = item.start_date || '';
+            var note = item.note || '';
+
+            return '<tr class="product-box-contain" data-cart-item-id="' + (item.id || item.product_id) + '" data-product-id="' + item.product_id + '" data-variant-id="' + (item.variant_id || '') + '" data-price="' + displayPrice + '">' +
+                '<td class="product-detail">' +
+                '<div class="product border-0">' +
+                '<a href="' + productUrl + '" class="product-image">' +
+                '<img src="' + item.image + '" class="img-fluid blur-up lazyload" alt="' + (item.title || '') + '">' +
+                '</a>' +
+                '<div class="product-detail">' +
+                '<ul>' +
+                '<li class="name"><a href="' + productUrl + '">' + (item.title || '') + '</a></li>' +
+                '<li class="text-content"><span class="text-title">{{ __("messages.Items") }}:</span> ' + (item.category || '') + '</li>' +
+                '<li><h5 class="text-content d-inline-block">{{ __("messages.Price") }} :</h5>' + priceHtml + '</li>' +
+                (savingHtml ? '<li><h5 class="saving theme-color">' + savingHtml.replace('<h6', '<h5').replace('</h6>', '</h5>') + '</h5></li>' : '') +
+                (note ? '<li class="text-content"><span class="text-title">{{ __("messages.Note") }}:</span> ' + note + '</li>' : '') +
+                '</ul>' +
+                '</div>' +
+                '</div>' +
+                '</td>' +
+                '<td class="price">' +
+                '<h4 class="table-title text-content">{{ __("messages.Price") }}</h4>' +
+                '<h5>' + priceHtml + '</h5>' +
+                (savingHtml ? savingHtml : '') +
+                '</td>' +
+                '<td class="start-date">' +
+                '<h4 class="table-title text-content">{{ __("messages.Start Date") }}</h4>' +
+                '<input type="date" class="form-control rent-start-date" value="' + startDate + '" data-cart-item-id="' + (item.id || item.product_id) + '" min="' + new Date().toISOString().split('T')[0] + '">' +
+                '</td>' +
+                '<td class="count-day">' +
+                '<h4 class="table-title text-content">{{ __("messages.Count Days") }}</h4>' +
+                '<input type="number" class="form-control rent-count-day" value="' + countDay + '" min="1" data-cart-item-id="' + (item.id || item.product_id) + '">' +
+                '</td>' +
+                '<td class="subtotal">' +
+                '<h4 class="table-title text-content">{{ __("messages.Total") }}</h4>' +
+                '<h5 class="item-total">{{ __("messages.currency") }} ' + parseFloat(total).toFixed(2) + '</h5>' +
+                '</td>' +
+                '<td class="save-remove">' +
+                '<h4 class="table-title text-content">{{ __("messages.Action") }}</h4>' +
+                '<a class="remove close-cart-item-btn" href="javascript:void(0)" data-cart-item-id="' + (item.id || item.product_id) + '" data-product-id="' + item.product_id + '" data-variant-id="' + (item.variant_id || '') + '">' +
+                '{{ __("messages.Remove") }}' +
+                '</a>' +
+                '</td>' +
+                '</tr>';
         }
 
         /**
@@ -2227,6 +2964,82 @@
         /**
          * Handle remove button
          */
+        /**
+         * Handle rent fields update (start_date and count_day)
+         */
+        $(document).on('change blur', '.rent-start-date, .rent-count-day', function() {
+            var $input = $(this);
+            var cartItemId = $input.data('cart-item-id');
+            var $row = $('tr[data-cart-item-id="' + cartItemId + '"]');
+
+            if (!$row.length || !cartItemId) return;
+
+            var startDate = $row.find('.rent-start-date').val();
+            var countDay = parseInt($row.find('.rent-count-day').val()) || 1;
+
+            if (!startDate || countDay < 1) {
+                return;
+            }
+
+            if (isAuth) {
+                // Update in database
+                $.ajax({
+                    url: '/api/web/cart/update-quantity/' + cartItemId,
+                    type: 'PUT',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                        'Accept': 'application/json'
+                    },
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                    data: {
+                        start_date: startDate,
+                        count_day: countDay
+                    },
+                    success: function(response) {
+                        if (response.data) {
+                            // Update item total
+                            var price = parseFloat($row.data('price') || response.data.price || 0);
+                            var newTotal = price * countDay;
+                            $row.find('.item-total').text('{{ __("messages.currency") }} ' + parseFloat(newTotal).toFixed(2));
+
+                            // Recalculate and update summary
+                            loadCartItems();
+                        }
+                    },
+                    error: function(xhr) {
+                        console.error('Error updating rent item:', xhr);
+                        var message = xhr.responseJSON?.message || '{{ __("messages.Error updating cart") }}';
+                        showNotification(message, 'error');
+                    }
+                });
+            } else {
+                // Update in localStorage
+                var productId = $row.data('product-id');
+                var variantId = $row.data('variant-id');
+                var cart = getCartFromStorage();
+                var cartItem = cart.find(function(item) {
+                    return item.product_id == productId &&
+                           (variantId ? item.variant_id == variantId : !item.variant_id) &&
+                           item.type === 'rent';
+                });
+
+                if (cartItem) {
+                    cartItem.start_date = startDate;
+                    cartItem.count_day = countDay;
+                    saveCartToStorage(cart);
+
+                    // Update item total
+                    var price = parseFloat($row.data('price') || 0);
+                    var newTotal = price * countDay;
+                    $row.find('.item-total').text('{{ __("messages.currency") }} ' + parseFloat(newTotal).toFixed(2));
+                    // Recalculate and update summary
+                    loadCartItems();
+                }
+            }
+        });
+
         $(document).on('click', '.close-cart-item-btn', function(e) {
             e.preventDefault();
             var $button = $(this);
