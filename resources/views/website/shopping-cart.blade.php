@@ -32,20 +32,84 @@
         <div class="container-fluid-lg">
             <div class="row g-sm-5 g-3">
                 <div class="col-xxl-9">
-                    <div class="cart-table">
+                    {{-- Buy Items Table --}}
+                    <div class="cart-table cart-table-2 mb-4">
+                        <div class="cart-table-header d-flex align-items-center justify-content-between mb-3">
+                            <h4 class="mb-0">
+                                <i class="fa-solid fa-shopping-bag me-2"></i>
+                                {{ __('messages.Buy Items') }}
+                            </h4>
+                            <span class="badge bg-success" id="buy-items-count-badge" style="display: none;">0 {{ __('messages.Items') }}</span>
+                        </div>
                         <div class="table-responsive-xl">
                             <table class="table">
-                                <tbody id="cart-items-container">
-                                    <!-- Cart items will be loaded here via JavaScript -->
+                                <thead>
+                                    <tr>
+                                        <th>{{ __('messages.Product') }}</th>
+                                        <th>{{ __('messages.Price') }}</th>
+                                        <th>{{ __('messages.Quantity') }}</th>
+                                        <th>{{ __('messages.Total') }}</th>
+                                        <th>{{ __('messages.Action') }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cart-buy-items-container">
+                                    <!-- Buy cart items will be loaded here via JavaScript -->
                                     <tr>
                                         <td colspan="5" class="text-center py-5">
-                                            <div class="spinner-border" role="status">
+                                            <div class="spinner-border text-primary" role="status">
                                                 <span class="visually-hidden">{{ __('messages.Loading') }}...</span>
                                             </div>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
+                        </div>
+                        <div id="cart-buy-empty" class="text-center py-5" style="display: none;">
+                            <div class="empty-cart-icon mb-3">
+                                <i class="fa-solid fa-cart-shopping" style="font-size: 4rem; color: #ddd;"></i>
+                            </div>
+                            <p class="text-muted mb-0">{{ __('messages.No buy items in cart') }}</p>
+                        </div>
+                    </div>
+
+                    {{-- Rent Items Table --}}
+                    <div class="cart-table cart-table-2">
+                        <div class="cart-table-header d-flex align-items-center justify-content-between mb-3">
+                            <h4 class="mb-0">
+                                <i class="fa-solid fa-calendar-days me-2"></i>
+                                {{ __('messages.Rent Items') }}
+                            </h4>
+                            <span class="badge bg-warning" id="rent-items-count-badge" style="display: none;">0 {{ __('messages.Items') }}</span>
+                        </div>
+                        <div class="table-responsive-xl">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>{{ __('messages.Product') }}</th>
+                                        <th>{{ __('messages.Price') }}</th>
+                                        <th>{{ __('messages.Start Date') }}</th>
+                                        <th>{{ __('messages.Count Days') }}</th>
+                                        <th>{{ __('messages.Total') }}</th>
+                                        <th>{{ __('messages.Action') }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cart-rent-items-container">
+                                    <!-- Rent cart items will be loaded here via JavaScript -->
+                                    <tr>
+                                        <td colspan="6" class="text-center py-5">
+                                            <div class="spinner-border text-primary" role="status">
+                                                <span class="visually-hidden">{{ __('messages.Loading') }}...</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id="cart-rent-empty" class="text-center py-5" style="display: none;">
+                            <div class="empty-cart-icon mb-3">
+                                <i class="fa-solid fa-calendar-xmark" style="font-size: 4rem; color: #ddd;"></i>
+                            </div>
+                            <p class="text-muted mb-0">{{ __('messages.No rent items in cart') }}</p>
                         </div>
                     </div>
                 </div>

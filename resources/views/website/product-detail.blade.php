@@ -116,6 +116,127 @@
         .product-thumbnail-slider .sidebar-image:hover::before {
             background: rgba(13, 164, 135, 0.1);
         }
+
+        /* Rent Fields Styling */
+        .rent-fields-wrapper {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .rent-fields-wrapper:hover {
+            border-color: var(--theme-color, #0da487);
+            box-shadow: 0 6px 20px rgba(13, 164, 135, 0.15);
+        }
+
+        .rent-header {
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .rent-title {
+            color: var(--theme-color, #0da487);
+            font-weight: 600;
+            font-size: 1.25rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+
+        .rent-title i {
+            color: var(--theme-color, #0da487);
+            font-size: 1.1rem;
+        }
+
+        .form-group-rent {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        .rent-label {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            font-size: 0.95rem;
+        }
+
+        .rent-label i {
+            color: var(--theme-color, #0da487);
+            font-size: 0.9rem;
+        }
+
+        .input-wrapper-rent {
+            position: relative;
+        }
+
+        .rent-input {
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 12px 45px 12px 15px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            background: #fff;
+        }
+
+        .rent-input:focus {
+            border-color: var(--theme-color, #0da487);
+            box-shadow: 0 0 0 0.2rem rgba(13, 164, 135, 0.15);
+            outline: none;
+        }
+
+        .rent-input.is-invalid {
+            border-color: #dc3545;
+        }
+
+        .rent-input.is-valid {
+            border-color: #28a745;
+        }
+
+        .input-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+            pointer-events: none;
+            font-size: 0.9rem;
+        }
+
+        .textarea-icon {
+            top: 20px;
+            transform: none;
+        }
+
+        .rent-input[type="date"]::-webkit-calendar-picker-indicator {
+            opacity: 0;
+            position: absolute;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .rent-input[type="number"]::-webkit-inner-spin-button,
+        .rent-input[type="number"]::-webkit-outer-spin-button {
+            opacity: 1;
+            margin-right: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .rent-fields-wrapper {
+                padding: 20px 15px;
+            }
+
+            .rent-title {
+                font-size: 1.1rem;
+            }
+        }
         .product-thumbnail-slider .sidebar-image.active {
             border-color: var(--theme-color, #0da487);
             border-width: 3px;
@@ -441,25 +562,82 @@
                                 </div>
 
                                 <div class="note-box product-packege">
-{{--                                    <div class="cart_qty qty-box product-qty">--}}
-{{--                                        <div class="input-group">--}}
-{{--                                            <button type="button" class="qty-right-plus" data-type="plus" data-field="">--}}
-{{--                                                <i class="fa fa-plus" aria-hidden="true"></i>--}}
-{{--                                            </button>--}}
-{{--                                            <input class="form-control input-number qty-input" type="text"--}}
-{{--                                                       name="quantity" value="1" min="1" id="product-quantity">--}}
-{{--                                                <button type="button" class="qty-left-minus" data-type="minus" data-field="">--}}
-{{--                                                <i class="fa fa-minus" aria-hidden="true"></i>--}}
-{{--                                            </button>--}}
-{{--                                        </div>--}}
-{{--                                    </div>--}}
-
-                                    <button class="btn btn-md bg-dark cart-button text-white w-100 addcart-button"
-                                            id="add-to-cart-btn"
-                                            data-product-id="{{ $product->id }}"
-                                            data-variant-id="{{ $firstVariant->id ?? '' }}">
+                                    {{-- Rent Fields (only for rent products) --}}
+                                    @if($product->condition === 'rent')
+                                        <div id="product-rent-fields" class="rent-fields-wrapper mb-4">
+                                            <div class="rent-header mb-3">
+                                                <h5 class="rent-title">
+                                                    <i class="fa-solid fa-calendar-days me-2"></i>
+                                                    {{ __('messages.Rental Period') }}
+                                                </h5>
+                                                <p class="text-content mb-0">{{ __('messages.Please select your rental period') }}</p>
+                                            </div>
+                                            <div class="rent-fields-content">
+                                                <div class="row g-3">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group-rent">
+                                                            <label for="product-start-date" class="form-label rent-label">
+                                                                <i class="fa-solid fa-calendar-check me-2"></i>
+                                                                {{ __('messages.Start Date') }} <span class="text-danger">*</span>
+                                                            </label>
+                                                            <div class="input-wrapper-rent">
+                                                                <input type="date" class="form-control rent-input" id="product-start-date" name="start_date" required>
+                                                                <i class="fa-solid fa-calendar input-icon"></i>
+                                                            </div>
+                                                            <div class="invalid-feedback">{{ __('messages.Start date is required') }}</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group-rent">
+                                                            <label for="product-count-day" class="form-label rent-label">
+                                                                <i class="fa-solid fa-calendar-day me-2"></i>
+                                                                {{ __('messages.Count Days') }} <span class="text-danger">*</span>
+                                                            </label>
+                                                            <div class="input-wrapper-rent">
+                                                                <input type="number" class="form-control rent-input" id="product-count-day" name="count_day" min="1" required>
+                                                                <i class="fa-solid fa-hashtag input-icon"></i>
+                                                            </div>
+                                                            <div class="invalid-feedback">{{ __('messages.Count days is required') }}</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="form-group-rent">
+                                                            <label for="product-note" class="form-label rent-label">
+                                                                <i class="fa-solid fa-note-sticky me-2"></i>
+                                                                {{ __('messages.Note') }} <span class="text-muted">({{ __('messages.Optional') }})</span>
+                                                            </label>
+                                                            <div class="input-wrapper-rent">
+                                                                <textarea class="form-control rent-input" id="product-note" name="note" rows="3" placeholder="{{ __('messages.Note (Optional)') }}"></textarea>
+                                                                <i class="fa-solid fa-comment input-icon textarea-icon"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
+                                    @if($product->condition === 'rent')
+                                    <button
+                                        class="btn btn-md bg-dark cart-button text-white w-100 addcart-button"
+                                        id="add-to-cart-btn"
+                                        data-model-custom="page"
+                                        data-product-id="{{ $product->id }}"
+                                        data-variant-id="{{ $firstVariant->id ?? '' }}"
+                                        data-condition="{{ $product->condition }}"
+                                    >
                                         {{ __('messages.Add to cart') }}
                                     </button>
+                                    @else
+                                    <button
+                                        class="btn btn-md bg-dark cart-button text-white w-100 addcart-button"
+                                        id="add-to-cart-btn"
+                                        data-product-id="{{ $product->id }}"
+                                        data-variant-id="{{ $firstVariant->id ?? '' }}"
+                                        data-condition="{{ $product->condition }}"
+                                    >
+                                        {{ __('messages.Add to cart') }}
+                                    </button>
+                                    @endif
                                 </div>
 
                                 <div class="buy-box">
@@ -693,7 +871,41 @@
                                     @if($relatedTranslation)
                         <div>
                             <div class="product-box-3 wow fadeInUp">
-                                <div class="product-header">
+                                <div class="product-header product-box">
+                                    {{-- Condition Badge (same logic as shop.blade.php) --}}
+                                    @php
+                                        $conditionLabel = '';
+                                        $conditionClass = '';
+                                        $showBadge = false;
+
+                                        // Show condition badge based on department:
+                                        // - For Buying department (id = 2): show new/used badge
+                                        // - For Renting department (id = 1): show rent badge if condition is rent
+                                        if ($relatedProduct->department) {
+                                            if ($relatedProduct->department->id == 2) {
+                                                // Buying department: show new/used badge
+                                                if ($relatedProduct->condition === 'new') {
+                                                    $conditionLabel = __('messages.New');
+                                                    $conditionClass = 'bg-success';
+                                                    $showBadge = true;
+                                                } elseif ($relatedProduct->condition === 'used') {
+                                                    $conditionLabel = __('messages.Used');
+                                                    $conditionClass = 'bg-info';
+                                                    $showBadge = true;
+                                                }
+                                            } elseif ($relatedProduct->department->id == 1 && $relatedProduct->condition === 'rent') {
+                                                // Renting department: show rent badge
+                                                $conditionLabel = __('messages.Rent');
+                                                $conditionClass = 'bg-warning';
+                                                $showBadge = true;
+                                            }
+                                        }
+                                    @endphp
+                                    @if($showBadge && $conditionLabel)
+                                        <div class="label-tag {{ $conditionClass }}">
+                                            <span>{{ $conditionLabel }}</span>
+                                        </div>
+                                    @endif
                                     <div class="product-image">
                                                         <a href="{{ route('productDetail', $relatedTranslation->slug) }}">
                                                             <img src="{{ $relatedProduct->image ?? asset('website/images/veg-3/home/19.jpg') }}"
@@ -749,7 +961,10 @@
                                                             @endif
                                                         @endif
                                         <div class="add-to-cart-box bg-white">
-                                                            <button class="btn btn-add-cart addcart-button">{{ __('messages.Add') }}
+                                                            <button class="btn btn-add-cart addcart-button"
+                                                                    data-product-id="{{ $relatedProduct->id }}"
+                                                                    data-variant-id="{{ $relatedVariant->id ?? '' }}"
+                                                                    data-condition="{{ $relatedProduct->condition }}">{{ __('messages.Add') }}
                                                 <span class="add-icon bg-light-gray">
                                                     <i class="fa-solid fa-plus"></i>
                                                 </span>
@@ -905,7 +1120,13 @@
             if (typeof feather !== 'undefined') {
                 feather.replace();
             }
+
+            // Set minimum date for rent products
+            @if($product->condition === 'rent')
+                var today = new Date().toISOString().split('T')[0];
+                $('#product-start-date').attr('min', today);
+            @endif
         });
     </script>
-    @endpush
+@endpush
 @endsection
