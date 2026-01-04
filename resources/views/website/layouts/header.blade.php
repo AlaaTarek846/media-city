@@ -248,7 +248,7 @@
                                             </div>
                                             <div class="delivery-detail">
                                                 <h6>{{ __('messages.Hello') }},</h6>
-                                                <h5>{{ substr($user->name, 0, 13) }}</h5>
+                                                <h5>{{ Str::limit($user->name, 13) }}</h5>
                                             </div>
                                         </div>
 

@@ -16,6 +16,32 @@ class Cart extends Model
 
     protected $table = "carts";
 
+    /**
+     * The attributes that are mass assignable.
+     * Added rent fields: note, start_date, count_day
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'user_id',
+        'product_id',
+        'product_variant_id',
+        'quantity',
+        'price',
+        'note',
+        'start_date',
+        'count_day',
+    ];
+
+    /**
+     * Cast dates for proper handling
+     *
+     * @var array
+     */
+    protected $casts = [
+        'start_date' => 'date',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);

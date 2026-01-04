@@ -432,7 +432,10 @@
                             '</a>' +
                             priceHtml +
                             '<div class="add-to-cart-box bg-white mt-2">' +
-                                '<button class="btn btn-add-cart addcart-button">{{ __('messages.Add') }}' +
+                                '<button class="btn btn-add-cart addcart-button" ' +
+                                    'data-product-id="' + product.id + '" ' +
+                                    'data-variant-id="' + (product.variant_id || '') + '" ' +
+                                    'data-condition="' + (product.condition || 'new') + '">{{ __('messages.Add') }}' +
                                     '<span class="add-icon bg-light-gray">' +
                                         '<i class="fa-solid fa-plus"></i>' +
                                     '</span>' +
@@ -523,7 +526,8 @@
     function getConditionLabel(condition) {
         const labels = {
             'new': '{{ __("messages.New") }}',
-            'used': '{{ __("messages.Used") }}'
+            'used': '{{ __("messages.Used") }}',
+            'rent': '{{ __("messages.Rent") }}',
         };
         return labels[condition] || condition;
     }
