@@ -2,12 +2,12 @@
     <div>
               <!-- Page Header -->
               <div class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
-            <h1 class="page-title fw-semibold fs-18 mb-0">{{ $t('global.banners') }}</h1>
+            <h1 class="page-title fw-semibold fs-18 mb-0">{{ $t('global.sliders') }}</h1>
             <div class="ms-md-1 ms-0">
                 <nav>
                     <ol class="breadcrumb mb-0">
                         <li class="breadcrumb-item"><router-link :to="{name: 'dashboard'}">{{$t('global.home')}}</router-link></li>
-                        <li class="breadcrumb-item active" aria-current="page">{{ $t('global.banners') }}</li>
+                        <li class="breadcrumb-item active" aria-current="page">{{ $t('global.sliders') }}</li>
                     </ol>
                 </nav>
             </div>
@@ -22,7 +22,7 @@
                         <search-and-filters @search="(val) => search.searchKey = val" />
 
                         <!-- <div class="prism-toggle">
-                            <button v-if="permission.includes('banner create')" @click="showModelCreate" class="btn btn-sm btn-primary-light" data-bs-toggle="modal" data-bs-target="#banner-modal">
+                            <button v-if="permission.includes('slider create')" @click="showModelCreate" class="btn btn-sm btn-primary-light" data-bs-toggle="modal" data-bs-target="#banner-modal">
                                 <i class="ri-add-line me-1 fw-semibold align-middle"></i>{{ $t('global.add') }}
                             </button>
                         </div> -->
@@ -34,9 +34,6 @@
                                 <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">{{ $t('global.image') }}</th>
-                                    <th scope="col">{{ $t('label.title_one') }}</th>
-                                    <th scope="col">{{ $t('label.title_two') }}</th>
-                                    <th scope="col">{{ $t('label.type') }}</th>
                                     <th scope="col">{{ $t('global.status') }}</th>
                                     <th scope="col">{{ $t('global.action') }}</th>
                                 </tr>
@@ -53,26 +50,18 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td>{{item.title}}</td>
-                                    <td>{{item.description}}</td>
-                                    <td>
-                                        <span class="badge rounded-pill bg-info-transparent" v-if="item.type === 'shop'">{{$t('label.bannerType.shop')}}</span>
-                                        <span class="badge rounded-pill bg-info-transparent" v-else-if="item.type === 'renting'">{{$t('label.bannerType.renting')}}</span>
-                                        <span class="badge rounded-pill bg-info-transparent" v-else-if="item.type === 'best_sellers'">{{$t('label.bannerType.best_sellers')}}</span>
-                                        <span class="badge rounded-pill bg-info-transparent" v-else-if="item.type === 'home'">{{$t('label.bannerType.home')}}</span>
-                                    </td>
                                     <td>
                                         <span class="badge rounded-pill bg-success-transparent" v-if="item.status">{{$t('global.activated')}}</span>
                                         <span class="badge rounded-pill bg-danger-transparent" v-else>{{$t('global.Inactive')}}</span>
                                     </td>
                                     <td>
                                         <div class="hstack gap-2 fs-15">
-                                            <button v-if="permission.includes('banner edit')"
+                                            <button v-if="permission.includes('slider edit')"
                                                 @click.prevent="showEditMode(item)"
                                                 data-bs-toggle="modal" data-bs-target="#banner-modal"
                                                class="btn btn-icon btn-sm btn-info-transparent rounded-pill"><i
                                                 class="ri-edit-line"></i></button>
-                                            <!-- <a href="#" @click.prevent="deleteData(item.id,index)" v-if="permission.includes('banner delete')"
+                                            <!-- <a href="#" @click.prevent="deleteData(item.id,index)" v-if="permission.includes('slider delete')"
                                                class="btn btn-icon btn-sm btn-danger-transparent rounded-pill"><i
                                                 class="ri-delete-bin-line"></i></a> -->
                                         </div>
@@ -81,7 +70,7 @@
                                 </tbody>
                                 <tbody v-else>
                                     <tr>
-                                        <th class="text-center" colspan="8">{{ $t('global.NoDataFound') }}</th>
+                                        <th class="text-center" colspan="7">{{ $t('global.NoDataFound') }}</th>
                                     </tr>
                                 </tbody>
                             </table>
@@ -130,7 +119,7 @@ export default {
             ]
         }
         onBeforeMount(() => {
-            uri.value = 'banners';
+            uri.value = 'sliders';
             getData();
         });
 

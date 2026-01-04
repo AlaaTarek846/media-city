@@ -29,6 +29,7 @@ use App\Http\Controllers\Dashboard\ProfileController;
 use App\Http\Controllers\Dashboard\RoleController;
 use App\Http\Controllers\Dashboard\SendNotificationController;
 use App\Http\Controllers\Dashboard\SettingController;
+use App\Http\Controllers\Dashboard\SliderController;
 use App\Http\Controllers\Dashboard\TestimonialController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Dashboard\ProductAttributeController;
@@ -64,12 +65,12 @@ Route::group(['prefix' => 'web', 'middleware' => [ChangeLang::class,StartSession
     Route::post('complete-register',[RegisterController::class,'completeRegister'])->middleware(['auth:user']);
     Route::post('contact-us',[HomePageController::class,'contactUsForm']);
     Route::post('login',[RegisterController::class,'loginForm'])->middleware(['guest:user','throttle:login']);
-    
+
     // Password Reset Routes
     Route::post('password/email',[RegisterController::class,'sendResetLinkEmail'])->middleware(['guest:user']);
     Route::get('password/reset',[RegisterController::class,'showResetForm'])->middleware(['guest:user'])->name('password.reset');
     Route::post('password/reset',[RegisterController::class,'reset'])->middleware(['guest:user']);
-    
+
      Route::get('/show-product/{id}', [HomePageController::class, 'showProduct']);
      Route::get('/product-modal/{id}', [HomePageController::class, 'getProductForModal']); // AJAX endpoint for quick view modal
      Route::get('/shop-products', [HomePageController::class, 'getShopProducts']); // AJAX endpoint for shop filtering
@@ -91,7 +92,7 @@ Route::group(['prefix' => 'web', 'middleware' => [ChangeLang::class,StartSession
     Route::get('/get-favorites', [FavoriteController::class, 'index'])->middleware('auth:user');
     Route::post('/add-favorites', [FavoriteController::class, 'store'])->middleware('auth:user');
     Route::delete('/delete-favorite/{id}', [FavoriteController::class, 'destroy'])->middleware('auth:user');
-    
+
     // Wishlist routes
     Route::post('/wishlist/add', [FavoriteController::class, 'addToWishlist'])->middleware('auth:user');
     Route::post('/wishlist/sync', [FavoriteController::class, 'syncWishlist'])->middleware('auth:user');
@@ -205,6 +206,8 @@ Route::group(['prefix' => 'dashboard', 'middleware' => [ChangeLang::class]], fun
         // about-us
         Route::apiResource('about-us', AboutUsController::class);
 
+        Route::apiResource('sliders', SliderController::class);
+
         // vision
         Route::apiResource('vision', VisionController::class);
 
@@ -226,7 +229,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => [ChangeLang::class]], fun
             Route::get('getNotNotRead', 'getNotNotRead');
             Route::post('clearItem/{id}', 'clearItem');
             Route::post('getNotNotRead', 'clearAll');
-            
+
             // Contact Messages Notifications
             Route::get('notifications', 'getContactMessages');
             Route::post('notifications/{id}/read', 'markAsRead');
@@ -236,7 +239,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => [ChangeLang::class]], fun
         // Pusher Test Routes
         Route::post('test-pusher', [\App\Http\Controllers\Dashboard\PusherTestController::class, 'testPusher']);
         Route::post('test-pusher-private', [\App\Http\Controllers\Dashboard\PusherTestController::class, 'testPrivateChannel'])->middleware('auth:admin_api');
-        
+
         // Contact Message Test Routes
         Route::post('test-contact-message', [\App\Http\Controllers\Dashboard\TestContactMessageController::class, 'testContactMessage'])->middleware('auth:admin_api');
         Route::get('test-notification-flow', [\App\Http\Controllers\Dashboard\TestNotificationController::class, 'testCompleteFlow'])->middleware('auth:admin_api');

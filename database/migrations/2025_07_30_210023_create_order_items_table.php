@@ -23,6 +23,9 @@ return new class extends Migration
             $table->double('price')->default(0.00);
             $table->double('discount')->default(0.00);
             $table->double('total')->default(0.00);
+            $table->integer('count_day')->default(0);
+            $table->date('start_date')->nullable();
+            $table->text('note')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

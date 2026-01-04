@@ -154,6 +154,13 @@
                         </router-link>
                     </li>
 
+                    <li class="slide" v-show="permission.includes('slider read')">
+                        <router-link :to="{name:'slider'}" class="side-menu__item">
+                            <i class="bx bx-image side-menu__icon"></i>
+                            <span class="side-menu__label">{{$t('global.sliders')}}</span>
+                        </router-link>
+                    </li>
+
 <!--                    <li class="slide" v-show="permission.includes('testimonial read')">-->
 <!--                        <router-link :to="{name:'testimonial'}" class="side-menu__item">-->
 <!--                            <i class="bx bx-comment side-menu__icon"></i>-->

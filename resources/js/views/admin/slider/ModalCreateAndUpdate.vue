@@ -11,62 +11,9 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-md-6" v-if="data.ar" v-for="lang in languages">
-                            <label class="form-label">{{ $t('label.title_one') }} ({{lang.title}})</label>
-                            <input type="text" class="form-control"  v-model="v$[lang.code].title.$model"
-                                   :placeholder="$t('label.title_one')+' '+lang.title"
-                                   :class="{'is-invalid': v$[lang.code].title.$error || errors[`translations.${lang.code}.title`],
-                                   'is-valid': !v$[lang.code].title.$invalid && !errors[`translations.${lang.code}.title`]}">
 
-                            <div class="invalid-feedback">
-                                <span v-if="v$[lang.code].title.required.$invalid">{{ $t('validation.fieldRequired') }}<br /> </span>
-                                <span v-if="v$[lang.code].title.minLength.$invalid">{{ $t('validation.TitleIsMustHaveAtLeast') }} {{
-                                        v$[lang.code].title.minLength.$params.min
-                                    }} {{ $t('validation.Letters') }} <br />
-                                </span>
-                            </div>
-                            <template v-if="errors[`translations.${lang.code}.title`]">
-                                <error-message v-for="(errorMessage, index) in errors[`translations.${lang.code}.title`]" :key="index">
-                                    {{ errorMessage }}
-                                </error-message>
-                            </template>
-                        </div>
 
-                        <div class="col-md-6" v-if="data.ar" v-for="lang in languages">
-                            <label class="form-label">{{ $t('label.title_two') }} ({{lang.title}})</label>
-                            <input type="text" class="form-control"  v-model="v$[lang.code].description.$model"
-                            :placeholder="$t('label.title_two')+' '+lang.title"
-                            :class="{'is-invalid': v$[lang.code].description.$error || errors[`translations.${lang.code}.description`],
-                            'is-valid': !v$[lang.code].description.$invalid && !errors[`translations.${lang.code}.description`]}">
-
-                            <div class="invalid-feedback">
-                                <span v-if="v$[lang.code].description.required.$invalid">{{ $t('validation.fieldRequired') }}<br /> </span>
-                            </div>
-                            <template v-if="errors[`translations.${lang.code}.description`]">
-                                <error-message v-for="(errorMessage, index) in errors[`translations.${lang.code}.description`]" :key="index">
-                                    {{ errorMessage }}
-                                </error-message>
-                            </template>
-                        </div>
-
-                        <div class="col-md-6 mt-2">
-                            <label class="form-label">{{ $t('label.type') }}</label>
-                            <select class="form-select" v-model="data.type"
-                                    :class="{'is-invalid': errors['type'], 'is-valid': !errors['type']}">
-                                <option value="">{{ $t('label.selectType') }}</option>
-                                <option value="shop">{{ $t('label.bannerType.shop') }}</option>
-                                <option value="renting">{{ $t('label.bannerType.renting') }}</option>
-                                <option value="best_sellers">{{ $t('label.bannerType.best_sellers') }}</option>
-                                <option value="home">{{ $t('label.bannerType.home') }}</option>
-                            </select>
-                            <template v-if="errors['type']">
-                                <error-message v-for="(errorMessage, index) in errors['type']" :key="index">
-                                    {{ errorMessage }}
-                                </error-message>
-                            </template>
-                        </div>
-
-                        <!-- <div class="col-md-6 mt-2">
+                         <div class="col-md-6 mt-2">
                             <div class="custom-toggle-switch d-flex align-items-center my-4 ">
                                 <input id="toggleswitchPrimary" v-model="data.status" type="checkbox">
                                 <label for="toggleswitchPrimary" class="label-primary"></label><span class="ms-3">{{ $t('label.status') }}</span>
@@ -76,7 +23,7 @@
                                     {{ errorMessage }}
                                 </error-message>
                             </template>
-                        </div> -->
+                        </div>
 
 
                         <div class="col-md-12 mt-3 row flex-fill">
@@ -145,7 +92,7 @@ import useVuelidate from "@vuelidate/core";
 import adminApi from "../../../api/adminAxios";
 
 export default {
-    name: "Banner",
+    name: "Slider",
     props: {
         type: {default: 'create'},
         dataRow: {default: ''},
@@ -180,16 +127,8 @@ export default {
 
        function defaultData(){
 
-        languages.value.forEach((el)=>{
-               submitdata.data[el.code]={title:'',description:'',};
-               langValidation.value[el.code] ={
-                   title: {minLength: minLength(1),required,},
-                   description: {required}
-               }
-           });
 
            submitdata.data.status = true;
-           submitdata.data.type = 'home';
            imageUpload.value = '';
            is_disabled.value = false;
            image.value=null
@@ -202,18 +141,11 @@ export default {
                 if (props.type != 'edit') {
                 } else {
                     id.value = props.dataRow.id;
-                    adminApi.get(`dashboard/banners/${id.value}`)
+                    adminApi.get(`dashboard/sliders/${id.value}`)
                     .then((res) => {
                         loading.value = true;
                         let l = res.data.data;
-                        l.translations.forEach((el)=>{
-                            submitdata.data[el.locale]={
-                                title:el.title,
-                                description:el.description,
-                            }
-                        });
                         submitdata.data.status = l.status==1;
-                        submitdata.data.type = l.type || 'home';
                         imageUpload.value = l.image
                     })
                     .catch((err) => {
@@ -236,7 +168,6 @@ export default {
         let submitdata =  reactive({
             data:{
                 status: true,
-                type: 'home',
             }
         });
 
@@ -315,12 +246,8 @@ export default {
 
         let formData = new FormData();
 
-        this.languages.forEach((el)=>{
-           formData.append(`translations[${el.code}][title]`, this.data[el.code].title);
-           formData.append(`translations[${el.code}][description]`, this.data[el.code].description);
-       })
+
         formData.append('status', this.data.status ? 1 : 0);
-        formData.append('type', this.data.type);
         if (this.image) {
             formData.append('image', this.image);
         }
@@ -328,7 +255,7 @@ export default {
             if (!this.v$.$error && this.numberOfImage) {
                 this.is_disabled = false;
                 this.loading = true;
-                adminApi.post(`dashboard/banners`, formData)
+                adminApi.post(`dashboard/sliders`, formData)
                     .then((res) => {
                         Swal.fire({
                             icon: 'success',
@@ -362,7 +289,7 @@ export default {
             this.is_disabled = false;
             this.loading = true;
             formData.append('_method','PUT');
-            adminApi.post(`dashboard/banners/${this.id}`,formData)
+            adminApi.post(`dashboard/sliders/${this.id}`,formData)
                 .then((res) => {
                     Swal.fire({
                         icon: 'success',

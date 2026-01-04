@@ -5,7 +5,7 @@ namespace App\Http\Requests\Dashboard;
 use App\Models\Category;
 use Illuminate\Foundation\Http\FormRequest;
 
-class BannerRequest extends FormRequest
+class SliderRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,11 +25,7 @@ class BannerRequest extends FormRequest
     public function rules()
     {
         return [
-            "translations"         => "nullable|array",
-            "translations.*.title" => "required|string",
-            "translations.*.description" => "required|string",
             "status" =>  "required|boolean",
-            "type" => "required|in:shop,renting,best_sellers,home",
             'image' => $this->method() == 'PUT' ? 'nullable'.($this->hasFile('image')?'|file|mimes:jpeg,jpg,png,svg,webp':'') : 'nullable|file|mimes:png,svg,webp,jpg,jpeg' ,
         ];
     }

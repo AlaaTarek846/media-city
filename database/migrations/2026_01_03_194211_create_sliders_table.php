@@ -11,15 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('banners', function (Blueprint $table) {
+        Schema::create('sliders', function (Blueprint $table) {
             $table->id();
             $table->string('image');
             $table->boolean('status')->default(true);
-            $table->enum('type',['shop','renting','best_sellers','home'])->default('home');
-            $table->softDeletes();
             $table->timestamps();
         });
-
     }
 
     /**
@@ -27,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('banners');
+        Schema::dropIfExists('sliders');
     }
 };

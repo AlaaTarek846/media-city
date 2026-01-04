@@ -46,6 +46,13 @@
         "reasonType": "Reason Type",
         "reasonModel": "Reason Model",
         "type": "Type",
+        "selectType": "Select Type",
+        "bannerType": {
+            "shop": "Shop Page",
+            "renting": "Renting Page",
+            "best_sellers": "Best Sellers Page",
+            "home": "Home Page"
+        },
         "prefix": "Prefix",
         "startNumber": "Start Number",
         "subTotal": "Subtotal",
@@ -177,6 +184,7 @@
         "phone": "Phone Number",
         "admins": "Admins",
         "banners": "Banners",
+        "sliders": "Sliders",
         "payment_methods": "Payment Methods",
         "roles": "Admin Roles",
         "profile": "Profile",
