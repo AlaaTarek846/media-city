@@ -8,61 +8,66 @@
                         <img src="{{asset('website/images/logo/3.png')}}" class="img-fluid" alt="">
                     </a>
 
+                    @if(isset($contactUs) && $contactUs)
                     <ul class="social-icon">
+                        @if($contactUs->facebook)
                         <li>
-                            <a href="www.facebook.com">
+                            <a href="{{ $contactUs->facebook }}" target="_blank" rel="noopener noreferrer">
                                 <i class="fab fa-facebook-f"></i>
                             </a>
                         </li>
+                        @endif
+                        @if($contactUs->twitter)
                         <li>
-                            <a href="www.goolge.com">
-                                <i class="fab fa-google"></i>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="www.twitter.com">
+                            <a href="{{ $contactUs->twitter }}" target="_blank" rel="noopener noreferrer">
                                 <i class="fab fa-twitter"></i>
                             </a>
                         </li>
+                        @endif
+                        @if($contactUs->instagram)
                         <li>
-                            <a href="www.instagram.com">
+                            <a href="{{ $contactUs->instagram }}" target="_blank" rel="noopener noreferrer">
                                 <i class="fab fa-instagram"></i>
                             </a>
                         </li>
+                        @endif
+                        @if($contactUs->linkedin)
                         <li>
-                            <a href="www.pinterest.com">
-                                <i class="fab fa-pinterest-p"></i>
+                            <a href="{{ $contactUs->linkedin }}" target="_blank" rel="noopener noreferrer">
+                                <i class="fab fa-linkedin"></i>
                             </a>
                         </li>
+                        @endif
                     </ul>
+                    @endif
 
 
                 </div>
 
                 <div class="col-xxl-3 col-xl-4 col-sm-6">
                     <div class="footer-title">
-                        <h4>About MediaCity</h4>
+                        <h4>{{ __('messages.About MediaCity') }}</h4>
                     </div>
                     <ul class="footer-list footer-contact mb-sm-0 mb-3">
                         <li>
                             <a href="{{route('about-us')}}" class="footer-contain-2">
-                                <i class="fas fa-angle-right"></i>About Us</a>
+                                <i class="fas fa-angle-right"></i>{{ __('messages.About Us') }}</a>
                         </li>
                         <li>
                             <a href="{{route('contact')}}" class="footer-contain-2">
-                                <i class="fas fa-angle-right"></i>Contact Us</a>
+                                <i class="fas fa-angle-right"></i>{{ __('messages.Contact Us') }}</a>
                         </li>
                         <li>
                             <a href="{{route('terms-condition')}}" class="footer-contain-2">
-                                <i class="fas fa-angle-right"></i>Terms & Conditions</a>
+                                <i class="fas fa-angle-right"></i>{{ __('messages.Terms & Conditions') }}</a>
                         </li>
                         <li>
                             <a href="{{route('renting')}}" class="footer-contain-2">
-                                <i class="fas fa-angle-right"></i>Renting</a>
+                                <i class="fas fa-angle-right"></i>{{ __('messages.Renting') }}</a>
                         </li>
                         <li>
                             <a href="{{route('blog')}}" class="footer-contain-2">
-                                <i class="fas fa-angle-right"></i>Latest Blog</a>
+                                <i class="fas fa-angle-right"></i>{{ __('messages.Latest Blog') }}</a>
                         </li>
                     </ul>
                 </div>
@@ -70,72 +75,73 @@
 
                 <div class="col-xxl-3 col-xl-4 col-sm-6">
                     <div class="footer-title">
-                        <h4>Items</h4>
+                        <h4>{{ __('messages.Items') }}</h4>
                     </div>
                     <ul class="footer-list footer-contact mb-sm-0 mb-3">
-                        <li>
-                            <a href="vegetables-demo.html" class="footer-contain-2">
-                                <i class="fas fa-angle-right"></i>Cameras</a>
-                        </li>
-                        <li>
-                            <a href="spice-demo.html" class="footer-contain-2">
-                                <i class="fas fa-angle-right"></i>Lenses</a>
-                        </li>
-                        <li>
-                            <a href="bags-demo.html" class="footer-contain-2">
-                                <i class="fas fa-angle-right"></i>Sound</a>
-                        </li>
-                        <li>
-                            <a href="bakery-demo.html" class="footer-contain-2">
-                                <i class="fas fa-angle-right"></i>Camera Accessories</a>
-                        </li>
-                        <li>
-                            <a href="grocery-demo.html" class="footer-contain-2">
-                                <i class="fas fa-angle-right"></i>Lighting</a>
-                        </li>
+                        @foreach($headerDepartments as $department)
+                            @if($department->id == 1)
+                                @php
+                                    // Categories are already filtered by status in ViewServiceProvider
+                                    $departmentCategories = $department->categories;
+                                @endphp
+                                @foreach($departmentCategories as $index => $category)
+                                    @if($index < 5)
+                                        @php
+                                            $categoryTranslation = $category->translation ?? $category->translations->first();
+                                        @endphp
+                                        <li>
+                                            <a
+                                                href="{{ url('/shop/' . $department->slug . '/' . $category->slug) }}"
+                                                class="footer-contain-2"
+                                            >
+                                                <i class="fas fa-angle-right"></i>
+                                                {{ $categoryTranslation->title }}
+                                            </a>
+                                        </li>
+                                    @endif
+                                @endforeach
+                            @endif
+                        @endforeach
                     </ul>
                 </div>
 
                 <div class="col-xxl-3 col-xl-4 col-sm-6">
                     <div class="footer-title">
-                        <h4>Store infomation</h4>
+                        <h4>{{ __('messages.Store Information') }}</h4>
                     </div>
                     <ul class="footer-address footer-contact">
+                        @if(isset($contactUs) && $contactUs && $contactUs->address)
                         <li>
                             <a href="javascript:void(0)">
                                 <div class="inform-box flex-start-box">
                                     <i data-feather="map-pin"></i>
-                                    <p>MediaCity Demo Store, Demo store india 345 - 659</p>
+                                    <p>{!! $contactUs->address !!}</p>
                                 </div>
                             </a>
                         </li>
+                        @endif
 
+                        @if(isset($contactUs) && $contactUs && $contactUs->mobile)
                         <li>
-                            <a href="javascript:void(0)">
+                            <a href="tel:{{ $contactUs->mobile }}">
                                 <div class="inform-box">
                                     <i data-feather="phone"></i>
-                                    <p>Call us: 123-456-7890</p>
+                                    <p>{{ __('messages.Call us') }}: <span style="direction: ltr;display: inline-block">{{ $contactUs->mobile }}</span></p>
                                 </div>
                             </a>
                         </li>
+                        @endif
 
+                        @if(isset($contactUs) && $contactUs && $contactUs->email)
                         <li>
-                            <a href="javascript:void(0)">
+                            <a href="mailto:{{ $contactUs->email }}">
                                 <div class="inform-box">
                                     <i data-feather="mail"></i>
-                                    <p>Email Us: Support@MediaCity.com</p>
+                                    <p>{{ __('messages.Email Us') }}: {{ $contactUs->email }}</p>
                                 </div>
                             </a>
                         </li>
-
-                        <li>
-                            <a href="javascript:void(0)">
-                                <div class="inform-box">
-                                    <i data-feather="printer"></i>
-                                    <p>Fax: 123456</p>
-                                </div>
-                            </a>
-                        </li>
+                        @endif
                     </ul>
                 </div>
             </div>

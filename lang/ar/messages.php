@@ -1124,4 +1124,11 @@ return [
     "Message must be at least 10 characters"=>"يجب أن تكون الرسالة 10 أحرف على الأقل",
     "Subject must be at least 3 characters"=>"يجب أن يكون الموضوع 3 أحرف على الأقل",
     "Please enter a valid email address"=>"يرجى إدخال عنوان بريد إلكتروني صحيح",
+    "About MediaCity"=>"حول ميديا سيتي",
+    "Store Information"=>"معلومات المتجر",
+    "Renting"=>"الإيجار",
+    "Latest Blog"=>"أحدث المدونة",
+    "Fax"=>"فاكس",
+    "Call us"=>"اتصل بنا",
+    "Email Us"=>"راسلنا",
 ];

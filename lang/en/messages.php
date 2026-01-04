@@ -1114,4 +1114,11 @@ return [
     "Please select your rental period"=>"Please select your rental period",
     "Please fill in the rental period"=>"Please fill in the rental period",
     "Please fill in the rental period in the modal"=>"Please fill in the rental period in the modal",
+    "About MediaCity"=>"About MediaCity",
+    "Store Information"=>"Store Information",
+    "Renting"=>"Renting",
+    "Latest Blog"=>"Latest Blog",
+    "Fax"=>"Fax",
+    "Call us"=>"Call us",
+    "Email Us"=>"Email Us",
 ];
