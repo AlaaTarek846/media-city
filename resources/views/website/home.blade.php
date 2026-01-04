@@ -69,464 +69,154 @@
 
     <!-- Home Section End -->
 
-
-
     <section class="category-section-3">
         <div class="container-fluid-lg">
             <div class="title">
-                <h2>Shop By Categories</h2>
+                <h2>{{ __('messages.Shop By Categories') }}</h2>
             </div>
             <div class="row">
                 <div class="col-12">
                     <div class="category-slider-1 arrow-slider wow fadeInUp">
-                        <div>
-                            <div class="category-box-list">
-                                <a href="shop-left-sidebar.html" class="category-name">
-                                    <h4>Cameras</h4>
-                                </a>
-                                <div class="category-box-view">
-                                    <a href="shop-left-sidebar.html">
-                                        <img src="{{asset('website/svg/1/Cinema-camera.png')}}"
-                                             class="img-fluid blur-up lazyload" alt="">
-                                    </a>
-                                    <button onclick="location.href = 'shop-left-sidebar.html';" class="btn shop-button">
-                                        <span>Shop Now</span>
-                                        <i class="fas fa-angle-right"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="category-box-list">
-                                <a href="shop-left-sidebar.html" class="category-name">
-                                    <h4>Lenses</h4>
-                                </a>
-                                <div class="category-box-view">
-                                    <a href="shop-left-sidebar.html">
-                                        <img src="{{asset('website/svg/1/lenses.png')}}"
-                                             class="img-fluid blur-up lazyload" alt="">
-                                    </a>
-                                    <button onclick="location.href = 'shop-left-sidebar.html';" class="btn shop-button">
-                                        <span>Shop Now</span>
-                                        <i class="fas fa-angle-right"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="category-box-list">
-                                <a href="shop-left-sidebar.html" class="category-name">
-                                    <h4>Sound</h4>
-                                </a>
-                                <div class="category-box-view">
-                                    <a href="shop-left-sidebar.html">
-                                        <img src="{{asset('website/svg/1/mic.png')}}"
-                                             class="img-fluid blur-up lazyload" alt="">
-                                    </a>
-                                    <button onclick="location.href = 'shop-left-sidebar.html';" class="btn shop-button">
-                                        <span>Shop Now</span>
-                                        <i class="fas fa-angle-right"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="category-box-list">
-                                <a href="shop-left-sidebar.html" class="category-name">
-                                    <h4>Camera Accessories</h4>
-                                </a>
-                                <div class="category-box-view">
-                                    <a href="shop-left-sidebar.html">
-                                        <img src="{{asset('website/svg/1/tripod.png')}}"
-                                             class="img-fluid blur-up lazyload" alt="">
-                                    </a>
-                                    <button onclick="location.href = 'shop-left-sidebar.html';" class="btn shop-button">
-                                        <span>Shop Now</span>
-                                        <i class="fas fa-angle-right"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="category-box-list">
-                                <a href="shop-left-sidebar.html" class="category-name">
-                                    <h4>Lighting</h4>
-                                </a>
-                                <div class="category-box-view">
-                                    <a href="shop-left-sidebar.html">
-                                        <img src="{{asset('website/svg/1/illumination.png')}}"
-                                             class="img-fluid blur-up lazyload" alt="">
-                                    </a>
-                                    <button onclick="location.href = 'shop-left-sidebar.html';" class="btn shop-button">
-                                        <span>Shop Now</span>
-                                        <i class="fas fa-angle-right"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="category-box-list">
-                                <a href="shop-left-sidebar.html" class="category-name">
-                                    <h4>Lighting Accessories</h4>
-                                </a>
-                                <div class="category-box-view">
-                                    <a href="shop-left-sidebar.html">
-                                        <img src="{{asset('website/svg/1/illumination.png')}}"
-                                             class="img-fluid blur-up lazyload" alt="">
-                                    </a>
-                                    <button onclick="location.href = 'shop-left-sidebar.html';" class="btn shop-button">
-                                        <span>Shop Now</span>
-                                        <i class="fas fa-angle-right"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="category-box-list">
-                                <a href="shop-left-sidebar.html" class="category-name">
-                                    <h4>Lighting Accessories</h4>
-                                </a>
-                                <div class="category-box-view">
-                                    <a href="shop-left-sidebar.html">
-                                        <img src="{{asset('website/svg/1/illumination.png')}}"
-                                             class="img-fluid blur-up lazyload" alt="">
-                                    </a>
-                                    <button onclick="location.href = 'shop-left-sidebar.html';" class="btn shop-button">
-                                        <span>Shop Now</span>
-                                        <i class="fas fa-angle-right"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+                        @if(isset($shopByDepartment) && $shopByDepartment?->categories->count() > 0)
+                            @foreach($shopByDepartment->categories as $category)
+                                @php
+                                    $categoryTranslation = $category->translation ?? $category->translations->first();
+                                    $categoryUrl = url('/shop/' . $shopByDepartment->slug . '/' . $category->slug);
+                                @endphp
+                                @if($categoryTranslation)
+                                    <div>
+                                        <div class="category-box-list">
+                                            <a href="{{ $categoryUrl }}" class="category-name">
+                                                <h4>{{ $categoryTranslation->title }}</h4>
+                                            </a>
+                                            <div class="category-box-view">
+                                                <a href="{{ $categoryUrl }}">
+                                                    @if($category->image)
+                                                        <img src="{{ $category->image }}"
+                                                             class="img-fluid blur-up lazyload"
+                                                             alt="{{ $categoryTranslation->title }}">
+                                                    @else
+                                                        <img src="{{ asset('website/svg/1/Cinema-camera.png') }}"
+                                                             class="img-fluid blur-up lazyload"
+                                                             alt="{{ $categoryTranslation->title }}">
+                                                    @endif
+                                                </a>
+                                                <button onclick="location.href = '{{ $categoryUrl }}';" class="btn shop-button">
+                                                    <span>{{ __('messages.shop now') }}</span>
+                                                    @if(app()->getLocale() == 'en')
+                                                        <i class="fas fa-angle-right"></i>
+                                                    @else
+                                                        <i class="fas fa-angle-left"></i>
+                                                    @endif
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+                            @endforeach
+                        @endif
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-
-
-
     <!-- Deal Section Start -->
     <section class="deal-section">
         <div class="container-fluid-lg">
             <div class="title">
-                <h2>Deal Of The Day</h2>
+                <h2>{{ __('messages.Deal Of The Day') }}</h2>
             </div>
             <div class="row">
                 <div class="col-12">
                     <div class="three-slider-1 arrow-slider">
-                        <div>
-                            <div class="deal-box wow fadeInUp">
-                                <a href="shop-list.html" class="category-image order-sm-2">
-                                    <img src="{{asset('website/images/veg-3/home/1.png')}}" class="img-fluid blur-up lazyload"
-                                         alt="">
-                                </a>
+                        @if(isset($dealProducts) && $dealProducts->count() > 0)
+                            @foreach($dealProducts as $index => $product)
+                                @php
+                                    $translation = $product->translation ?? $product->translations->first();
+                                    $variant = $product->variants->first();
+                                    $productUrl = route('productDetail', ['id' => $translation->slug ?? $product->id]);
+                                    $rating = round($product->rate ?? 0);
+                                    $discountPrice = $variant->price ?? 0;
+                                    $originalPrice = $variant->price_before_discount > 0 ? $variant->price_before_discount : ($variant->price ?? 0);
+                                    $discountPercentage = $variant->discount_percentage ?? 0;
+                                    $wowDelay = $index * 0.05;
+                                    $timerId = 'clockdiv-' . ($index + 1);
+                                @endphp
+                                @if($translation && $variant && $discountPercentage > 0)
+                                    <div>
+                                        <div class="deal-box wow fadeInUp" @if($index > 0) data-wow-delay="{{ $wowDelay }}s" @endif>
+                                            <a href="{{ $productUrl }}" class="category-image order-sm-2">
+                                                <img src="{{ $product->image }}"
+                                                     class="img-fluid blur-up lazyload"
+                                                     alt="{{ $translation->title }}">
+                                            </a>
 
-                                <div class="deal-detail order-sm-1">
-                                    <button class="buy-box btn theme-bg-color text-white btn-cart">
-                                        <i class="iconly-Buy icli m-0"></i>
-                                    </button>
-                                    <div class="hot-deal">
-                                        <span>Hot Deals</span>
+                                            <div class="deal-detail order-sm-1">
+                                                <div class="hot-deal">
+                                                    <span>{{ __('messages.Hot Deals') }}</span>
+                                                </div>
+                                                <ul class="rating">
+                                                    @for($i = 1; $i <= 5; $i++)
+                                                        <li>
+                                                            <i data-feather="star" class="{{ $i <= $rating ? 'fill' : '' }}"></i>
+                                                        </li>
+                                                    @endfor
+                                                </ul>
+                                                <a href="{{ $productUrl }}" class="text-title">
+                                                    <h5>{{ $translation->title }}</h5>
+                                                </a>
+                                                <h5 class="price">
+                                                    {{ __('messages.currency') }} {{ number_format($discountPrice, 2) }}
+                                                    <span>{{ __('messages.currency') }} {{ number_format($originalPrice, 2) }}</span>
+                                                </h5>
+                                                <div class="progress custom-progressbar">
+                                                    <div class="progress-bar"
+                                                         style="width: {{ min(100, max(10, $discountPercentage)) }}%"
+                                                         role="progressbar"
+                                                         aria-valuenow="{{ $discountPercentage }}"
+                                                         aria-valuemin="0"
+                                                         aria-valuemax="100"></div>
+                                                </div>
+                                                <h4 class="offer">{{ __('messages.Hurry up offer end in') }}</h4>
+                                                <div class="timer" id="{{ $timerId }}" data-hours="24" data-minutes="0" data-seconds="0">
+                                                    <ul>
+                                                        <li>
+                                                            <div class="counter">
+                                                                <div class="days">
+                                                                    <h6></h6>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        <li>
+                                                            <div class="counter">
+                                                                <div class="hours">
+                                                                    <h6></h6>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        <li>
+                                                            <div class="counter">
+                                                                <div class="minutes">
+                                                                    <h6></h6>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        <li>
+                                                            <div class="counter">
+                                                                <div class="seconds">
+                                                                    <h6></h6>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <ul class="rating">
-                                        <li>
-                                            <i data-feather="star" class="fill"></i>
-                                        </li>
-                                        <li>
-                                            <i data-feather="star" class="fill"></i>
-                                        </li>
-                                        <li>
-                                            <i data-feather="star" class="fill"></i>
-                                        </li>
-                                        <li>
-                                            <i data-feather="star"></i>
-                                        </li>
-                                        <li>
-                                            <i data-feather="star"></i>
-                                        </li>
-                                    </ul>
-                                    <a href="shop-list.html" class="text-title">
-                                        <h5>Canon EOS C300 Mark III Digital Cinema Camera (EF Lens Mount)</h5>
-                                    </a>
-                                    <h5 class="price">EGP 70.21 <span>EGP 65.00</span></h5>
-                                    <div class="progress custom-progressbar">
-                                        <div class="progress-bar" style="width: 50%" role="progressbar"
-                                             aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    <h4 class="item">Sold: <span>30 Items</span></h4>
-                                    <h4 class="offer">Hurry up offer end in</h4>
-                                    <div class="timer" id="clockdiv-4" data-hours="1" data-minutes="2" data-seconds="3">
-                                        <ul>
-                                            <li>
-                                                <div class="counter">
-                                                    <div class="days">
-                                                        <h6></h6>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="counter">
-                                                    <div class="hours">
-                                                        <h6></h6>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="counter">
-                                                    <div class="minutes">
-                                                        <h6></h6>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="counter">
-                                                    <div class="seconds">
-                                                        <h6></h6>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="deal-box wow fadeInUp" data-wow-delay="0.05s">
-                                <a href="shop-list.html" class="category-image order-sm-2">
-                                    <img src="{{asset('website/images/veg-3/home/1.png')}}" class="img-fluid blur-up lazyload"
-                                         alt="">
-                                </a>
-
-                                <div class="deal-detail order-sm-1">
-                                    <button class="buy-box btn theme-bg-color text-white btn-cart">
-                                        <i class="iconly-Buy icli m-0"></i>
-                                    </button>
-                                    <div class="hot-deal">
-                                        <span>Hot Deals</span>
-                                    </div>
-                                    <ul class="rating">
-                                        <li>
-                                            <i data-feather="star" class="fill"></i>
-                                        </li>
-                                        <li>
-                                            <i data-feather="star" class="fill"></i>
-                                        </li>
-                                        <li>
-                                            <i data-feather="star"></i>
-                                        </li>
-                                        <li>
-                                            <i data-feather="star"></i>
-                                        </li>
-                                        <li>
-                                            <i data-feather="star"></i>
-                                        </li>
-                                    </ul>
-                                    <a href="shop-list.html" class="text-title">
-                                        <h5>Canon EOS C300 Mark III Digital Cinema Camera (EF Lens Mount)</h5>
-                                    </a>
-                                    <h5 class="price">EGP 70.21 <span>EGP 65.00</span></h5>
-                                    <div class="progress custom-progressbar">
-                                        <div class="progress-bar" style="width: 50%" role="progressbar"
-                                             aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    <h4 class="item">Sold: <span>30 Items</span></h4>
-                                    <h4 class="offer">Hurry up offer end in</h4>
-                                    <div class="timer" id="clockdiv-1" data-hours="1" data-minutes="2" data-seconds="3">
-                                        <ul>
-                                            <li>
-                                                <div class="counter">
-                                                    <div class="days">
-                                                        <h6></h6>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="counter">
-                                                    <div class="hours">
-                                                        <h6></h6>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="counter">
-                                                    <div class="minutes">
-                                                        <h6></h6>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="counter">
-                                                    <div class="seconds">
-                                                        <h6></h6>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="deal-box wow fadeInUp" data-wow-delay="0.1s">
-                                <a href="shop-list.html" class="category-image order-sm-2">
-                                    <img src="{{asset('website/images/veg-3/home/1.png')}}" class="img-fluid blur-up lazyload"
-                                         alt="">
-                                </a>
-
-                                <div class="deal-detail order-sm-1">
-                                    <button class="buy-box btn theme-bg-color text-white btn-cart">
-                                        <i class="iconly-Buy icli m-0"></i>
-                                    </button>
-                                    <div class="hot-deal">
-                                        <span>Hot Deals</span>
-                                    </div>
-                                    <ul class="rating">
-                                        <li>
-                                            <i data-feather="star" class="fill"></i>
-                                        </li>
-                                        <li>
-                                            <i data-feather="star" class="fill"></i>
-                                        </li>
-                                        <li>
-                                            <i data-feather="star"></i>
-                                        </li>
-                                        <li>
-                                            <i data-feather="star"></i>
-                                        </li>
-                                        <li>
-                                            <i data-feather="star"></i>
-                                        </li>
-                                    </ul>
-                                    <a href="shop-list.html" class="text-title">
-                                        <h5>Canon EOS C300 Mark III Digital Cinema Camera (EF Lens Mount)</h5>
-                                    </a>
-                                    <h5 class="price">EGP 70.21 <span>EGP 65.00</span></h5>
-                                    <div class="progress custom-progressbar">
-                                        <div class="progress-bar" style="width: 50%" role="progressbar"
-                                             aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    <h4 class="item">Sold: <span>30 Items</span></h4>
-                                    <h4 class="offer">Hurry up offer end in</h4>
-                                    <div class="timer" id="clockdiv-2" data-hours="1" data-minutes="2" data-seconds="3">
-                                        <ul>
-                                            <li>
-                                                <div class="counter">
-                                                    <div class="days">
-                                                        <h6></h6>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="counter">
-                                                    <div class="hours">
-                                                        <h6></h6>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="counter">
-                                                    <div class="minutes">
-                                                        <h6></h6>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="counter">
-                                                    <div class="seconds">
-                                                        <h6></h6>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="deal-box wow fadeInUp" data-wow-delay="0.15s">
-                                <div class="category-image order-sm-2">
-                                    <img src="{{asset('website/images/veg-3/home/1.png')}}" class="img-fluid" alt="">
-                                </div>
-
-                                <div class="deal-detail order-sm-1">
-                                    <button class="buy-box btn theme-bg-color text-white btn-cart">
-                                        <i class="iconly-Buy icli m-0"></i>
-                                    </button>
-                                    <div class="hot-deal">
-                                        <span>Hot Deals</span>
-                                    </div>
-                                    <ul class="rating">
-                                        <li>
-                                            <i data-feather="star" class="fill"></i>
-                                        </li>
-                                        <li>
-                                            <i data-feather="star" class="fill"></i>
-                                        </li>
-                                        <li>
-                                            <i data-feather="star"></i>
-                                        </li>
-                                        <li>
-                                            <i data-feather="star"></i>
-                                        </li>
-                                        <li>
-                                            <i data-feather="star"></i>
-                                        </li>
-                                    </ul>
-                                    <a href="shop-list.html" class="text-title">
-                                        <h5>Canon EOS C300 Mark III Digital Cinema Camera (EF Lens Mount)</h5>
-                                    </a>
-                                    <h5 class="price">EGP 70.21 <span>EGP 65.00</span></h5>
-                                    <div class="progress custom-progressbar">
-                                        <div class="progress-bar" style="width: 50%" role="progressbar"
-                                             aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    <h4 class="item">Sold: <span>30 Items</span></h4>
-                                    <h4 class="offer">Hurry up offer end in</h4>
-                                    <div class="timer" id="clockdiv-3" data-hours="1" data-minutes="2" data-seconds="3">
-                                        <ul>
-                                            <li>
-                                                <div class="counter">
-                                                    <div class="days">
-                                                        <h6></h6>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="counter">
-                                                    <div class="hours">
-                                                        <h6></h6>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="counter">
-                                                    <div class="minutes">
-                                                        <h6></h6>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="counter">
-                                                    <div class="seconds">
-                                                        <h6></h6>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                                @endif
+                            @endforeach
+                        @endif
                     </div>
                 </div>
             </div>
@@ -590,562 +280,117 @@
             <div class="row">
                 <div class="col-xxl-12 col-lg-12">
                     <div class="title d-block">
-                        <h2 class="text-theme font-sm">best seller</h2>
-                        <p>A virtual assistant collects the products from your list</p>
+                        <h2 class="text-theme font-sm">{{ __('messages.Best Seller') }}</h2>
+                        <p>{{ __('messages.A virtual assistant collects the products from your list') }}</p>
                     </div>
-                    <div class="row row-cols-xxl-5 row-cols-xl-4 row-cols-md-3 row-cols-2 g-sm-4 g-3 no-arrow
-                        section-b-space">
-                        <div>
-                            <div class="product-box product-white-bg wow fadeIn">
-                                <div class="product-image">
-                                    <a href="product-left-thumbnail.html">
-                                        <img src="{{asset('website/images/veg-3/home/15.jpg')}}" class="img-fluid blur-up lazyload"
-                                             alt="">
-                                    </a>
-                                    <ul class="product-option">
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="View">
-                                            <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#view">
-                                                <i data-feather="eye"></i>
-                                            </a>
-                                        </li>
-
-
-
-
-                                        <li data-bs-toggle="tooltip"
-                                            class="btn p-0 wishlist btn-wishlist notifi-wishlist"
-                                            data-bs-placement="top" title="Wishlist">
-                                            <i data-feather="heart"></i>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="product-detail position-relative">
-                                    <a href="product-left-thumbnail.html">
-                                        <h6 class="name">
-                                            Sony Alpha a7 IV Mirrorless Digital Camera
-                                        </h6>
-                                    </a>
-
-
-
-                                    <h6 class="price theme-color">EGP 80.00</h6>
-
-                                    <div class="add-to-cart-btn-2 addtocart_btn">
-                                        <button class="btn addcart-button btn buy-button"><i
-                                                class="fa-solid fa-plus"></i></button>
-                                        <div class="cart_qty qty-box-2">
-                                            <div class="input-group">
-                                                <button type="button" class="qty-left-minus" data-type="minus"
-                                                        data-field="">
-                                                    <i class="fa fa-minus" aria-hidden="true"></i>
-                                                </button>
-                                                <input class="form-control input-number qty-input" type="text"
-                                                       name="quantity" value="1">
-                                                <button type="button" class="qty-right-plus" data-type="plus"
-                                                        data-field="">
-                                                    <i class="fa fa-plus" aria-hidden="true"></i>
-                                                </button>
+                    <div class="row row-cols-xxl-5 row-cols-xl-4 row-cols-md-3 row-cols-2 g-sm-4 g-3 no-arrow section-b-space">
+                        @if(isset($bestSellerProducts) && $bestSellerProducts->count() > 0)
+                            @foreach($bestSellerProducts->take(10) as $index => $product)
+                                @php
+                                    $translation = $product->translation ?? $product->translations->first();
+                                    $variant = $product->variants->first();
+                                    $productUrl = route('productDetail', ['id' => $translation->slug ?? $product->id]);
+                                    $categoryTranslation = $product->category->translation ?? $product->category->translations->first() ?? null;
+                                    
+                                    // Condition badge logic
+                                    $conditionLabel = '';
+                                    $conditionClass = '';
+                                    $showBadge = false;
+                                    if ($product->department) {
+                                        if ($product->department->id == 2) {
+                                            if ($product->condition === 'new') {
+                                                $conditionLabel = __('messages.New');
+                                                $conditionClass = 'bg-success';
+                                                $showBadge = true;
+                                            } elseif ($product->condition === 'used') {
+                                                $conditionLabel = __('messages.Used');
+                                                $conditionClass = 'bg-info';
+                                                $showBadge = true;
+                                            }
+                                        } elseif ($product->department->id == 1 && $product->condition === 'rent') {
+                                            $conditionLabel = __('messages.Rent');
+                                            $conditionClass = 'bg-warning';
+                                            $showBadge = true;
+                                        }
+                                    }
+                                    
+                                    $rating = round($product->rate ?? 0);
+                                    $wowDelay = ($index % 4 == 0) ? 0 : ($index % 4) * 0.1;
+                                @endphp
+                                @if($translation && $variant)
+                                    <div>
+                                        <div class="product-box-3 wow fadeInUp" @if($wowDelay > 0) data-wow-delay="{{ $wowDelay }}s" @endif>
+                                            <div class="product-header product-box">
+                                                @if($showBadge && $conditionLabel)
+                                                    <div class="label-tag {{ $conditionClass }}">
+                                                        <span>{{ $conditionLabel }}</span>
+                                                    </div>
+                                                @endif
+                                                <div class="product-image">
+                                                    <a href="{{ $productUrl }}">
+                                                        <img src="{{ $product->image }}" 
+                                                             class="img-fluid blur-up lazyload" 
+                                                             alt="{{ $translation->title }}">
+                                                    </a>
+                                                    <ul class="product-option">
+                                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="{{ __('messages.View') }}">
+                                                            <a href="javascript:void(0)" class="view-product-btn" data-bs-toggle="modal" data-bs-target="#view" data-product-id="{{ $product->id }}">
+                                                                <i data-feather="eye"></i>
+                                                            </a>
+                                                        </li>
+                                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="{{ __('messages.Wishlist') }}">
+                                                            <a href="javascript:void(0)" class="add-to-wishlist" data-product-id="{{ $product->id }}">
+                                                                <i data-feather="heart"></i>
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="product-footer">
+                                                <div class="product-detail">
+                                                    @if($categoryTranslation)
+                                                        <span class="span-name">{{ $categoryTranslation->title }}</span>
+                                                    @endif
+                                                    <a href="{{ $productUrl }}">
+                                                        <h5 class="name">{{ $translation->title }}</h5>
+                                                    </a>
+                                                    <div class="product-rating mt-2">
+                                                        <ul class="rating">
+                                                            @for($i = 1; $i <= 5; $i++)
+                                                                <li>
+                                                                    <i data-feather="star" class="{{ $i <= $rating ? 'fill' : '' }}"></i>
+                                                                </li>
+                                                            @endfor
+                                                        </ul>
+                                                        <span>({{ number_format($product->rate ?? 0, 1) }})</span>
+                                                    </div>
+                                                    @if($variant->discount_price && $variant->discount_percentage > 0)
+                                                        <h5 class="price">
+                                                            <span class="theme-color">{{ __('messages.currency') }} {{ number_format($variant->discount_price, 2) }}</span>
+                                                            <del>{{ __('messages.currency') }} {{ number_format($variant->price_before_discount ?? $variant->price, 2) }}</del>
+                                                        </h5>
+                                                    @else
+                                                        <h5 class="price">
+                                                            <span class="theme-color">{{ __('messages.currency') }} {{ number_format($variant->price, 2) }}</span>
+                                                        </h5>
+                                                    @endif
+                                                    <div class="add-to-cart-box bg-white">
+                                                        <button class="btn btn-add-cart addcart-button"
+                                                                data-product-id="{{ $product->id }}"
+                                                                data-variant-id="{{ $variant->id }}"
+                                                                data-condition="{{ $product->condition }}">{{ __('messages.Add') }}
+                                                            <span class="add-icon bg-light-gray">
+                                                                <i class="fa-solid fa-plus"></i>
+                                                            </span>
+                                                        </button>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="product-box product-white-bg wow fadeIn" data-wow-delay="0.1s">
-                                <div class="product-image">
-                                    <a href="product-left-thumbnail.html">
-                                        <img src="{{asset('website/images/veg-3/home/16.jpg')}}" class="img-fluid blur-up lazyload"
-                                             alt="">
-                                    </a>
-                                    <ul class="product-option">
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="View">
-                                            <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#view">
-                                                <i data-feather="eye"></i>
-                                            </a>
-                                        </li>
-
-
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="Wishlist">
-                                            <a href="wishlist.html" class="notifi-wishlist">
-                                                <i data-feather="heart"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="product-detail position-relative">
-                                    <a href="product-left-thumbnail.html">
-                                        <h6 class="name">
-                                            Sony Alpha a7 IV Mirrorless Digital Camera
-                                        </h6>
-                                    </a>
-
-
-
-                                    <h6 class="price theme-color">EGP 80.00</h6>
-
-                                    <div class="add-to-cart-btn-2 addtocart_btn">
-                                        <button class="btn addcart-button btn buy-button"><i
-                                                class="fa-solid fa-plus"></i></button>
-                                        <div class="cart_qty qty-box-2">
-                                            <div class="input-group">
-                                                <button type="button" class="qty-left-minus" data-type="minus"
-                                                        data-field="">
-                                                    <i class="fa fa-minus" aria-hidden="true"></i>
-                                                </button>
-                                                <input class="form-control input-number qty-input" type="text"
-                                                       name="quantity" value="1">
-                                                <button type="button" class="qty-right-plus" data-type="plus"
-                                                        data-field="">
-                                                    <i class="fa fa-plus" aria-hidden="true"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="product-box product-white-bg wow fadeIn">
-                                <div class="product-image">
-                                    <a href="product-left-thumbnail.html">
-                                        <img src="{{asset('website/images/veg-3/home/17.jpg')}}" class="img-fluid blur-up lazyload"
-                                             alt="">
-                                    </a>
-                                    <ul class="product-option">
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="View">
-                                            <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#view">
-                                                <i data-feather="eye"></i>
-                                            </a>
-                                        </li>
-
-
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="Wishlist">
-                                            <a href="wishlist.html" class="notifi-wishlist">
-                                                <i data-feather="heart"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="product-detail position-relative">
-                                    <a href="product-left-thumbnail.html">
-                                        <h6 class="name">
-                                            Sony Alpha a7 IV Mirrorless Digital Camera
-                                        </h6>
-                                    </a>
-
-
-
-                                    <h6 class="price theme-color">EGP 80.00</h6>
-
-                                    <div class="add-to-cart-btn-2 addtocart_btn">
-                                        <button class="btn addcart-button btn buy-button"><i
-                                                class="fa-solid fa-plus"></i></button>
-                                        <div class="cart_qty qty-box-2">
-                                            <div class="input-group">
-                                                <button type="button" class="qty-left-minus" data-type="minus"
-                                                        data-field="">
-                                                    <i class="fa fa-minus" aria-hidden="true"></i>
-                                                </button>
-                                                <input class="form-control input-number qty-input" type="text"
-                                                       name="quantity" value="1">
-                                                <button type="button" class="qty-right-plus" data-type="plus"
-                                                        data-field="">
-                                                    <i class="fa fa-plus" aria-hidden="true"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="product-box product-white-bg wow fadeIn" data-wow-delay="0.1s">
-                                <div class="product-image">
-                                    <a href="product-left-thumbnail.html">
-                                        <img src="{{asset('website/images/veg-3/home/18.jpg')}}" class="img-fluid blur-up lazyload"
-                                             alt="">
-                                    </a>
-                                    <ul class="product-option">
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="View">
-                                            <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#view">
-                                                <i data-feather="eye"></i>
-                                            </a>
-                                        </li>
-
-
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="Wishlist">
-                                            <a href="wishlist.html" class="notifi-wishlist">
-                                                <i data-feather="heart"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="product-detail position-relative">
-                                    <a href="product-left-thumbnail.html">
-                                        <h6 class="name">
-                                            Sony Alpha a7 IV Mirrorless Digital Camera
-                                        </h6>
-                                    </a>
-
-
-
-                                    <h6 class="price theme-color">EGP 80.00</h6>
-
-                                    <div class="add-to-cart-btn-2 addtocart_btn">
-                                        <button class="btn addcart-button btn buy-button"><i
-                                                class="fa-solid fa-plus"></i></button>
-                                        <div class="cart_qty qty-box-2">
-                                            <div class="input-group">
-                                                <button type="button" class="qty-left-minus" data-type="minus"
-                                                        data-field="">
-                                                    <i class="fa fa-minus" aria-hidden="true"></i>
-                                                </button>
-                                                <input class="form-control input-number qty-input" type="text"
-                                                       name="quantity" value="1">
-                                                <button type="button" class="qty-right-plus" data-type="plus"
-                                                        data-field="">
-                                                    <i class="fa fa-plus" aria-hidden="true"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="product-box product-white-bg wow fadeIn">
-                                <div class="product-image">
-                                    <a href="product-left-thumbnail.html">
-                                        <img src="{{asset('website/images/veg-3/home/19.jpg')}}" class="img-fluid blur-up lazyload"
-                                             alt="">
-                                    </a>
-                                    <ul class="product-option">
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="View">
-                                            <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#view">
-                                                <i data-feather="eye"></i>
-                                            </a>
-                                        </li>
-
-
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="Wishlist">
-                                            <a href="wishlist.html" class="notifi-wishlist">
-                                                <i data-feather="heart"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="product-detail position-relative">
-                                    <a href="product-left-thumbnail.html">
-                                        <h6 class="name">
-                                            Sony Alpha a7 IV Mirrorless Digital Camera
-                                        </h6>
-                                    </a>
-
-
-
-                                    <h6 class="price theme-color">EGP 80.00</h6>
-
-                                    <div class="add-to-cart-btn-2 addtocart_btn">
-                                        <button class="btn addcart-button btn buy-button"><i
-                                                class="fa-solid fa-plus"></i></button>
-                                        <div class="cart_qty qty-box-2">
-                                            <div class="input-group">
-                                                <button type="button" class="qty-left-minus" data-type="minus"
-                                                        data-field="">
-                                                    <i class="fa fa-minus" aria-hidden="true"></i>
-                                                </button>
-                                                <input class="form-control input-number qty-input" type="text"
-                                                       name="quantity" value="1">
-                                                <button type="button" class="qty-right-plus" data-type="plus"
-                                                        data-field="">
-                                                    <i class="fa fa-plus" aria-hidden="true"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="product-box product-white-bg wow fadeIn" data-wow-delay="0.1s">
-                                <div class="product-image">
-                                    <a href="product-left-thumbnail.html">
-                                        <img src="{{asset('website/images/veg-3/home/20.jpg')}}" class="img-fluid blur-up lazyload"
-                                             alt="">
-                                    </a>
-                                    <ul class="product-option">
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="View">
-                                            <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#view">
-                                                <i data-feather="eye"></i>
-                                            </a>
-                                        </li>
-
-
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="Wishlist">
-                                            <a href="wishlist.html" class="notifi-wishlist">
-                                                <i data-feather="heart"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="product-detail position-relative">
-                                    <a href="product-left-thumbnail.html">
-                                        <h6 class="name">
-                                            Sony Alpha a7 IV Mirrorless Digital Camera
-                                        </h6>
-                                    </a>
-
-
-
-                                    <h6 class="price theme-color">EGP 80.00</h6>
-
-                                    <div class="add-to-cart-btn-2 addtocart_btn">
-                                        <button class="btn addcart-button btn buy-button"><i
-                                                class="fa-solid fa-plus"></i></button>
-                                        <div class="cart_qty qty-box-2">
-                                            <div class="input-group">
-                                                <button type="button" class="qty-left-minus" data-type="minus"
-                                                        data-field="">
-                                                    <i class="fa fa-minus" aria-hidden="true"></i>
-                                                </button>
-                                                <input class="form-control input-number qty-input" type="text"
-                                                       name="quantity" value="1">
-                                                <button type="button" class="qty-right-plus" data-type="plus"
-                                                        data-field="">
-                                                    <i class="fa fa-plus" aria-hidden="true"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="product-box product-white-bg wow fadeIn">
-                                <div class="product-image">
-                                    <a href="product-left-thumbnail.html">
-                                        <img src="{{asset('website/images/veg-3/home/21.jpg')}}" class="img-fluid blur-up lazyload"
-                                             alt="">
-                                    </a>
-                                    <ul class="product-option">
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="View">
-                                            <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#view">
-                                                <i data-feather="eye"></i>
-                                            </a>
-                                        </li>
-
-
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="Wishlist">
-                                            <a href="wishlist.html" class="notifi-wishlist">
-                                                <i data-feather="heart"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="product-detail position-relative">
-                                    <a href="product-left-thumbnail.html">
-                                        <h6 class="name"> Sony Alpha a7 IV Mirrorless Digital Camera</h6>
-                                    </a>
-
-
-
-                                    <h6 class="price theme-color">EGP 80.00</h6>
-
-                                    <div class="add-to-cart-btn-2 addtocart_btn">
-                                        <button class="btn addcart-button btn buy-button"><i
-                                                class="fa-solid fa-plus"></i></button>
-                                        <div class="cart_qty qty-box-2">
-                                            <div class="input-group">
-                                                <button type="button" class="qty-left-minus" data-type="minus"
-                                                        data-field="">
-                                                    <i class="fa fa-minus" aria-hidden="true"></i>
-                                                </button>
-                                                <input class="form-control input-number qty-input" type="text"
-                                                       name="quantity" value="1">
-                                                <button type="button" class="qty-right-plus" data-type="plus"
-                                                        data-field="">
-                                                    <i class="fa fa-plus" aria-hidden="true"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-
-                            <div class="product-box product-white-bg wow fadeIn" data-wow-delay="0.1s">
-                                <div class="product-image">
-                                    <a href="product-left-thumbnail.html">
-                                        <img src="{{asset('website/images/veg-3/home/22.jpg')}}" class="img-fluid blur-up lazyload"
-                                             alt="">
-                                    </a>
-                                    <ul class="product-option">
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="View">
-                                            <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#view">
-                                                <i data-feather="eye"></i>
-                                            </a>
-                                        </li>
-
-
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="Wishlist">
-                                            <a href="wishlist.html" class="notifi-wishlist">
-                                                <i data-feather="heart"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="product-detail position-relative">
-                                    <a href="product-left-thumbnail.html">
-                                        <h6 class="name">
-                                            Sony Alpha a7 IV Mirrorless Digital Camera
-                                        </h6>
-                                    </a>
-
-
-
-                                    <h6 class="price theme-color">EGP 80.00</h6>
-
-                                    <div class="add-to-cart-btn-2 addtocart_btn">
-                                        <button class="btn addcart-button btn buy-button"><i
-                                                class="fa-solid fa-plus"></i></button>
-                                        <div class="cart_qty qty-box-2">
-                                            <div class="input-group">
-                                                <button type="button" class="qty-left-minus" data-type="minus"
-                                                        data-field="">
-                                                    <i class="fa fa-minus" aria-hidden="true"></i>
-                                                </button>
-                                                <input class="form-control input-number qty-input" type="text"
-                                                       name="quantity" value="1">
-                                                <button type="button" class="qty-right-plus" data-type="plus"
-                                                        data-field="">
-                                                    <i class="fa fa-plus" aria-hidden="true"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="product-box product-white-bg wow fadeIn">
-                                <div class="product-image">
-                                    <a href="product-left-thumbnail.html">
-                                        <img src="{{asset('website/images/veg-3/home/23.jpg')}}" class="img-fluid blur-up lazyload"
-                                             alt="">
-                                    </a>
-                                    <ul class="product-option">
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="View">
-                                            <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#view">
-                                                <i data-feather="eye"></i>
-                                            </a>
-                                        </li>
-
-
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="Wishlist">
-                                            <a href="wishlist.html" class="notifi-wishlist">
-                                                <i data-feather="heart"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="product-detail position-relative">
-                                    <a href="product-left-thumbnail.html">
-                                        <h6 class="name">
-                                            Sony Alpha a7 IV Mirrorless Digital Camera
-                                        </h6>
-                                    </a>
-
-
-
-                                    <h6 class="price theme-color">EGP 80.00</h6>
-
-                                    <div class="add-to-cart-btn-2 addtocart_btn">
-                                        <button class="btn addcart-button btn buy-button"><i
-                                                class="fa-solid fa-plus"></i></button>
-                                        <div class="cart_qty qty-box-2">
-                                            <div class="input-group">
-                                                <button type="button" class="qty-left-minus" data-type="minus"
-                                                        data-field="">
-                                                    <i class="fa fa-minus" aria-hidden="true"></i>
-                                                </button>
-                                                <input class="form-control input-number qty-input" type="text"
-                                                       name="quantity" value="1">
-                                                <button type="button" class="qty-right-plus" data-type="plus"
-                                                        data-field="">
-                                                    <i class="fa fa-plus" aria-hidden="true"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-
-                            <div class="product-box product-white-bg wow fadeIn" data-wow-delay="0.1s">
-                                <div class="product-image">
-                                    <a href="product-left-thumbnail.html">
-                                        <img src="{{asset('website/images/veg-3/home/24.jpg')}}" class="img-fluid blur-up lazyload"
-                                             alt="">
-                                    </a>
-                                    <ul class="product-option">
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="View">
-                                            <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#view">
-                                                <i data-feather="eye"></i>
-                                            </a>
-                                        </li>
-
-
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="Wishlist">
-                                            <a href="wishlist.html" class="notifi-wishlist">
-                                                <i data-feather="heart"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="product-detail position-relative">
-                                    <a href="product-left-thumbnail.html">
-                                        <h6 class="name">
-                                            Sony Alpha a7 IV Mirrorless Digital Camera
-                                        </h6>
-                                    </a>
-
-
-
-                                    <h6 class="price theme-color">EGP 80.00</h6>
-
-                                    <div class="add-to-cart-btn-2 addtocart_btn">
-                                        <button class="btn addcart-button btn buy-button"><i
-                                                class="fa-solid fa-plus"></i></button>
-                                        <div class="cart_qty qty-box-2">
-                                            <div class="input-group">
-                                                <button type="button" class="qty-left-minus" data-type="minus"
-                                                        data-field="">
-                                                    <i class="fa fa-minus" aria-hidden="true"></i>
-                                                </button>
-                                                <input class="form-control input-number qty-input" type="text"
-                                                       name="quantity" value="1">
-                                                <button type="button" class="qty-right-plus" data-type="plus"
-                                                        data-field="">
-                                                    <i class="fa fa-plus" aria-hidden="true"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                                @endif
+                            @endforeach
+                        @endif
                     </div>
 
                     <section class="newsletter-section-2 section-b-space">
@@ -1177,560 +422,117 @@
 
 
                     <div class="title d-block">
-                        <h2 class="text-theme font-sm">Most requested</h2>
-                        <p>A virtual assistant collects the products from your list</p>
+                        <h2 class="text-theme font-sm">{{ __('messages.Most Requested') }}</h2>
+                        <p>{{ __('messages.A virtual assistant collects the products from your list') }}</p>
                     </div>
-                    <div class="row row-cols-xxl-5 row-cols-xl-4 row-cols-md-3 row-cols-2 g-sm-4 g-3 no-arrow
-                        section-b-space">
-                        <div>
-                            <div class="product-box product-white-bg wow fadeIn">
-                                <div class="product-image">
-                                    <a href="product-left-thumbnail.html">
-                                        <img src="{{asset('website/images/veg-3/home/15.jpg')}}" class="img-fluid blur-up lazyload"
-                                             alt="">
-                                    </a>
-                                    <ul class="product-option">
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="View">
-                                            <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#view">
-                                                <i data-feather="eye"></i>
-                                            </a>
-                                        </li>
-
-
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="Wishlist">
-                                            <a href="wishlist.html" class="notifi-wishlist">
-                                                <i data-feather="heart"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="product-detail position-relative">
-                                    <a href="product-left-thumbnail.html">
-                                        <h6 class="name">
-                                            Sony Alpha a7 IV Mirrorless Digital Camera
-                                        </h6>
-                                    </a>
-
-
-
-                                    <h6 class="price theme-color">EGP 80.00</h6>
-
-                                    <div class="add-to-cart-btn-2 addtocart_btn">
-                                        <button class="btn addcart-button btn buy-button"><i
-                                                class="fa-solid fa-plus"></i></button>
-                                        <div class="cart_qty qty-box-2">
-                                            <div class="input-group">
-                                                <button type="button" class="qty-left-minus" data-type="minus"
-                                                        data-field="">
-                                                    <i class="fa fa-minus" aria-hidden="true"></i>
-                                                </button>
-                                                <input class="form-control input-number qty-input" type="text"
-                                                       name="quantity" value="1">
-                                                <button type="button" class="qty-right-plus" data-type="plus"
-                                                        data-field="">
-                                                    <i class="fa fa-plus" aria-hidden="true"></i>
-                                                </button>
+                    <div class="row row-cols-xxl-5 row-cols-xl-4 row-cols-md-3 row-cols-2 g-sm-4 g-3 no-arrow section-b-space">
+                        @if(isset($mostRequestedProducts) && $mostRequestedProducts->count() > 0)
+                            @foreach($mostRequestedProducts->take(10) as $index => $product)
+                                @php
+                                    $translation = $product->translation ?? $product->translations->first();
+                                    $variant = $product->variants->first();
+                                    $productUrl = route('productDetail', ['id' => $translation->slug ?? $product->id]);
+                                    $categoryTranslation = $product->category->translation ?? $product->category->translations->first() ?? null;
+                                    
+                                    // Condition badge logic
+                                    $conditionLabel = '';
+                                    $conditionClass = '';
+                                    $showBadge = false;
+                                    if ($product->department) {
+                                        if ($product->department->id == 2) {
+                                            if ($product->condition === 'new') {
+                                                $conditionLabel = __('messages.New');
+                                                $conditionClass = 'bg-success';
+                                                $showBadge = true;
+                                            } elseif ($product->condition === 'used') {
+                                                $conditionLabel = __('messages.Used');
+                                                $conditionClass = 'bg-info';
+                                                $showBadge = true;
+                                            }
+                                        } elseif ($product->department->id == 1 && $product->condition === 'rent') {
+                                            $conditionLabel = __('messages.Rent');
+                                            $conditionClass = 'bg-warning';
+                                            $showBadge = true;
+                                        }
+                                    }
+                                    
+                                    $rating = round($product->rate ?? 0);
+                                    $wowDelay = ($index % 4 == 0) ? 0 : ($index % 4) * 0.1;
+                                @endphp
+                                @if($translation && $variant)
+                                    <div>
+                                        <div class="product-box-3 wow fadeInUp" @if($wowDelay > 0) data-wow-delay="{{ $wowDelay }}s" @endif>
+                                            <div class="product-header product-box">
+                                                @if($showBadge && $conditionLabel)
+                                                    <div class="label-tag {{ $conditionClass }}">
+                                                        <span>{{ $conditionLabel }}</span>
+                                                    </div>
+                                                @endif
+                                                <div class="product-image">
+                                                    <a href="{{ $productUrl }}">
+                                                        <img src="{{ $product->image }}" 
+                                                             class="img-fluid blur-up lazyload" 
+                                                             alt="{{ $translation->title }}">
+                                                    </a>
+                                                    <ul class="product-option">
+                                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="{{ __('messages.View') }}">
+                                                            <a href="javascript:void(0)" class="view-product-btn" data-bs-toggle="modal" data-bs-target="#view" data-product-id="{{ $product->id }}">
+                                                                <i data-feather="eye"></i>
+                                                            </a>
+                                                        </li>
+                                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="{{ __('messages.Wishlist') }}">
+                                                            <a href="javascript:void(0)" class="add-to-wishlist" data-product-id="{{ $product->id }}">
+                                                                <i data-feather="heart"></i>
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="product-footer">
+                                                <div class="product-detail">
+                                                    @if($categoryTranslation)
+                                                        <span class="span-name">{{ $categoryTranslation->title }}</span>
+                                                    @endif
+                                                    <a href="{{ $productUrl }}">
+                                                        <h5 class="name">{{ $translation->title }}</h5>
+                                                    </a>
+                                                    <div class="product-rating mt-2">
+                                                        <ul class="rating">
+                                                            @for($i = 1; $i <= 5; $i++)
+                                                                <li>
+                                                                    <i data-feather="star" class="{{ $i <= $rating ? 'fill' : '' }}"></i>
+                                                                </li>
+                                                            @endfor
+                                                        </ul>
+                                                        <span>({{ number_format($product->rate ?? 0, 1) }})</span>
+                                                    </div>
+                                                    @if($variant->discount_price && $variant->discount_percentage > 0)
+                                                        <h5 class="price">
+                                                            <span class="theme-color">{{ __('messages.currency') }} {{ number_format($variant->discount_price, 2) }}</span>
+                                                            <del>{{ __('messages.currency') }} {{ number_format($variant->price_before_discount ?? $variant->price, 2) }}</del>
+                                                        </h5>
+                                                    @else
+                                                        <h5 class="price">
+                                                            <span class="theme-color">{{ __('messages.currency') }} {{ number_format($variant->price, 2) }}</span>
+                                                        </h5>
+                                                    @endif
+                                                    <div class="add-to-cart-box bg-white">
+                                                        <button class="btn btn-add-cart addcart-button"
+                                                                data-product-id="{{ $product->id }}"
+                                                                data-variant-id="{{ $variant->id }}"
+                                                                data-condition="{{ $product->condition }}">{{ __('messages.Add') }}
+                                                            <span class="add-icon bg-light-gray">
+                                                                <i class="fa-solid fa-plus"></i>
+                                                            </span>
+                                                        </button>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="product-box product-white-bg wow fadeIn" data-wow-delay="0.1s">
-                                <div class="product-image">
-                                    <a href="product-left-thumbnail.html">
-                                        <img src="{{asset('website/images/veg-3/home/16.jpg')}}" class="img-fluid blur-up lazyload"
-                                             alt="">
-                                    </a>
-                                    <ul class="product-option">
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="View">
-                                            <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#view">
-                                                <i data-feather="eye"></i>
-                                            </a>
-                                        </li>
-
-
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="Wishlist">
-                                            <a href="wishlist.html" class="notifi-wishlist">
-                                                <i data-feather="heart"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="product-detail position-relative">
-                                    <a href="product-left-thumbnail.html">
-                                        <h6 class="name">
-                                            Sony Alpha a7 IV Mirrorless Digital Camera
-                                        </h6>
-                                    </a>
-
-
-
-                                    <h6 class="price theme-color">EGP 80.00</h6>
-
-                                    <div class="add-to-cart-btn-2 addtocart_btn">
-                                        <button class="btn addcart-button btn buy-button"><i
-                                                class="fa-solid fa-plus"></i></button>
-                                        <div class="cart_qty qty-box-2">
-                                            <div class="input-group">
-                                                <button type="button" class="qty-left-minus" data-type="minus"
-                                                        data-field="">
-                                                    <i class="fa fa-minus" aria-hidden="true"></i>
-                                                </button>
-                                                <input class="form-control input-number qty-input" type="text"
-                                                       name="quantity" value="1">
-                                                <button type="button" class="qty-right-plus" data-type="plus"
-                                                        data-field="">
-                                                    <i class="fa fa-plus" aria-hidden="true"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="product-box product-white-bg wow fadeIn">
-                                <div class="product-image">
-                                    <a href="product-left-thumbnail.html">
-                                        <img src="{{asset('website/images/veg-3/home/17.jpg')}}" class="img-fluid blur-up lazyload"
-                                             alt="">
-                                    </a>
-                                    <ul class="product-option">
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="View">
-                                            <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#view">
-                                                <i data-feather="eye"></i>
-                                            </a>
-                                        </li>
-
-
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="Wishlist">
-                                            <a href="wishlist.html" class="notifi-wishlist">
-                                                <i data-feather="heart"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="product-detail position-relative">
-                                    <a href="product-left-thumbnail.html">
-                                        <h6 class="name">
-                                            Sony Alpha a7 IV Mirrorless Digital Camera
-                                        </h6>
-                                    </a>
-
-
-
-                                    <h6 class="price theme-color">EGP 80.00</h6>
-
-                                    <div class="add-to-cart-btn-2 addtocart_btn">
-                                        <button class="btn addcart-button btn buy-button"><i
-                                                class="fa-solid fa-plus"></i></button>
-                                        <div class="cart_qty qty-box-2">
-                                            <div class="input-group">
-                                                <button type="button" class="qty-left-minus" data-type="minus"
-                                                        data-field="">
-                                                    <i class="fa fa-minus" aria-hidden="true"></i>
-                                                </button>
-                                                <input class="form-control input-number qty-input" type="text"
-                                                       name="quantity" value="1">
-                                                <button type="button" class="qty-right-plus" data-type="plus"
-                                                        data-field="">
-                                                    <i class="fa fa-plus" aria-hidden="true"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="product-box product-white-bg wow fadeIn" data-wow-delay="0.1s">
-                                <div class="product-image">
-                                    <a href="product-left-thumbnail.html">
-                                        <img src="{{asset('website/images/veg-3/home/18.jpg')}}" class="img-fluid blur-up lazyload"
-                                             alt="">
-                                    </a>
-                                    <ul class="product-option">
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="View">
-                                            <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#view">
-                                                <i data-feather="eye"></i>
-                                            </a>
-                                        </li>
-
-
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="Wishlist">
-                                            <a href="wishlist.html" class="notifi-wishlist">
-                                                <i data-feather="heart"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="product-detail position-relative">
-                                    <a href="product-left-thumbnail.html">
-                                        <h6 class="name">
-                                            Sony Alpha a7 IV Mirrorless Digital Camera
-                                        </h6>
-                                    </a>
-
-
-
-                                    <h6 class="price theme-color">EGP 80.00</h6>
-
-                                    <div class="add-to-cart-btn-2 addtocart_btn">
-                                        <button class="btn addcart-button btn buy-button"><i
-                                                class="fa-solid fa-plus"></i></button>
-                                        <div class="cart_qty qty-box-2">
-                                            <div class="input-group">
-                                                <button type="button" class="qty-left-minus" data-type="minus"
-                                                        data-field="">
-                                                    <i class="fa fa-minus" aria-hidden="true"></i>
-                                                </button>
-                                                <input class="form-control input-number qty-input" type="text"
-                                                       name="quantity" value="1">
-                                                <button type="button" class="qty-right-plus" data-type="plus"
-                                                        data-field="">
-                                                    <i class="fa fa-plus" aria-hidden="true"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="product-box product-white-bg wow fadeIn">
-                                <div class="product-image">
-                                    <a href="product-left-thumbnail.html">
-                                        <img src="{{asset('website/images/veg-3/home/19.jpg')}}" class="img-fluid blur-up lazyload"
-                                             alt="">
-                                    </a>
-                                    <ul class="product-option">
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="View">
-                                            <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#view">
-                                                <i data-feather="eye"></i>
-                                            </a>
-                                        </li>
-
-
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="Wishlist">
-                                            <a href="wishlist.html" class="notifi-wishlist">
-                                                <i data-feather="heart"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="product-detail position-relative">
-                                    <a href="product-left-thumbnail.html">
-                                        <h6 class="name">
-                                            Sony Alpha a7 IV Mirrorless Digital Camera
-                                        </h6>
-                                    </a>
-
-
-
-                                    <h6 class="price theme-color">EGP 80.00</h6>
-
-                                    <div class="add-to-cart-btn-2 addtocart_btn">
-                                        <button class="btn addcart-button btn buy-button"><i
-                                                class="fa-solid fa-plus"></i></button>
-                                        <div class="cart_qty qty-box-2">
-                                            <div class="input-group">
-                                                <button type="button" class="qty-left-minus" data-type="minus"
-                                                        data-field="">
-                                                    <i class="fa fa-minus" aria-hidden="true"></i>
-                                                </button>
-                                                <input class="form-control input-number qty-input" type="text"
-                                                       name="quantity" value="1">
-                                                <button type="button" class="qty-right-plus" data-type="plus"
-                                                        data-field="">
-                                                    <i class="fa fa-plus" aria-hidden="true"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="product-box product-white-bg wow fadeIn" data-wow-delay="0.1s">
-                                <div class="product-image">
-                                    <a href="product-left-thumbnail.html">
-                                        <img src="{{asset('website/images/veg-3/home/20.jpg')}}" class="img-fluid blur-up lazyload"
-                                             alt="">
-                                    </a>
-                                    <ul class="product-option">
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="View">
-                                            <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#view">
-                                                <i data-feather="eye"></i>
-                                            </a>
-                                        </li>
-
-
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="Wishlist">
-                                            <a href="wishlist.html" class="notifi-wishlist">
-                                                <i data-feather="heart"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="product-detail position-relative">
-                                    <a href="product-left-thumbnail.html">
-                                        <h6 class="name">
-                                            Sony Alpha a7 IV Mirrorless Digital Camera
-                                        </h6>
-                                    </a>
-
-
-
-                                    <h6 class="price theme-color">EGP 80.00</h6>
-
-                                    <div class="add-to-cart-btn-2 addtocart_btn">
-                                        <button class="btn addcart-button btn buy-button"><i
-                                                class="fa-solid fa-plus"></i></button>
-                                        <div class="cart_qty qty-box-2">
-                                            <div class="input-group">
-                                                <button type="button" class="qty-left-minus" data-type="minus"
-                                                        data-field="">
-                                                    <i class="fa fa-minus" aria-hidden="true"></i>
-                                                </button>
-                                                <input class="form-control input-number qty-input" type="text"
-                                                       name="quantity" value="1">
-                                                <button type="button" class="qty-right-plus" data-type="plus"
-                                                        data-field="">
-                                                    <i class="fa fa-plus" aria-hidden="true"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="product-box product-white-bg wow fadeIn">
-                                <div class="product-image">
-                                    <a href="product-left-thumbnail.html">
-                                        <img src="{{asset('website/images/veg-3/home/21.jpg')}}" class="img-fluid blur-up lazyload"
-                                             alt="">
-                                    </a>
-                                    <ul class="product-option">
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="View">
-                                            <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#view">
-                                                <i data-feather="eye"></i>
-                                            </a>
-                                        </li>
-
-
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="Wishlist">
-                                            <a href="wishlist.html" class="notifi-wishlist">
-                                                <i data-feather="heart"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="product-detail position-relative">
-                                    <a href="product-left-thumbnail.html">
-                                        <h6 class="name"> Sony Alpha a7 IV Mirrorless Digital Camera</h6>
-                                    </a>
-
-
-
-                                    <h6 class="price theme-color">EGP 80.00</h6>
-
-                                    <div class="add-to-cart-btn-2 addtocart_btn">
-                                        <button class="btn addcart-button btn buy-button"><i
-                                                class="fa-solid fa-plus"></i></button>
-                                        <div class="cart_qty qty-box-2">
-                                            <div class="input-group">
-                                                <button type="button" class="qty-left-minus" data-type="minus"
-                                                        data-field="">
-                                                    <i class="fa fa-minus" aria-hidden="true"></i>
-                                                </button>
-                                                <input class="form-control input-number qty-input" type="text"
-                                                       name="quantity" value="1">
-                                                <button type="button" class="qty-right-plus" data-type="plus"
-                                                        data-field="">
-                                                    <i class="fa fa-plus" aria-hidden="true"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-
-                            <div class="product-box product-white-bg wow fadeIn" data-wow-delay="0.1s">
-                                <div class="product-image">
-                                    <a href="product-left-thumbnail.html">
-                                        <img src="{{asset('website/images/veg-3/home/22.jpg')}}" class="img-fluid blur-up lazyload"
-                                             alt="">
-                                    </a>
-                                    <ul class="product-option">
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="View">
-                                            <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#view">
-                                                <i data-feather="eye"></i>
-                                            </a>
-                                        </li>
-
-
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="Wishlist">
-                                            <a href="wishlist.html" class="notifi-wishlist">
-                                                <i data-feather="heart"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="product-detail position-relative">
-                                    <a href="product-left-thumbnail.html">
-                                        <h6 class="name">
-                                            Sony Alpha a7 IV Mirrorless Digital Camera
-                                        </h6>
-                                    </a>
-
-
-
-                                    <h6 class="price theme-color">EGP 80.00</h6>
-
-                                    <div class="add-to-cart-btn-2 addtocart_btn">
-                                        <button class="btn addcart-button btn buy-button"><i
-                                                class="fa-solid fa-plus"></i></button>
-                                        <div class="cart_qty qty-box-2">
-                                            <div class="input-group">
-                                                <button type="button" class="qty-left-minus" data-type="minus"
-                                                        data-field="">
-                                                    <i class="fa fa-minus" aria-hidden="true"></i>
-                                                </button>
-                                                <input class="form-control input-number qty-input" type="text"
-                                                       name="quantity" value="1">
-                                                <button type="button" class="qty-right-plus" data-type="plus"
-                                                        data-field="">
-                                                    <i class="fa fa-plus" aria-hidden="true"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="product-box product-white-bg wow fadeIn">
-                                <div class="product-image">
-                                    <a href="product-left-thumbnail.html">
-                                        <img src="{{asset('website/images/veg-3/home/23.jpg')}}" class="img-fluid blur-up lazyload"
-                                             alt="">
-                                    </a>
-                                    <ul class="product-option">
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="View">
-                                            <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#view">
-                                                <i data-feather="eye"></i>
-                                            </a>
-                                        </li>
-
-
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="Wishlist">
-                                            <a href="wishlist.html" class="notifi-wishlist">
-                                                <i data-feather="heart"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="product-detail position-relative">
-                                    <a href="product-left-thumbnail.html">
-                                        <h6 class="name">
-                                            Sony Alpha a7 IV Mirrorless Digital Camera
-                                        </h6>
-                                    </a>
-
-
-
-                                    <h6 class="price theme-color">EGP 80.00</h6>
-
-                                    <div class="add-to-cart-btn-2 addtocart_btn">
-                                        <button class="btn addcart-button btn buy-button"><i
-                                                class="fa-solid fa-plus"></i></button>
-                                        <div class="cart_qty qty-box-2">
-                                            <div class="input-group">
-                                                <button type="button" class="qty-left-minus" data-type="minus"
-                                                        data-field="">
-                                                    <i class="fa fa-minus" aria-hidden="true"></i>
-                                                </button>
-                                                <input class="form-control input-number qty-input" type="text"
-                                                       name="quantity" value="1">
-                                                <button type="button" class="qty-right-plus" data-type="plus"
-                                                        data-field="">
-                                                    <i class="fa fa-plus" aria-hidden="true"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-
-                            <div class="product-box product-white-bg wow fadeIn" data-wow-delay="0.1s">
-                                <div class="product-image">
-                                    <a href="product-left-thumbnail.html">
-                                        <img src="{{asset('website/images/veg-3/home/24.jpg')}}" class="img-fluid blur-up lazyload"
-                                             alt="">
-                                    </a>
-                                    <ul class="product-option">
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="View">
-                                            <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#view">
-                                                <i data-feather="eye"></i>
-                                            </a>
-                                        </li>
-
-
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="Wishlist">
-                                            <a href="wishlist.html" class="notifi-wishlist">
-                                                <i data-feather="heart"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="product-detail position-relative">
-                                    <a href="product-left-thumbnail.html">
-                                        <h6 class="name">
-                                            Sony Alpha a7 IV Mirrorless Digital Camera
-                                        </h6>
-                                    </a>
-
-
-
-                                    <h6 class="price theme-color">EGP 80.00</h6>
-
-                                    <div class="add-to-cart-btn-2 addtocart_btn">
-                                        <button class="btn addcart-button btn buy-button"><i
-                                                class="fa-solid fa-plus"></i></button>
-                                        <div class="cart_qty qty-box-2">
-                                            <div class="input-group">
-                                                <button type="button" class="qty-left-minus" data-type="minus"
-                                                        data-field="">
-                                                    <i class="fa fa-minus" aria-hidden="true"></i>
-                                                </button>
-                                                <input class="form-control input-number qty-input" type="text"
-                                                       name="quantity" value="1">
-                                                <button type="button" class="qty-right-plus" data-type="plus"
-                                                        data-field="">
-                                                    <i class="fa fa-plus" aria-hidden="true"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                                @endif
+                            @endforeach
+                        @endif
                     </div>
                 </div>
             </div>

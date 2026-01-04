@@ -16864,7 +16864,6 @@ header .offcanvas-backdrop {
 
 .product-box {
     padding: calc(8px + (14 - 8) * ((100vw - 320px) / (1920 - 320)));
-    border-right: 1px solid rgba(74, 85, 104, 0.3);
     position: relative;
     -webkit-transition: all 0.3s ease-in-out;
     transition: all 0.3s ease-in-out;
