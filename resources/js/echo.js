@@ -1,51 +1,37 @@
+/**
+ * Laravel Echo Configuration for Pusher
+ * 
+ * This file initializes Laravel Echo with Pusher for real-time notifications.
+ * Uses public channels (no authentication required for channel subscription).
+ */
 
 import pusherJs from 'pusher-js'
-import Cookies from "js-cookie";
 import Echo from 'laravel-echo';
 
-// window.Pusher = pusherJs;
-// window.Pusher.logToConsole = true;
+// Set Pusher globally
+window.Pusher = pusherJs;
 
-// let host = location.origin;
-// window.Echo = new Echo({
-//     broadcaster: 'pusher',
-//     key: import.meta.env.VITE_PUSHER_APP_KEY,
-//     cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
-//     forceTLS: true,
-//     encrypted: true,
-//     auth:{
-//     headers:{
-//         Authorization: `Bearer ${Cookies.get("token")}`
-//     }
-//     },
-//     authorizer: (channel, options) => {
-//             return {
-//                 authorize: (socketId, callback) => {
-//                     axios
-//                         .post(
-//                             host+'/broadcasting/auth',
-//                             {
-//                                 socket_id: socketId,
-//                                 channel_name: channel.name,
-//                             },
-//                             {
-//                                 headers:{
-//                                     'Content-Type': 'application/json',
-//                                     Authorization: `Bearer ${Cookies.get("token")}` ,
-//                                     'Access-Control-Allow-Credentials': true,
-//                                 }
-//                                 , withCredentials: true
-//                             }
-//                         )
-//                         .then((response) => {
-//                             callback(false, response.data);
-//                         })
-//                         .catch((error) => {
-//                             callback(true, error);
-//                         });
-//                 },
-//             };
-//         },
-// });
+// Pusher configuration from environment variables
+const pusherKey = import.meta.env.VITE_PUSHER_APP_KEY || '5574d355f663616e7c35';
+const pusherCluster = import.meta.env.VITE_PUSHER_APP_CLUSTER || 'eu';
 
+/**
+ * Initialize Laravel Echo with Pusher
+ * Using public channels - no authentication required
+ */
+try {
+    window.Echo = new Echo({
+        broadcaster: 'pusher',
+        key: pusherKey,
+        cluster: pusherCluster,
+        forceTLS: true,
+        encrypted: true,
+    });
+
+    console.log('✅ Laravel Echo initialized successfully');
+    console.log('📡 Pusher Key:', pusherKey);
+    console.log('🌍 Pusher Cluster:', pusherCluster);
+} catch (error) {
+    console.error('❌ Error initializing Laravel Echo:', error);
+}
 

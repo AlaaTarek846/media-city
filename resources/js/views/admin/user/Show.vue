@@ -48,19 +48,40 @@
                                     <div class="p-4 border-bottom border-block-end-dashed">
                                         <p class="fs-15 mb-2 me-4 fw-semibold">{{ $t('global.ContactInformation') }} :</p>
                                         <div class="text-muted">
-                                            <p class="mb-0">
+                                            <p class="mb-2">
+                                                <span class="badge rounded-pill bg-info-transparent me-2" v-if="user?.user_type === 'person'">{{ $t('global.person') }}</span>
+                                                <span class="badge rounded-pill bg-primary-transparent me-2" v-else-if="user?.user_type === 'company'">{{ $t('global.company') }}</span>
+                                                <span class="badge rounded-pill bg-success-transparent me-2" v-else-if="user?.user_type === 'studio'">{{ $t('global.studio') }}</span>
+                                                <span class="fw-semibold">{{ $t('global.user_type') }}</span>
+                                            </p>
+                                            <p class="mb-2">
                                                 <span class="avatar avatar-sm avatar-rounded me-2 bg-light text-muted">
                                                     <i class="bi bi-phone"></i>
                                                 </span>
-                                                <span dir="ltr">{{user?.phone}}</span>
+                                                <span class="fw-semibold me-2">{{ $t('global.mobile') }}:</span>
+                                                <span dir="ltr">{{user?.mobile || '-'}}</span>
                                             </p>
-                                            <p class="mb-0">
+                                            <p class="mb-2">
+                                                <span class="avatar avatar-sm avatar-rounded me-2 bg-light text-muted">
+                                                    <i class="ri-whatsapp-line"></i>
+                                                </span>
+                                                <span class="fw-semibold me-2">{{ $t('global.whatsapp') }}:</span>
+                                                <span dir="ltr">{{user?.whatsapp || '-'}}</span>
+                                            </p>
+                                            <p class="mb-2">
                                                 <span class="avatar avatar-sm avatar-rounded me-2 bg-light text-muted">
                                                     <i class="ri-mail-line"></i>
                                                 </span>
+                                                <span class="fw-semibold me-2">{{ $t('global.email') }}:</span>
                                                 {{ user?.email }}
                                             </p>
-
+                                            <p class="mb-0" v-if="user?.how_did_you_hear_about_us">
+                                                <span class="avatar avatar-sm avatar-rounded me-2 bg-light text-muted">
+                                                    <i class="ri-information-line"></i>
+                                                </span>
+                                                <span class="fw-semibold me-2">{{ $t('global.how_did_you_hear_about_us') }}:</span>
+                                                {{ user?.how_did_you_hear_about_us }}
+                                            </p>
                                         </div>
                                     </div>
 
@@ -91,14 +112,14 @@
                                                                 {{$t('global.product_favorites')}}
                                                             </button>
                                                         </li>
-                                                        <li class="nav-item" role="presentation">
+                                                        <!-- <li class="nav-item" role="presentation">
                                                             <button class="nav-link" id="gallery-tab-reviews" data-bs-toggle="tab"
                                                                     data-bs-target="#gallery-tab-reviews-pane" type="button" role="tab"
                                                                     aria-controls="gallery-tab-reviews-pane" aria-selected="false">
                                                                 <i class="ri-star-line me-1 align-middle d-inline-block"></i>
                                                                 {{$t('global.reviews')}}
                                                             </button>
-                                                        </li>
+                                                        </li> -->
                                                         <li class="nav-item" role="presentation">
                                                             <button class="nav-link" id="gallery-tab-addresses" data-bs-toggle="tab"
                                                                     data-bs-target="#gallery-tab-addresses-pane" type="button" role="tab"
@@ -126,7 +147,6 @@
                                                                                 <th>{{$t('global.applied_coupon')}}</th>
                                                                                 <th>{{$t('global.Discounts')}}</th>
                                                                                 <th>{{$t('global.sub_total')}}</th>
-                                                                                <th>{{$t('global.tax')}}</th>
                                                                                 <th>{{$t('global.Shipping')}}</th>
                                                                                 <th>{{$t('global.total')}}</th>
                                                                                 <th>{{$t('global.created_at')}}</th>
@@ -147,6 +167,12 @@
                                                                                             <li v-for="item in order.items" :key="item.id">
                                                                                                 {{ item.product }} <span> {{ item.quantity }} </span>
                                                                                                 <span v-if="item.price">x {{ item.price }} </span>
+                                                                                                <span v-if="item.condition" class="ms-2">
+                                                                                                    <span class="badge bg-info-transparent">{{ $t('global.condition') }}: {{ $t('global.' + item.condition) }}</span>
+                                                                                                </span>
+                                                                                                <span v-if="item.department" class="ms-2">
+                                                                                                    <span class="badge bg-primary-transparent">{{ $t('global.department') }}: {{ item.department }}</span>
+                                                                                                </span>
                                                                                             </li>
                                                                                         </ul>
                                                                                     </div>
@@ -162,9 +188,6 @@
                                                                                 </td>
                                                                                 <td>
                                                                                     {{ order.sub_total ? order.sub_total : '---' }}
-                                                                                </td>
-                                                                                <td>
-                                                                                    {{ order.tax ? order.tax + ' ( ' + order.tax_percentage +'%'+ ' )' : '---' }}
                                                                                 </td>
                                                                                 <td>
                                                                                     {{ order.shipping_price ? order.shipping_price : '---' }}
@@ -196,7 +219,8 @@
                                                                                 <th scope="col">{{ $t('label.title') }}</th>
                                                                                 <th scope="col">{{ $t('global.brand') }}</th>
                                                                                 <th scope="col">{{ $t('global.category') }}</th>
-                                                                                <th scope="col">{{ $t('global.type') }}</th>
+                                                                                <th scope="col">{{ $t('global.department') }}</th>
+                                                                                <th scope="col">{{ $t('global.condition') }}</th>
                                                                             </tr>
                                                                         </thead>
                                                                         <tbody>
@@ -213,7 +237,11 @@
                                                                                 <td>{{item.title}}</td>
                                                                                 <td>{{item.brand}}</td>
                                                                                 <td>{{item.category}}</td>
-                                                                                <td>{{ $t('global.' + item.type) }}</td>
+                                                                                <td>{{item.department || '-'}}</td>
+                                                                                <td>
+                                                                                    <span v-if="item.condition">{{ $t('global.' + item.condition) }}</span>
+                                                                                    <span v-else>-</span>
+                                                                                </td>
                                                                             </tr>
                                                                         </tbody>
                                                                     </table>
@@ -265,34 +293,34 @@
                                                                             <tr>
                                                                                 <th scope="col">{{ $t('global.nameAddress') }}</th>
                                                                                 <th scope="col">{{ $t('global.address') }}</th>
-                                                                                <th scope="col">{{ $t('global.building_number') }}</th>
-                                                                                <th scope="col">{{ $t('global.floor_number') }}</th>
-                                                                                <th scope="col">{{ $t('global.apartment_number') }}</th>
-                                                                                <th scope="col">{{ $t('global.distinctive_mark') }}</th>
-                                                                                <th scope="col">{{ $t('global.country') }}</th>
-                                                                                <th scope="col">{{ $t('global.area') }}</th>
+                                                                                <th scope="col">{{ $t('global.governorate') }}</th>
+                                                                                <th scope="col">{{ $t('global.location') }}</th>
                                                                             </tr>
                                                                         </thead>
                                                                         <tbody>
                                                                             <tr v-for="item in user?.addresses" :key="item.id">
-                                                                            
                                                                                 <td>
-                                                                                    {{ item.title }}
+                                                                                    {{ item.title || item.name || '-' }}
                                                                                     <span v-if="parseInt(item.is_primary)" class="badge bg-primary ms-2">
                                                                                         {{$t('global.is_primary')}}
                                                                                     </span>
                                                                                 </td>
                                                                                 <td>
                                                                                     <span style="white-space: pre-line; word-break: break-word;">
-                                                                                        {{ item.address }}
+                                                                                        {{ item.address || '-' }}
                                                                                     </span>
                                                                                 </td>
-                                                                                <td>{{item.building_number}}</td>
-                                                                                <td>{{item.floor_number}}</td>
-                                                                                <td>{{item.apartment_number}}</td>
-                                                                                <td>{{item.distinctive_mark}}</td>
-                                                                                <td>{{item.country}}</td>
-                                                                                <td>{{item.area}}</td>
+                                                                                <td>{{item.area || '-'}}</td>
+                                                                                <td>
+                                                                                    <a v-if="item.lat && item.lng" 
+                                                                                       :href="`https://www.google.com/maps?q=${item.lat},${item.lng}`" 
+                                                                                       target="_blank" 
+                                                                                       rel="noopener noreferrer"
+                                                                                       class="btn btn-sm btn-primary-transparent">
+                                                                                        <i class="ri-map-pin-line me-1"></i>{{ $t('global.view_on_map') }}
+                                                                                    </a>
+                                                                                    <span v-else>-</span>
+                                                                                </td>
                                                                             </tr>
                                                                         </tbody>
                                                                     </table>

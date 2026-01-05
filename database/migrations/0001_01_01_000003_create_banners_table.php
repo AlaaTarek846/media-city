@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('image');
             $table->boolean('status')->default(true);
+            $table->enum('type',['shop','renting','best_sellers','home'])->default('home');
             $table->softDeletes();
             $table->timestamps();
         });

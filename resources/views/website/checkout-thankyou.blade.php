@@ -1,11 +1,29 @@
 @extends('website.layouts.layoutPage')
 @section('pageTitle',__('messages.Thank You'))
-@push("headStyle")
-    @vite(['resources/js/single-components.js'])
-@endpush
 @section('body')
-    @include('website.layouts.breadcrump', ['currentPage' => __('messages.Thank You')])
-
+    <!-- Breadcrumb Section Start -->
+    <section class="breadscrumb-section pt-0">
+        <div class="container-fluid-lg">
+            <div class="row">
+                <div class="col-12">
+                    <div class="breadscrumb-contain">
+                        <h2>{{ __('messages.Thank You') }}</h2>
+                        <nav>
+                            <ol class="breadcrumb mb-0">
+                                <li class="breadcrumb-item">
+                                    <a href="{{route('web.home')}}">
+                                        <i class="fa-solid fa-house"></i>
+                                    </a>
+                                </li>
+                                <li class="breadcrumb-item active mx-1" aria-current="page">{{ __('messages.Thank You') }}</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Breadcrumb Section End -->
 
   <!--start main content-->
   <main class="main-content">
@@ -15,21 +33,21 @@
           <div class="thank-you-content">
             <div class="text-center">
                  <div class="fs-1 mb-3">
-                  <i class="bi bi-check-circle-fill text-success"></i>
+                  <i class="fa-solid fa-circle-check text-success" style="font-size: 80px;"></i>
                  </div>
-                 <p class="mb-2">@lang('messages.OrderNumber') {{ $order->order_number }}</p>
-                 <h5 class="mb-0 fw-semibold">@lang('messages.Thank you for your order!')</h5>
+                 <h3 class="mb-3 fw-bold text-success">{{ __('messages.Thank You') }}</h3>
+                 <p class="mb-2 fs-5">{{ __('messages.OrderNumber') }}: <strong>{{ $order->order_number }}</strong></p>
+                 <p class="mb-4 text-muted">{{ __('messages.Thank you for your order!') }}</p>
+                 <p class="mb-4">{{ __('messages.Your order has been placed successfully and will be processed soon.') }}</p>
                  <div class="mt-4">
-                   <a href="/home" class="btn btn-dark py-2 px-4 rounded-3">@lang('messages.Continue Shopping')</a>
+                   <a href="{{route('web.home')}}" class="btn theme-bg-color text-white btn-md px-5 py-2 rounded-3">
+                     <i class="fa-solid fa-arrow-left me-2"></i>{{ __('messages.Continue Shopping') }}
+                   </a>
                  </div>
             </div>
           </div>
       </div>
     </section>
-
-     <!--start Recommended product-->
-    <checkout-products :recommended="{{ $products }}" :user="{{ auth('user')->user() }}" :setting="{{ $setting }}"></checkout-products>
-    <!--end Recommended product-->
 
   </main>
   <!--end main content-->

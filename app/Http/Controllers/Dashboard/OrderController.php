@@ -25,7 +25,30 @@ class OrderController extends Controller implements HasMiddleware
 
     public function index(Request $request)
     {
-        $orders = Order::searchAndFilter()->latest()->paginate(10);
+        $query = Order::searchAndFilter();
+
+        // Filter by read status (all, unread, or read)
+        if ($request->has('filter')) {
+            if ($request->filter === 'unread') {
+                $query->where('is_read', false);
+            } elseif ($request->filter === 'read') {
+                $query->where('is_read', true);
+            }
+        }
+
+        // Filter by date (today, yesterday, or all)
+        if ($request->has('date_filter') && $request->date_filter) {
+            // Use DATE() function to extract date part and compare
+            $query->whereRaw("DATE(created_at) = ?", [$request->date_filter]);
+        }
+
+        // Search by specific date
+        if ($request->has('date_search') && $request->date_search) {
+            // Use DATE() function to extract date part and compare
+            $query->whereRaw("DATE(created_at) = ?", [$request->date_search]);
+        }
+
+        $orders = $query->latest()->paginate(10);
 
         return responseJson(OrderResource::collection($orders->items()), 'ContactMessage', 200, getPaginates($orders));
     }
@@ -42,6 +65,23 @@ class OrderController extends Controller implements HasMiddleware
 
     public function update(Request $request,$id){
         $order = Order::find($id);
+
+        if ($request->order_status_id == 5){
+            if ($order->order_status_id != 5){
+                foreach ($order->orderItems as $cartItem) {
+                    $cartItem->productVariant->increment('quantity', $cartItem->quantity);
+                }
+            }
+
+        }else{
+            if ($order->order_status_id == 5){
+                foreach ($order->orderItems as $cartItem) {
+                    $cartItem->productVariant->decrement('quantity', $cartItem->quantity);
+                }
+            }
+        }
+
+
         $order->update([
             'order_status_id' => $request->order_status_id,
         ]);
@@ -58,6 +98,37 @@ class OrderController extends Controller implements HasMiddleware
             ];
         });
         return responseJson($orderStatuses, 'Order Statuses', 200);
+    }
+
+    /**
+     * Mark an order as read
+     */
+    public function markAsRead($id)
+    {
+        $order = Order::findOrFail($id);
+
+        if (!$order->is_read) {
+            $order->update([
+                'is_read' => true,
+                'read_at' => now(),
+            ]);
+        }
+
+        return responseJson([
+            'data' => new OrderResource($order),
+        ], 'Order marked as read', 200);
+    }
+
+    /**
+     * Get unread orders count
+     */
+    public function getUnreadCount()
+    {
+        $count = Order::where('is_read', false)->count();
+
+        return responseJson([
+            'count' => $count,
+        ], '', 200);
     }
 
 }

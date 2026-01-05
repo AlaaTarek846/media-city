@@ -66,7 +66,7 @@
                                         <td>{{ item.name }}</td>
                                         <td>{{ item.phone }}</td>
                                         <td>{{ item.email }}</td>
-                                        <td>{{ item.role_name }}</td>
+                                        <td>{{ item.role_name_text }}</td>
                                         <td>
                                             <span class="badge rounded-pill bg-success-transparent"
                                                 v-if="item.status">{{ $t('global.activated') }}</span>

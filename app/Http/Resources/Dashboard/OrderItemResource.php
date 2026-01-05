@@ -27,6 +27,11 @@ class OrderItemResource extends JsonResource
             "quantity"            => $this->quantity,
             "price"            => $this->price,
             "total"            => $this->total,
+            "count_day"            => $this->count_day,
+            "start_date"            => $this->start_date ? Carbon::parse($this->start_date)->format('Y-m-d') : null,
+            "note"            => $this->note,
+            "department"            => $this->product?->department?->current_translation?->title,
+            "condition"            => $this->product?->condition,
         ];
     }
 }

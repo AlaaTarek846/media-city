@@ -1147,7 +1147,7 @@
                     success: function(response) {
                         // Find the product container (works with both old and new structure)
                         var $productContainer = $element.closest('.product-box-contain');
-                        
+
                         // If not found, try to find the parent div containing product-box-3 (new structure)
                         if ($productContainer.length === 0) {
                             $productContainer = $element.closest('div').parent();
@@ -1223,10 +1223,10 @@
             } else {
                 // Remove from localStorage
                 removeFromLocalStorageWishlist(productId);
-                
+
                 // Find the product container (works with both old and new structure)
                 var $productContainer = $element.closest('.product-box-contain');
-                
+
                 // If not found, try to find the parent div containing product-box-3 (new structure)
                 if ($productContainer.length === 0) {
                     $productContainer = $element.closest('div').parent();
@@ -1347,6 +1347,7 @@
         var $ = jQuery;
         var isRTL = '{{ app()->getLocale() }}' === 'ar';
         var isAuth = {{ auth('user')->check() ? 'true' : 'false' }};
+        var isCheckout = {{ request()->routeIs('checkout') ? 'true' : 'false' }};
         var cartStorageKey = 'cart_products';
 
         /**
@@ -1833,6 +1834,10 @@
             } else {
                 var html = '';
                 items.forEach(function(item) {
+                    let closeCustom = !isCheckout ? ('<button class="close-button close-cart-item" data-product-id="' + item.product_id + '" data-variant-id="' + (item.variant_id || '') + '">' +
+                        '<i class="fa-solid fa-xmark"></i>' +
+                        '</button>') : '';
+
                     var productUrl = '{{ route("productDetail", ":slug") }}'.replace(':slug', item.slug || item.product_id);
                     html += '<li class="product-box-contain" data-cart-item-id="' + (item.id || item.product_id) + '">' +
                         '<div class="drop-cart">' +
@@ -1844,9 +1849,7 @@
                         '<h5>' + (item.title || '') + '</h5>' +
                         '</a>' +
                         '<h6><span>' + item.quantity + ' x</span> {{ __("messages.currency") }} ' + parseFloat(item.price).toFixed(2) + '</h6>' +
-                        '<button class="close-button close-cart-item" data-product-id="' + item.product_id + '" data-variant-id="' + (item.variant_id || '') + '">' +
-                        '<i class="fa-solid fa-xmark"></i>' +
-                        '</button>' +
+                        closeCustom +
                         '</div>' +
                         '</div>' +
                         '</li>';

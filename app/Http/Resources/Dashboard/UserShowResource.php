@@ -18,7 +18,10 @@ class UserShowResource extends JsonResource
         return [
             'id'              => $this->id,
             'name'            => $this->name,
-            'phone'            => $this->phone,
+            'mobile'          => $this->mobile,
+            'whatsapp'        => $this->whatsapp,
+            'user_type'       => $this->user_type,
+            'how_did_you_hear_about_us' => $this->how_did_you_hear_about_us,
             'email'           => $this->email ,
             "addresses"        => UserAddressesResource::collection($this->addresses),
             "orders"           => OrderResource::collection($this->orders),

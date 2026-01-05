@@ -27,36 +27,36 @@ class BlogSeeder extends Seeder
 
         $blogCategorises = [
             [
-                'title_ar' => 'خواتم',
-                'title_en' => 'Rings',
+                'title_ar' => 'كاميرات تصوير',
+                'title_en' => 'Cameras',
             ],
             [
-                'title_ar' => 'سلاسل',
-                'title_en' => 'Necklaces',
+                'title_ar' => 'إكسسوارات التصوير',
+                'title_en' => 'Photography Accessories',
             ],
             [
-                'title_ar' => 'أساور',
-                'title_en' => 'Bracelets',
+                'title_ar' => 'تأجير كاميرات',
+                'title_en' => 'Camera Rental',
             ],
             [
-                'title_ar' => 'أطقم ذهب',
-                'title_en' => 'Gold Sets',
+                'title_ar' => 'استوديوهات التصوير',
+                'title_en' => 'Photography Studios',
             ],
             [
-                'title_ar' => 'حلقان',
-                'title_en' => 'Earrings',
+                'title_ar' => 'عدسات التصوير',
+                'title_en' => 'Camera Lenses',
             ],
             [
-                'title_ar' => 'سبائك ذهب',
-                'title_en' => 'Gold Bars',
+                'title_ar' => 'معدات الإضاءة',
+                'title_en' => 'Lighting Equipment',
             ],
             [
-                'title_ar' => 'نصائح الاستثمار',
-                'title_en' => 'Investment Tips',
+                'title_ar' => 'نصائح التصوير',
+                'title_en' => 'Photography Tips',
             ],
             [
-                'title_ar' => 'العناية بالمجوهرات',
-                'title_en' => 'Jewelry Care',
+                'title_ar' => 'شراكات',
+                'title_en' => 'Partnerships',
             ],
         ];
 
@@ -80,127 +80,127 @@ class BlogSeeder extends Seeder
 
         // 1
         $article = Article::create([
-            'image' => '19.jpg',
+            'image' => 'blog-1.jpg',
             'category_id' => $categories[1] ?? 1,
             'status' => 1
         ]);
         $article->setTranslations([
             'ar' => [
-                'title' => 'خواتم ذهب فاخرة',
-                'description' => '<p>اكتشف تشكيلتنا المميزة من الخواتم الذهبية التي تعكس الأناقة والجمال. نحن نقدم مجموعة واسعة من التصاميم العصرية والكلاسيكية التي تناسب جميع الأذواق.</p><p>جميع خواتمنا مصنوعة من الذهب عيار 21 و 18 قيراط، مما يضمن الجودة العالية والمتانة.</p>',
-                'slug' => Str::slug('خواتم ذهب فاخرة'),
-                'keywords' => ['خواتم', 'ذهب', 'مجوهرات', 'خواتم ذهب', 'خواتم فاخرة']
+                'title' => 'كاميرات تصوير احترافية',
+                'description' => '<p>اكتشف مجموعتنا المميزة من الكاميرات الاحترافية التي تلبي احتياجات المصورين المحترفين والهواة. نقدم مجموعة واسعة من الكاميرات الرقمية والمرآة العاكسة من أفضل العلامات التجارية.</p><p>جميع كاميراتنا تتميز بجودة عالية ودقة فائقة في التصوير، مما يضمن الحصول على صور احترافية متميزة.</p>',
+                'slug' => Str::slug('كاميرات تصوير احترافية'),
+                'keywords' => ['كاميرات', 'تصوير', 'كاميرات احترافية', 'كاميرات رقمية', 'تصوير فوتوغرافي']
             ],
             'en' => [
-                'title' => 'Luxury Gold Rings',
-                'description' => '<p>Discover our exclusive collection of gold rings that reflect elegance and beauty. We offer a wide range of modern and classic designs that suit all tastes.</p><p>All our rings are made from 21 and 18 karat gold, ensuring high quality and durability.</p>',
-                'slug' => Str::slug('Luxury Gold Rings'),
-                'keywords' => ['rings', 'gold', 'jewelry', 'gold rings', 'luxury rings']
+                'title' => 'Professional Photography Cameras',
+                'description' => '<p>Discover our exclusive collection of professional cameras that meet the needs of professional and amateur photographers. We offer a wide range of digital and DSLR cameras from the best brands.</p><p>All our cameras feature high quality and exceptional shooting accuracy, ensuring professional and outstanding photos.</p>',
+                'slug' => Str::slug('Professional Photography Cameras'),
+                'keywords' => ['cameras', 'photography', 'professional cameras', 'digital cameras', 'photography']
             ],
         ]);
 
         // 2
         $article = Article::create([
-            'image' => '19.jpg',
+            'image' => 'blog-2.jpg',
             'category_id' => $categories[2] ?? 2,
             'status' => 1
         ]);
         $article->setTranslations([
             'ar' => [
-                'title' => 'سلاسل ذهب عصرية',
-                'description' => '<p>سلاسل تناسب جميع المناسبات وتضيف لمسة فريدة لمظهرك. من التصاميم الكلاسيكية إلى العصرية، لدينا ما يناسبك.</p><p>جميع السلاسل مصنوعة يدوياً بعناية فائقة لضمان الجودة والأناقة.</p>',
-                'slug' => Str::slug('سلاسل ذهب عصرية'),
-                'keywords' => ['سلاسل', 'ذهب', 'قلائد', 'سلاسل ذهب', 'مجوهرات']
+                'title' => 'إكسسوارات التصوير الاحترافية',
+                'description' => '<p>إكسسوارات تصوير عالية الجودة تناسب جميع احتياجات المصورين. من الحاملات الثلاثية إلى الحقائب والبطاريات الاحتياطية، لدينا كل ما تحتاجه.</p><p>جميع إكسسواراتنا مصنوعة من مواد عالية الجودة لضمان المتانة والأداء المتميز.</p>',
+                'slug' => Str::slug('إكسسوارات التصوير الاحترافية'),
+                'keywords' => ['إكسسوارات', 'تصوير', 'معدات تصوير', 'حاملات ثلاثية', 'إكسسوارات كاميرات']
             ],
             'en' => [
-                'title' => 'Trendy Gold Necklaces',
-                'description' => '<p>Necklaces for all occasions that add a unique touch to your look. From classic to modern designs, we have something for you.</p><p>All necklaces are handcrafted with great care to ensure quality and elegance.</p>',
-                'slug' => Str::slug('Trendy Gold Necklaces'),
-                'keywords' => ['necklaces', 'gold', 'chains', 'gold necklaces', 'jewelry']
+                'title' => 'Professional Photography Accessories',
+                'description' => '<p>High-quality photography accessories that meet all photographers\' needs. From tripods to bags and spare batteries, we have everything you need.</p><p>All our accessories are made from high-quality materials to ensure durability and excellent performance.</p>',
+                'slug' => Str::slug('Professional Photography Accessories'),
+                'keywords' => ['accessories', 'photography', 'photography equipment', 'tripods', 'camera accessories']
             ],
         ]);
 
         // 3
         $article = Article::create([
-            'image' => '19.jpg',
+            'image' => 'blog-3.jpg',
             'category_id' => $categories[3] ?? 3,
             'status' => 1
         ]);
         $article->setTranslations([
             'ar' => [
-                'title' => 'أساور ذهب أنيقة',
-                'description' => '<p>أساور مصممة بعناية لتمنحك إطلالة راقية. تصاميم متنوعة تناسب جميع الأذواق والمناسبات.</p><p>جميع الأساور مصنوعة من الذهب الخالص مع ضمان الجودة والأناقة.</p>',
-                'slug' => Str::slug('أساور ذهب أنيقة'),
-                'keywords' => ['أساور', 'ذهب', 'مجوهرات', 'أساور ذهب', 'إطلالة راقية']
+                'title' => 'تأجير كاميرات للاستوديوهات',
+                'description' => '<p>خدمة تأجير كاميرات احترافية للاستوديوهات والمصورين. نوفر مجموعة واسعة من الكاميرات والمعدات الاحترافية بأسعار تنافسية.</p><p>جميع الكاميرات المعروضة للتأجير في حالة ممتازة ومجهزة بجميع الإكسسوارات اللازمة لضمان جودة التصوير.</p>',
+                'slug' => Str::slug('تأجير كاميرات للاستوديوهات'),
+                'keywords' => ['تأجير', 'كاميرات', 'استوديو', 'تأجير كاميرات', 'معدات تصوير']
             ],
             'en' => [
-                'title' => 'Elegant Gold Bracelets',
-                'description' => '<p>Carefully crafted bracelets that give you a sophisticated look. Various designs to suit all tastes and occasions.</p><p>All bracelets are made from pure gold with quality and elegance guaranteed.</p>',
-                'slug' => Str::slug('Elegant Gold Bracelets'),
-                'keywords' => ['bracelets', 'gold', 'jewelry', 'gold bracelets', 'elegant']
+                'title' => 'Camera Rental for Studios',
+                'description' => '<p>Professional camera rental service for studios and photographers. We offer a wide range of professional cameras and equipment at competitive prices.</p><p>All cameras available for rent are in excellent condition and equipped with all necessary accessories to ensure quality photography.</p>',
+                'slug' => Str::slug('Camera Rental for Studios'),
+                'keywords' => ['rental', 'cameras', 'studio', 'camera rental', 'photography equipment']
             ],
         ]);
 
         // 4
         $article = Article::create([
-            'image' => '19.jpg',
+            'image' => 'blog-4.jpg',
             'category_id' => $categories[4] ?? 4,
             'status' => 1
         ]);
         $article->setTranslations([
             'ar' => [
-                'title' => 'أطقم ذهب كاملة',
-                'description' => '<p>تميزي مع أطقم ذهبية متكاملة تناسب المناسبات الخاصة. أطقم مصممة بعناية لتكون متناسقة ومتكاملة.</p><p>جميع الأطقم تشمل خاتم وسلسلة وأساور متناسقة في التصميم.</p>',
-                'slug' => Str::slug('أطقم ذهب كاملة'),
-                'keywords' => ['أطقم', 'ذهب', 'مجوهرات', 'أطقم ذهب', 'مناسبات خاصة']
+                'title' => 'استوديوهات التصوير المجهزة',
+                'description' => '<p>استوديوهات تصوير مجهزة بالكامل بجميع المعدات اللازمة للتصوير الاحترافي. إضاءة احترافية وخلفيات متنوعة ومعدات متكاملة.</p><p>جميع الاستوديوهات مجهزة بأحدث المعدات والتقنيات لضمان الحصول على أفضل النتائج في التصوير.</p>',
+                'slug' => Str::slug('استوديوهات التصوير المجهزة'),
+                'keywords' => ['استوديو', 'تصوير', 'استوديوهات', 'تصوير احترافي', 'معدات استوديو']
             ],
             'en' => [
-                'title' => 'Complete Gold Sets',
-                'description' => '<p>Stand out with complete gold sets perfect for special occasions. Carefully designed sets that are harmonious and complete.</p><p>All sets include matching ring, necklace, and bracelets in design.</p>',
-                'slug' => Str::slug('Complete Gold Sets'),
-                'keywords' => ['sets', 'gold', 'jewelry', 'gold sets', 'special occasions']
+                'title' => 'Fully Equipped Photography Studios',
+                'description' => '<p>Fully equipped photography studios with all necessary equipment for professional photography. Professional lighting, various backgrounds, and integrated equipment.</p><p>All studios are equipped with the latest equipment and technologies to ensure the best photography results.</p>',
+                'slug' => Str::slug('Fully Equipped Photography Studios'),
+                'keywords' => ['studio', 'photography', 'studios', 'professional photography', 'studio equipment']
             ],
         ]);
 
         // 5
         $article = Article::create([
-            'image' => '19.jpg',
+            'image' => 'blog-5.jpg',
             'category_id' => $categories[6] ?? 6,
             'status' => 1
         ]);
         $article->setTranslations([
             'ar' => [
-                'title' => 'الاستثمار في السبائك',
-                'description' => '<p>تعرف على فوائد الاستثمار في سبائك الذهب كخيار آمن. الذهب يعتبر من أفضل الاستثمارات على المدى الطويل.</p><p>السبائك الذهبية تحافظ على قيمتها وتزداد مع مرور الوقت، مما يجعلها خياراً مثالياً للاستثمار.</p>',
-                'slug' => Str::slug('الاستثمار في السبائك'),
-                'keywords' => ['استثمار', 'سبائك', 'ذهب', 'استثمار آمن', 'سبائك ذهب']
+                'title' => 'نصائح التصوير الاحترافي',
+                'description' => '<p>تعرف على أفضل النصائح والتقنيات للتصوير الاحترافي. من الإضاءة إلى التكوين، نقدم لك كل ما تحتاج لمعرفته.</p><p>التصوير الاحترافي يتطلب فهم عميق للكاميرات والإضاءة والتقنيات المختلفة للحصول على أفضل النتائج.</p>',
+                'slug' => Str::slug('نصائح التصوير الاحترافي'),
+                'keywords' => ['نصائح', 'تصوير', 'تصوير احترافي', 'تقنيات تصوير', 'مصورين']
             ],
             'en' => [
-                'title' => 'Investing in Gold Bars',
-                'description' => '<p>Learn about the benefits of investing in gold bars as a safe option. Gold is considered one of the best long-term investments.</p><p>Gold bars maintain their value and increase over time, making them an ideal investment choice.</p>',
-                'slug' => Str::slug('Investing in Gold Bars'),
-                'keywords' => ['investment', 'bars', 'gold', 'safe investment', 'gold bars']
+                'title' => 'Professional Photography Tips',
+                'description' => '<p>Learn the best tips and techniques for professional photography. From lighting to composition, we provide everything you need to know.</p><p>Professional photography requires a deep understanding of cameras, lighting, and various techniques to achieve the best results.</p>',
+                'slug' => Str::slug('Professional Photography Tips'),
+                'keywords' => ['tips', 'photography', 'professional photography', 'photography techniques', 'photographers']
             ],
         ]);
 
         // 6
         $article = Article::create([
-            'image' => '19.jpg',
+            'image' => 'blog-6.jpg',
             'category_id' => $categories[8] ?? 8,
             'status' => 1
         ]);
         $article->setTranslations([
             'ar' => [
-                'title' => 'العناية بمجوهراتك الذهبية',
-                'description' => '<p>نصائح للحفاظ على لمعان وبريق الذهب لأطول فترة ممكنة. العناية الصحيحة بالمجوهرات الذهبية تطيل عمرها وتحافظ على جمالها.</p><p>تجنب تعريض الذهب للمواد الكيميائية والمنظفات القوية. نظف المجوهرات بقطعة قماش ناعمة وماء دافئ.</p>',
-                'slug' => Str::slug('العناية بمجوهراتك الذهبية'),
-                'keywords' => ['عناية', 'مجوهرات', 'ذهب', 'نصائح', 'صيانة مجوهرات']
+                'title' => 'شراكات استراتيجية في مجال التصوير',
+                'description' => '<p>نقدم شراكات استراتيجية مع الاستوديوهات والمصورين المحترفين. شراكات متبادلة المنفعة تساعد في تطوير الأعمال وتوسيع نطاق الخدمات.</p><p>نعمل مع أفضل الاستوديوهات والمصورين لتقديم خدمات متكاملة في مجال التصوير والمعدات.</p>',
+                'slug' => Str::slug('شراكات استراتيجية في مجال التصوير'),
+                'keywords' => ['شراكات', 'تصوير', 'استوديوهات', 'مصورين', 'شراكات استراتيجية']
             ],
             'en' => [
-                'title' => 'Caring for Your Gold Jewelry',
-                'description' => '<p>Tips to maintain the shine and brilliance of gold for longer. Proper care of gold jewelry extends its life and maintains its beauty.</p><p>Avoid exposing gold to chemicals and strong detergents. Clean jewelry with a soft cloth and warm water.</p>',
-                'slug' => Str::slug('Caring for Your Gold Jewelry'),
-                'keywords' => ['care', 'jewelry', 'gold', 'tips', 'jewelry maintenance']
+                'title' => 'Strategic Partnerships in Photography',
+                'description' => '<p>We offer strategic partnerships with studios and professional photographers. Mutually beneficial partnerships that help develop businesses and expand service scope.</p><p>We work with the best studios and photographers to provide integrated services in photography and equipment.</p>',
+                'slug' => Str::slug('Strategic Partnerships in Photography'),
+                'keywords' => ['partnerships', 'photography', 'studios', 'photographers', 'strategic partnerships']
             ],
         ]);
     }

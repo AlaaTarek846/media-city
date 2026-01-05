@@ -10,15 +10,15 @@
             <div class="row">
                 <div class="col-12">
                     <div class="breadscrumb-contain">
-                        <h2>Checkout</h2>
+                        <h2>{{ __('messages.Checkout') }}</h2>
                         <nav>
                             <ol class="breadcrumb mb-0">
                                 <li class="breadcrumb-item">
-                                    <a href="index.html">
+                                    <a href="{{ route('web.home') }}">
                                         <i class="fa-solid fa-house"></i>
                                     </a>
                                 </li>
-                                <li class="breadcrumb-item active mx-1" aria-current="page">Checkout</li>
+                                <li class="breadcrumb-item active mx-1" aria-current="page">{{ __('messages.Checkout') }}</li>
                             </ol>
                         </nav>
                     </div>
@@ -125,50 +125,6 @@
                                         </div>
                                     </div>
                                 </li>
-
-                                <li>
-                                    <div class="checkout-icon">
-                                        <lord-icon target=".nav-item" src="https://cdn.lordicon.com/qmcsqnle.json"
-                                                   trigger="loop-on-hover" colors="primary:#9d080f,secondary:#9d080f"
-                                                   class="lord-icon">
-                                        </lord-icon>
-                                    </div>
-                                    <div class="checkout-box">
-                                        <div class="checkout-title">
-                                            <h4>Payment Option</h4>
-                                        </div>
-
-                                        <div class="checkout-detail">
-                                            <div class="accordion accordion-flush custom-accordion"
-                                                 id="accordionFlushExample">
-                                                <div class="accordion-item">
-                                                    <div class="accordion-header" id="flush-headingFour">
-                                                        <div class="accordion-button collapsed"
-                                                             data-bs-toggle="collapse"
-                                                             data-bs-target="#flush-collapseFour">
-                                                            <div class="custom-form-check form-check mb-0">
-                                                                <label class="form-check-label" for="cash"><input
-                                                                        class="form-check-input mt-0" type="radio"
-                                                                        name="flexRadioDefault" id="cash" checked> Cash
-                                                                    On Delivery</label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div id="flush-collapseFour"
-                                                         class="accordion-collapse collapse show"
-                                                         data-bs-parent="#accordionFlushExample">
-                                                        <div class="accordion-body">
-                                                            <p class="cod-review">Pay digitally with SMS Pay
-                                                                Link. Cash may not be accepted in COVID restricted
-                                                                areas. <a href="javascript:void(0)">Know more.</a>
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
                             </ul>
                         </div>
                     </div>
@@ -178,94 +134,61 @@
                     <div class="summery-box p-sticky">
                         <div class="summery-contain">
                             <div class="coupon-cart">
-                                <h6 class="text-content mb-2">Coupon Apply</h6>
+                                <h6 class="text-content mb-2">{{ __('messages.Coupon Apply') }}</h6>
                                 <div class="mb-3 coupon-box input-group">
-                                    <input type="email" class="form-control" id="exampleFormControlInput1"
-                                           placeholder="Enter Coupon Code Here...">
-                                    <button class="btn-apply">Apply</button>
+                                    <input type="text" class="form-control" id="couponCodeInput"
+                                           placeholder="{{ __('messages.Enter Coupon Code Here') }}...">
+                                    <button class="btn-apply" id="applyCouponBtn">{{ __('messages.Apply') }}</button>
                                 </div>
+                                <div id="couponMessage" class="alert d-none mb-2" role="alert"></div>
                             </div>
                         </div>
                     </div>
                     <div class="right-side-summery-box">
-                        <div class="summery-box-2">
-                            <div class="summery-header">
-                                <h3>Order Summery</h3>
+                        <div class="summery-box-2" style="background-color: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden;">
+                            <div class="summery-header" style="background-color: var(--theme-color); color: #fff; padding: 16px 20px;">
+                                <h3 class="mb-0" style="color: #fff; font-size: 18px; font-weight: 700;">{{ __('messages.Order Summery') }}</h3>
                             </div>
 
-                            <ul class="summery-contain">
-                                <li>
-                                    <img src="/website/images/veg-3/home/15.jpg"
-                                         class="img-fluid blur-up lazyloaded checkout-image" alt="">
-                                    <h4>Bell pepper <span>X 1</span></h4>
-                                    <h4 class="price">EGP 32.34</h4>
-                                </li>
+                            <div id="cart-loading" class="text-center py-5 d-none">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">{{ __('messages.Loading') }}...</span>
+                                </div>
+                            </div>
 
-                                <li>
-                                    <img src="/website/images/veg-3/home/17.jpg"
-                                         class="img-fluid blur-up lazyloaded checkout-image" alt="">
-                                    <h4>Eggplant <span>X 3</span></h4>
-                                    <h4 class="price">EGP 12.23</h4>
-                                </li>
-
-                                <li>
-                                    <img src="/website/images/veg-3/home/22.jpg"
-                                         class="img-fluid blur-up lazyloaded checkout-image" alt="">
-                                    <h4>Onion <span>X 2</span></h4>
-                                    <h4 class="price">EGP 18.27</h4>
-                                </li>
-
-                                <li>
-                                    <img src="/website/images/veg-3/home/23.jpg"
-                                         class="img-fluid blur-up lazyloaded checkout-image" alt="">
-                                    <h4>Potato <span>X 1</span></h4>
-                                    <h4 class="price">EGP 26.90</h4>
-                                </li>
-
-                                <li>
-                                    <img src="/website/images/veg-3/home/24.jpg"
-                                         class="img-fluid blur-up lazyloaded checkout-image" alt="">
-                                    <h4>Baby Chili <span>X 1</span></h4>
-                                    <h4 class="price">EGP 19.28</h4>
-                                </li>
-
-                                <li>
-                                    <img src="/website/images/veg-3/home/24.jpg"
-                                         class="img-fluid blur-up lazyloaded checkout-image" alt="">
-                                    <h4>Broccoli <span>X 2</span></h4>
-                                    <h4 class="price">EGP 29.69</h4>
-                                </li>
+                            <ul class="summery-contain" id="cart-items-container" style="max-height: 400px; overflow-y: auto; padding: 16px 20px;">
+                                <!-- Cart items will be loaded here dynamically -->
                             </ul>
 
-                            <ul class="summery-total">
-                                <li>
-                                    <h4>Subtotal</h4>
-                                    <h4 class="price">EGP 111.81</h4>
+                            <ul class="summery-total" style="padding: 16px; background-color: #f8f9fa; border-top: 2px solid #ececec;">
+                                <li class="d-flex justify-content-between align-items-center mb-2" style="padding: 8px 0; border-bottom: 1px solid #e9ecef;">
+                                    <span style="font-size: 14px; color: #4a5568; font-weight: 500;">{{ __('messages.Subtotal') }}</span>
+                                    <span class="price" id="subtotal-price" style="font-size: 14px; color: #4a5568; font-weight: 600;">{{ $setting->translation->title ?? 'EGP' }} 0.00</span>
                                 </li>
 
-                                <li>
-                                    <h4>Shipping</h4>
-                                    <h4 class="price">EGP 8.90</h4>
+                                <li class="d-flex justify-content-between align-items-center mb-2" style="padding: 8px 0; border-bottom: 1px solid #e9ecef;">
+                                    <span style="font-size: 14px; color: #4a5568; font-weight: 500;">{{ __('messages.Shipping') }}</span>
+                                    <span class="price" id="shipping-price" style="font-size: 14px; color: #4a5568; font-weight: 600;">{{ $setting->translation->title ?? 'EGP' }} 0.00</span>
                                 </li>
 
-                                <li>
-                                    <h4>Tax</h4>
-                                    <h4 class="price">EGP 29.498</h4>
+                                <li id="tax-row" class="d-flex justify-content-between align-items-center mb-2" style="padding: 8px 0; border-bottom: 1px solid #e9ecef; display: none;">
+                                    <span style="font-size: 14px; color: #4a5568; font-weight: 500;">{{ __('messages.Tax') }}</span>
+                                    <span class="price" id="tax-price" style="font-size: 14px; color: #4a5568; font-weight: 600;">{{ $setting->translation->title ?? 'EGP' }} 0.00</span>
                                 </li>
 
-                                <li>
-                                    <h4>Coupon/Code</h4>
-                                    <h4 class="price">EGP -23.10</h4>
+                                <li id="coupon-row" class="d-flex justify-content-between align-items-center mb-2" style="padding: 8px 0; border-bottom: 1px solid #e9ecef; display: none;">
+                                    <span style="font-size: 14px; color: #4a5568; font-weight: 500;">{{ __('messages.Coupon Discount') }}</span>
+                                    <span class="price text-success" id="coupon-discount" style="font-size: 14px; font-weight: 600;">- {{ $setting->translation->title ?? 'EGP' }} 0.00</span>
                                 </li>
 
-                                <li class="list-total">
-                                    <h4>Total (USD)</h4>
-                                    <h4 class="price">EGP 19.28</h4>
+                                <li class="list-total d-flex justify-content-between align-items-center mt-3 pt-3" style="border-top: 2px solid var(--theme-color); padding-top: 12px;">
+                                    <h4 class="mb-0" style="font-size: 18px; font-weight: 700; color: #212529;">{{ __('messages.Total') }}</h4>
+                                    <h4 class="price mb-0" id="total-price" style="font-size: 20px; font-weight: 700; color: var(--theme-color);">{{ $setting->translation->title ?? 'EGP' }} 0.00</h4>
                                 </li>
                             </ul>
                         </div>
 
-                        <button class="btn theme-bg-color text-white btn-md w-100 mt-4 fw-bold">Place Order</button>
+                        <button class="btn theme-bg-color text-white btn-md w-100 mt-4 fw-bold" id="placeOrderBtn">{{ __('messages.Place Order') }}</button>
                     </div>
                 </div>
             </div>
@@ -860,9 +783,367 @@
             // Handle address selection (radio button change)
             $(document).on('change', '.address-radio', function() {
                 var selectedAddressId = $(this).val();
-                // You can store the selected address ID for later use in checkout
-                // For example, store it in a hidden input or use it when submitting the order
-                console.log('Selected address ID:', selectedAddressId);
+                updateShippingPrice(selectedAddressId);
+            });
+
+            // Global variables for cart and calculations
+            var cartData = {
+                items: [],
+                subtotal: 0,
+                shipping: 0,
+                tax: 0,
+                couponDiscount: 0,
+                total: 0,
+                selectedAddressId: null,
+                couponCode: null
+            };
+
+            var taxPercentage = {{ $setting->tax_percentage ?? 0 }};
+            var currency = '{{ $setting->translation->title ?? "EGP" }}';
+
+            /**
+             * Load cart items from API
+             */
+            function loadCartItems() {
+                $('#cart-loading').removeClass('d-none');
+                $('#cart-items-container').html('');
+
+                $.ajax({
+                    url: '/api/web/cart/items',
+                    type: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                    success: function(response) {
+                        $('#cart-loading').addClass('d-none');
+                        if (response.data && response.data.items && response.data.items.length > 0) {
+                            cartData.items = response.data.items;
+                            cartData.subtotal = response.data.total || 0;
+                            renderCartItems();
+                            calculateTotals();
+                        } else {
+                            $('#cart-items-container').html('<li class="text-center py-4"><p class="text-muted">{{ __("messages.No items in cart") }}</p></li>');
+                            $('#placeOrderBtn').prop('disabled', true);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error loading cart items:', error);
+                        $('#cart-loading').addClass('d-none');
+                        $('#cart-items-container').html('<li class="text-center py-4"><p class="text-danger">{{ __("messages.Error loading cart items") }}</p></li>');
+                    }
+                });
+            }
+
+            /**
+             * Render cart items in the container
+             */
+            function renderCartItems() {
+                var container = $('#cart-items-container');
+                container.empty();
+
+                if (!cartData.items || cartData.items.length === 0) {
+                    container.html('<li class="text-center py-4"><p class="text-muted mb-0">{{ __("messages.No items in cart") }}</p></li>');
+                    return;
+                }
+
+                $.each(cartData.items, function(index, item) {
+                    var quantityText = '';
+                    var typeBadge = '';
+                    if (item.type === 'rent') {
+                        quantityText = '{{ __("messages.Days") }}: ' + (item.count_day || 0);
+                        typeBadge = '<span class="badge bg-warning text-dark ms-2" style="font-size: 10px;">{{ __("messages.Rent") }}</span>';
+                    } else {
+                        quantityText = '{{ __("messages.Quantity") }}: ' + (item.quantity || 1);
+                        typeBadge = '<span class="badge bg-success ms-2" style="font-size: 10px;">{{ __("messages.Buy") }}</span>';
+                    }
+
+                    var itemImage = item.image || '/website/images/placeholder.jpg';
+                    var itemTitle = item.title || '{{ __("messages.Product") }}';
+                    var itemPrice = parseFloat(item.price || 0).toFixed(2);
+                    var itemTotal = parseFloat(item.total || 0).toFixed(2);
+
+                    var itemHtml = '<li class="d-flex align-items-start" style="padding: 12px 0; border-bottom: 1px solid #ececec;">' +
+                        '<div class="flex-shrink-0 me-3">' +
+                        '<img src="' + itemImage + '" ' +
+                        'class="img-fluid blur-up lazyloaded checkout-image rounded" ' +
+                        'alt="' + itemTitle + '" ' +
+                        'style="width: 60px; height: 60px; object-fit: cover; border: 1px solid #ddd;">' +
+                        '</div>' +
+                        '<div class="flex-grow-1">' +
+                        '<h5 class="mb-1" style="font-size: 14px; font-weight: 600; color: #4a5568; line-height: 1.4;">' +
+                        itemTitle + typeBadge + '</h5>' +
+                        '<p class="mb-1" style="font-size: 12px; color: #6c757d; margin: 0;">' + quantityText + '</p>' +
+                        '<p class="mb-0" style="font-size: 13px; color: #4a5568;">' +
+                        '<span style="color: #6c757d;">{{ __("messages.Price") }}: </span>' +
+                        '<strong>' + currency + ' ' + itemPrice + '</strong>' +
+                        '</p>' +
+                        '</div>' +
+                        '<div class="flex-shrink-0 ms-3 text-end">' +
+                        '<h5 class="mb-0 price" style="font-size: 16px; font-weight: 700; color: var(--theme-color);">' +
+                        currency + ' ' + itemTotal +
+                        '</h5>' +
+                        '</div>' +
+                        '</li>';
+
+                    container.append(itemHtml);
+                });
+            }
+
+            /**
+             * Update shipping price based on selected address
+             */
+            function updateShippingPrice(addressId) {
+                if (!addressId) {
+                    cartData.shipping = 0;
+                    calculateTotals();
+                    return;
+                }
+
+                // Get address data from the selected radio button
+                var selectedRadio = $('input[name="selected_address"]:checked');
+                if (selectedRadio.length === 0) {
+                    cartData.shipping = 0;
+                    calculateTotals();
+                    return;
+                }
+
+                // Get area_id from addresses data (we need to fetch it)
+                $.ajax({
+                    url: '/api/web/user-addresses',
+                    type: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                    success: function(response) {
+                        var address = response.data.find(function(addr) {
+                            return addr.id == addressId;
+                        });
+
+                        if (address && address.area && address.area.shipping_price !== undefined) {
+                            cartData.shipping = parseFloat(address.area.shipping_price) || 0;
+                            cartData.selectedAddressId = addressId;
+                            calculateTotals();
+                        } else {
+                            cartData.shipping = 0;
+                            calculateTotals();
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error loading address:', error);
+                        cartData.shipping = 0;
+                        calculateTotals();
+                    }
+                });
+            }
+
+            /**
+             * Calculate totals (subtotal, tax, shipping, coupon, total)
+             */
+            function calculateTotals() {
+                // Calculate tax
+                cartData.tax = (cartData.subtotal * taxPercentage) / 100;
+
+                // Calculate total
+                cartData.total = cartData.subtotal + cartData.shipping + cartData.tax - cartData.couponDiscount;
+
+                // Update UI
+                $('#subtotal-price').text(currency + ' ' + parseFloat(cartData.subtotal).toFixed(2));
+                $('#shipping-price').text(currency + ' ' + parseFloat(cartData.shipping).toFixed(2));
+
+                if (cartData.tax > 0) {
+                    $('#tax-row').css('display', 'flex');
+                    $('#tax-price').text(currency + ' ' + parseFloat(cartData.tax).toFixed(2));
+                } else {
+                    $('#tax-row').hide();
+                }
+
+                if (cartData.couponDiscount > 0) {
+                    $('#coupon-row').css('display', 'flex');
+                    $('#coupon-discount').text('- ' + currency + ' ' + parseFloat(cartData.couponDiscount).toFixed(2));
+                } else {
+                    $('#coupon-row').hide();
+                }
+
+                $('#total-price').text(currency + ' ' + parseFloat(cartData.total).toFixed(2));
+            }
+
+            /**
+             * Handle coupon apply button click
+             */
+            $('#applyCouponBtn').on('click', function(e) {
+                e.preventDefault();
+                var couponCode = $('#couponCodeInput').val().trim();
+                var messageDiv = $('#couponMessage');
+                var applyBtn = $(this);
+
+                if (!couponCode) {
+                    messageDiv.removeClass('d-none alert-success').addClass('alert-danger')
+                        .html('<strong>{{ __("messages.Error") }}!</strong> {{ __("messages.Please enter a coupon code") }}');
+                    return;
+                }
+
+                messageDiv.addClass('d-none').removeClass('alert-success alert-danger');
+                applyBtn.prop('disabled', true).text('{{ __("messages.Applying") }}...');
+
+                $.ajax({
+                    url: '/api/web/check-coupon-order',
+                    type: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                    data: {
+                        code: couponCode
+                    },
+                    success: function(response) {
+                        if (response.data) {
+                            cartData.couponDiscount = parseFloat(response.data.discount_amount) || 0;
+                            cartData.couponCode = couponCode;
+                            calculateTotals();
+                            messageDiv.removeClass('d-none alert-danger').addClass('alert-success')
+                                .html('<strong>{{ __("messages.Success") }}!</strong> ' + (response.message || '{{ __("messages.Coupon applied successfully") }}'));
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        var errorMsg = '{{ __("messages.Invalid coupon code") }}';
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMsg = xhr.responseJSON.message;
+                        }
+                        messageDiv.removeClass('d-none alert-success').addClass('alert-danger')
+                            .html('<strong>{{ __("messages.Error") }}!</strong> ' + errorMsg);
+                        cartData.couponDiscount = 0;
+                        cartData.couponCode = null;
+                        calculateTotals();
+                    },
+                    complete: function() {
+                        applyBtn.prop('disabled', false).text('{{ __("messages.Apply") }}');
+                    }
+                });
+            });
+
+            /**
+             * Handle place order button click
+             */
+            $('#placeOrderBtn').on('click', function(e) {
+                e.preventDefault();
+
+                // Check if address is selected
+                var selectedAddressId = $('input[name="selected_address"]:checked').val();
+                if (!selectedAddressId) {
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({
+                            icon: 'error',
+                            title: '{{ __("messages.Error") }}',
+                            text: '{{ __("messages.Please select a delivery address") }}'
+                        });
+                    } else {
+                        alert('{{ __("messages.Please select a delivery address") }}');
+                    }
+                    return;
+                }
+
+                // Check if cart has items
+                if (!cartData.items || cartData.items.length === 0) {
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({
+                            icon: 'error',
+                            title: '{{ __("messages.Error") }}',
+                            text: '{{ __("messages.No items in cart") }}'
+                        });
+                    } else {
+                        alert('{{ __("messages.No items in cart") }}');
+                    }
+                    return;
+                }
+
+                var placeOrderBtn = $(this);
+                var originalBtnText = placeOrderBtn.html();
+                placeOrderBtn.prop('disabled', true).html('{{ __("messages.Processing") }}...');
+
+                var orderData = {
+                    address_id: selectedAddressId,
+                    coupon_discount: cartData.couponCode || null,
+                    _token: '{{ csrf_token() }}'
+                };
+
+                $.ajax({
+                    url: '/api/web/add-order',
+                    type: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                    data: orderData,
+                    success: function(response) {
+                        if (response.data) {
+                            var orderNumber = response.data.order_number || null;
+                            var redirectUrl = '{{ route("checkoutThankyou") }}';
+                            if (orderNumber) {
+                                redirectUrl += '?order_number=' + orderNumber;
+                            }
+
+                            if (typeof Swal !== 'undefined') {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: '{{ __("messages.Success") }}',
+                                    text: response.message || '{{ __("messages.Order created successfully") }}',
+                                    timer: 1500,
+                                    showConfirmButton: false
+                                }).then(function() {
+                                    window.location.href = redirectUrl;
+                                });
+                            } else {
+                                alert(response.message || '{{ __("messages.Order created successfully") }}');
+                                window.location.href = redirectUrl;
+                            }
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error creating order:', error);
+                        var errorMsg = '{{ __("messages.Error creating order") }}';
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMsg = xhr.responseJSON.message;
+                        }
+                        if (typeof Swal !== 'undefined') {
+                            Swal.fire({
+                                icon: 'error',
+                                title: '{{ __("messages.Error") }}',
+                                text: errorMsg
+                            });
+                        } else {
+                            alert(errorMsg);
+                        }
+                        placeOrderBtn.prop('disabled', false).html(originalBtnText);
+                    }
+                });
+            });
+
+            // Prevent close-cart-item buttons from working on checkout page
+            $(document).off('click', '.close-cart-item-btn');
+
+            // Load cart items on page load
+            $(document).ready(function() {
+                loadCartItems();
+
+                // Set initial shipping price if address is already selected
+                var selectedAddress = $('input[name="selected_address"]:checked');
+                if (selectedAddress.length > 0) {
+                    updateShippingPrice(selectedAddress.val());
+                }
             });
         })();
     </script>

@@ -36,6 +36,27 @@
                         </div>
 
                         <div class="col-md-6 mt-4">
+                            <label class="form-label">{{ $t('global.shipping_price') }}</label>
+                            <input type="number" 
+                                   step="0.01" 
+                                   min="0"
+                                   class="form-control" 
+                                   v-model="v$.shipping_price.$model"
+                                   :placeholder="$t('global.shipping_price')"
+                                   :class="{'is-invalid': v$.shipping_price.$error || errors['shipping_price'],
+                                   'is-valid': !v$.shipping_price.$invalid && !errors['shipping_price']}">
+                            <div class="invalid-feedback">
+                                <span v-if="v$.shipping_price.required.$invalid">{{ $t('validation.fieldRequired') }}<br /></span>
+                                <span v-if="v$.shipping_price.numeric.$invalid">{{ $t('validation.fieldMustBeNumeric') }}<br /></span>
+                            </div>
+                            <template v-if="errors['shipping_price']">
+                                <error-message v-for="(errorMessage, index) in errors['shipping_price']" :key="index">
+                                    {{ errorMessage }}
+                                </error-message>
+                            </template>
+                        </div>
+
+                        <div class="col-md-6 mt-4">
                             <div class="custom-toggle-switch d-flex align-items-center mt-4">
                                 <input id="toggleswitchPrimary" v-model="data.status" type="checkbox">
                                 <label for="toggleswitchPrimary" class="label-primary"></label><span class="ms-3">{{ $t('label.status') }}</span>
@@ -85,15 +106,6 @@ export default {
         }
     },
     setup(props){
-        setTimeout(async () => {
-            let myModalEl = document.getElementById('areas')
-            myModalEl.addEventListener('show.bs.modal', function (event) {
-                resetModal();
-            })
-            myModalEl.addEventListener('hidden.bs.modal', function (event) {
-                resetModalHidden();
-            })
-        }, 150);
         const errors = ref([]);
         const languages = ref([]);
         const langValidation = ref({});
@@ -104,17 +116,49 @@ export default {
 
         onMounted(()=>{
             languages.value=JSON.parse(localStorage.getItem('languages'));
+            
+            // Wait for modal element to be available
+            setTimeout(() => {
+                let myModalEl = document.getElementById('areas');
+                if (myModalEl) {
+                    myModalEl.addEventListener('show.bs.modal', function (event) {
+                        resetModal();
+                    });
+                    myModalEl.addEventListener('hidden.bs.modal', function (event) {
+                        resetModalHidden();
+                    });
+                }
+            }, 300);
         });
 
        function defaultData(){
-
+           if (!languages.value || languages.value.length === 0) {
+               languages.value = JSON.parse(localStorage.getItem('languages')) || [];
+           }
+           
+           // Reset language data
            languages.value.forEach((el)=>{
-               submitdata.data[el.code]={title:''};
-               langValidation.value[el.code] ={
-                   title: {minLength: minLength(1),maxLength:maxLength(40),required,}
+               if (!submitdata.data[el.code]) {
+                   submitdata.data[el.code] = {title:''};
+               } else {
+                   submitdata.data[el.code].title = '';
+               }
+               if (!langValidation.value[el.code]) {
+                   langValidation.value[el.code] = {
+                       title: {minLength: minLength(1),maxLength:maxLength(40),required,}
+                   };
                }
            });
+           
+           // Reset other fields
            submitdata.data.status = true;
+           submitdata.data.shipping_price = 0;
+           
+           // Ensure shipping_price validation exists
+           if (!langValidation.value.shipping_price) {
+               langValidation.value.shipping_price = {required, numeric};
+           }
+           
            is_disabled.value = false;
            loading.value = false;
            errors.value = [];
@@ -136,6 +180,7 @@ export default {
                             }
                         });
                         submitdata.data.status = l.status == 1;
+                        submitdata.data.shipping_price = l.shipping_price || 0;
                     })
                     .catch((err) => {
                         console.log(err);
@@ -156,8 +201,25 @@ export default {
         let submitdata =  reactive({
             data:{
                 status: true,
+                shipping_price: 0,
             }
         });
+
+        // Initialize languages first
+        if (languages.value.length === 0) {
+            languages.value = JSON.parse(localStorage.getItem('languages')) || [];
+        }
+        
+        // Initialize langValidation with shipping_price
+        if (languages.value.length > 0) {
+            languages.value.forEach((el)=>{
+                submitdata.data[el.code]={title:''};
+                langValidation.value[el.code] ={
+                    title: {minLength: minLength(1),maxLength:maxLength(40),required,}
+                }
+            });
+        }
+        langValidation.value.shipping_price = {required, numeric};
 
         const rules = computed(() => {
             return {
@@ -184,6 +246,7 @@ export default {
            formData.append(`translations[${el.code}][title]`, this.data[el.code].title);
        })
         formData.append('status', this.data.status ? 1 : 0);
+        formData.append('shipping_price', this.data.shipping_price || 0);
         if (this.type !== 'edit') {
             if (!this.v$.$error) {
                 this.is_disabled = false;

@@ -39,6 +39,7 @@ class DatabaseSeeder extends Seeder
         $this->call(TermsConditionSeeder::class);
         $this->call(BlogSeeder::class);
         $this->call(UserProfileSeeder::class);
+        $this->call(SliderSeeder::class);
 
     }
 }

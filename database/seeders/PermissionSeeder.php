@@ -150,6 +150,12 @@ class PermissionSeeder extends Seeder
             ['name' => 'articleCategory edit',  'category' => 'Article Category'],
             ['name' => 'articleCategory delete',  'category' => 'Article Category'],
 
+            // Slider Permissions
+            ['name' => 'slider read',  'category' => 'Sliders'],
+            ['name' => 'slider create',  'category' => 'Sliders'],
+            ['name' => 'slider edit',  'category' => 'Sliders'],
+            ['name' => 'slider delete',  'category' => 'Sliders'],
+
         ];
 
         foreach ($permissions as $permission) {

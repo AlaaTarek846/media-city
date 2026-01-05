@@ -18,7 +18,10 @@ class UserResource extends JsonResource
         return [
             'id'              => $this->id,
             'name'            => $this->name,
-            'phone'            => $this->phone,
+            'mobile'          => $this->mobile,
+            'whatsapp'        => $this->whatsapp,
+            'user_type'       => $this->user_type,
+            'how_did_you_hear_about_us' => $this->how_did_you_hear_about_us,
             'email'           => $this->email ,
             'status'           => $this->status,
             "created_at"       => Carbon::createFromFormat('Y-m-d H:i:s', $this->created_at)->format('Y-m-d  (H:i)'),

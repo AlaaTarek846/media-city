@@ -138,10 +138,14 @@ export default function crud() {
 
     const debounce = ref({})
 
+    // Store getData reference for watcher
+    let getDataRef = getData;
+    
     watch([search,filterColumns], ([search,filter], [prevSearch,prevFilter]) => {
         clearTimeout(debounce.value);
         debounce.value = setTimeout(() => {
-            getData();
+            // Use the reference which can be overridden
+            getDataRef();
         }, 400);
      }, { deep: true });
 
@@ -149,6 +153,11 @@ export default function crud() {
 
 
 
+
+    // Function to override getData
+    const overrideGetData = (newGetData) => {
+        getDataRef = newGetData;
+    };
 
     return {
         errors,
@@ -166,6 +175,7 @@ export default function crud() {
         t,
         filter,
         getData,
+        overrideGetData,
         showEditMode,
         showModelCreate,
         deleteData,

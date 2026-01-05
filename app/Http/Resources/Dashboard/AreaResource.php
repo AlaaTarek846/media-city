@@ -14,6 +14,7 @@ class AreaResource extends JsonResource
             "id"  => $this->id,
             "title"     => $this->current_translation?->title,
             "status" => $this->status,
+            "shipping_price" => $this->shipping_price,
             "created_at" => Carbon::createFromFormat('Y-m-d H:i:s', $this->created_at)->format('Y-m-d  (H:i)'),
         ];
     }

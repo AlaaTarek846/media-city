@@ -2,12 +2,12 @@
     <div class="container-fluid">
         <!-- Page Header -->
         <div class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
-            <h1 class="page-title fw-semibold fs-18 mb-0">{{ $t('global.areas') }}</h1>
+            <h1 class="page-title fw-semibold fs-18 mb-0">{{ $t('global.governorate') }}</h1>
             <div class="ms-md-1 ms-0">
                 <nav>
                     <ol class="breadcrumb mb-0">
                         <li class="breadcrumb-item"><router-link :to="{name: 'dashboard'}">{{$t('global.home')}}</router-link></li>
-                        <li class="breadcrumb-item active" aria-current="page">{{ $t('global.areas') }}</li>
+                        <li class="breadcrumb-item active" aria-current="page">{{ $t('global.governorate') }}</li>
                     </ol>
                 </nav>
             </div>
@@ -34,6 +34,7 @@
                                 <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">{{ $t('label.title') }}</th>
+                                    <th scope="col">{{ $t('global.shipping_price') }}</th>
                                     <th scope="col">{{ $t('label.status') }}</th>
                                     <th scope="col">{{ $t('global.created_at') }}</th>
                                     <th scope="col">{{ $t('global.action') }}</th>
@@ -43,6 +44,7 @@
                                 <tr v-for="(item,index) in data" :key="item.id">
                                     <td scope="row">{{index + 1}}</td>
                                     <td>{{item.title}}</td>
+                                    <td>{{ item.shipping_price || 0 }} {{ $t('global.currency') }}</td>
                                     <td>
                                         <span class="badge rounded-pill bg-success-transparent" v-if="item.status">{{$t('global.activated')}}</span>
                                         <span class="badge rounded-pill bg-danger-transparent" v-else>{{$t('global.Inactive')}}</span>
@@ -64,7 +66,7 @@
                                 </tbody>
                                 <tbody v-else>
                                     <tr>
-                                        <th class="text-center" colspan="6">{{ $t('global.NoDataFound') }}</th>
+                                        <th class="text-center" colspan="7">{{ $t('global.NoDataFound') }}</th>
                                     </tr>
                                 </tbody>
                             </table>

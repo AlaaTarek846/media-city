@@ -40,6 +40,7 @@
                 <lang />
                 <!-- End::header-element -->
 
+                <NotificationAdmin />
                 <!-- Start::header-element -->
                 <div class="header-element header-theme-mode" >
                     <!-- Start::header-link|layout-setting -->

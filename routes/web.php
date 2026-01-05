@@ -12,6 +12,26 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('change-language/{locale}', [LanguageController::class, 'changeLanguage'])->name('change.language');
 
+// Pusher Test Page
+Route::get('pusher-test', function () {
+    return view('pusher-test');
+})->name('pusher.test');
+
+// Contact Form Test Page
+Route::get('test-contact-form', function () {
+    return view('test-contact-form');
+})->name('test.contact.form');
+
+// Notification Debug Test Page
+Route::get('test-notification-debug', function () {
+    return view('test-notification-debug');
+})->name('test.notification.debug');
+
+// Simple Notification Test Page
+Route::get('test-notification-simple', function () {
+    return view('test-notification-simple');
+})->name('test.notification.simple');
+
 // Dashboard admin
 Route::group(['middleware' => [ChangeLangForWeb::class]], function () {
 
@@ -49,7 +69,7 @@ Route::group(['middleware' => [ChangeLangForWeb::class]], function () {
 //        ->middleware('auth:user');
     Route::get('/checkout', [HomePageController::class, 'checkout'])->name('checkout')->middleware(AuthAndCartMiddleware::class);
     Route::get('/wishlist', [HomePageController::class, 'wishlist'])->name('wishlist');
-    Route::get('/checkout-thankyou', [HomePageController::class, 'checkoutThankyou'])->middleware('auth:user');
+    Route::get('/checkout-thankyou', [HomePageController::class, 'checkoutThankyou'])->name('checkoutThankyou')->middleware('auth:user');
     Route::get('/product-detail/{id}', [HomePageController::class, 'productDetail'])->name('productDetail');
     Route::get('/rent-retail/{id}', [HomePageController::class, 'rentDetail'])->name('rentDetail');
     // Shop route with department and category slugs (SEO-friendly URLs)
