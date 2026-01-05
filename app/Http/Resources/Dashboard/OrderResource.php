@@ -34,6 +34,8 @@ class OrderResource extends JsonResource
             "total"            => $this->total,
             "items"            => OrderItemResource::collection($this->orderItems),
             'order_status_id'   => $this->order_status_id,
+            'is_read'           => $this->is_read ?? false,
+            'read_at'           => $this->read_at ? Carbon::createFromFormat('Y-m-d H:i:s', $this->read_at)->format('Y-m-d  (H:i)') : null,
             'created_at'       => Carbon::createFromFormat('Y-m-d H:i:s', $this->created_at)->format('Y-m-d  (H:i)'),
         ];
     }

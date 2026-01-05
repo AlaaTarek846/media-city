@@ -14,11 +14,10 @@ class BannerSeeder extends Seeder
     {
         // Schema::disableForeignKeyConstraints();
         Banner::truncate();
-
         $Brand = Banner::create([
-            'image'   => 'slide-5.png',
+            'image'   => 'bannerHome.png',
+            "type"    => 'home',
         ]);
-
         $Brand->setTranslations([
             'ar' => [
                 'title' => 'الأناقة المعاد تعريفها',
@@ -32,7 +31,8 @@ class BannerSeeder extends Seeder
         ]);
 
         $Brand = Banner::create([
-            'image'   => 'slide-2.png',
+            'image'   => 'bannerShop.png',
+            "type"    => 'shop',
         ]);
 
         $Brand->setTranslations([
@@ -48,7 +48,9 @@ class BannerSeeder extends Seeder
         ]);
 
         $Brand = Banner::create([
-            'image'   => 'slide-3.png',
+            'image'   => 'bannerRenting.png',
+            "type"    => 'renting',
+
         ]);
 
         $Brand->setTranslations([
@@ -64,7 +66,8 @@ class BannerSeeder extends Seeder
         ]);
 
          $Brand = Banner::create([
-            'image'   => 'slide-4.png',
+            'image'   => 'bannerBestSellers.png',
+             "type"    => 'best_sellers',
         ]);
 
         $Brand->setTranslations([

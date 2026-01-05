@@ -19,7 +19,7 @@ class OrderShowResource extends JsonResource
             'id'              => $this->id,
             'user_id'            => $this->user_id,
             'user_name'            => $this->user?->name,
-            'user_phone'            => $this->user?->phone,
+            'user_phone'            => $this->user?->mobile,
             'user_email'            => $this->user?->email,
             'user_status'            => $this->user?->status,
             'order_number'            => $this->order_number,

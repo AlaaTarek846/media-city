@@ -17,6 +17,7 @@ import backup from "./adminRoute/backup.js";
 import frequentlyAskedQuestion from "./adminRoute/frequentlyAskedQuestion.js";
 import testimonial from "./adminRoute/testimonial.js";
 import brand from "./adminRoute/brand.js";
+import slider from "./adminRoute/slider.js";
 import news from "./adminRoute/news.js";
 import contactUs from "./adminRoute/contactUs.js";
 import contactMessage from "./adminRoute/contactMessage.js";
@@ -81,6 +82,7 @@ const routes = [
             ...frequentlyAskedQuestion,
             ...testimonial,
             ...brand,
+            ...slider,
             ...news,
             ...contactUs,
             ...contactMessage,

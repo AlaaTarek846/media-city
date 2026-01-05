@@ -70,8 +70,8 @@
                                                                     <div class="fs-15 form-label">{{ order?.address?.address }}</div>
                                                                 </div>
                                                                 <div class="col-md-12">
-                                                                    <label class="form-label fs-13 text-info"><i class="bx bx-id-card"></i> &nbsp;{{ $t("global.country&area") }}</label>
-                                                                    <div class="fs-15 form-label">{{ order?.address?.country }} / {{order?.address?.area}}</div>
+                                                                    <label class="form-label fs-13 text-info"><i class="bx bx-id-card"></i> &nbsp;{{ $t("global.governorate") }}</label>
+                                                                    <div class="fs-15 form-label"> {{order?.address?.area}}</div>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -82,29 +82,28 @@
                                                     <div class="d-flex flex-wrap align-items-top px-2 pt-2">
                                                         <div class="prism-toggle w-100">
                                                             <div class="row">
-                                                                <div class="col-md-12">
+                                                                <div class="col-md-3 mb-4">
                                                                     <label class="form-label fs-13 text-info">
-                                                                        <i class="bx bx-map-pin"></i> &nbsp;{{ $t("global.distinctive_mark") }}
+                                                                        <i class="bx bx-user"></i> &nbsp;{{ $t("global.recipient_name") }}
                                                                     </label>
-                                                                    <div class="fs-15 form-label">{{ order?.address?.distinctive_mark }}</div>
+                                                                    <div class="fs-15 form-label">{{ order?.address?.name || '---' }}</div>
                                                                 </div>
-                                                                <div class="col-md-4 border-end border-inline-end text-center">
+                                                                <div class="col-md-3 mb-4">
                                                                     <label class="form-label fs-13 text-info">
-                                                                        <i class='bx bx-buildings side-menu__icon text-info'></i>{{ $t('global.building_number') }}
+                                                                        <i class="bx bx-label"></i> &nbsp;{{ $t("global.address_type") }}
                                                                     </label>
-                                                                    <div class="role-description fs-14 form-label">{{order?.address?.building_number }}</div>
+                                                                    <div class="fs-15 form-label">{{ order?.address?.title || '---' }}</div>
                                                                 </div>
-                                                                <div class="col-md-4 border-end border-inline-end text-center">
+                                                                <div class="col-md-3 mb-4" v-if="order?.address?.lat && order?.address?.lng">
                                                                     <label class="form-label fs-13 text-info">
-                                                                        <i class="bx bx-building-house text-info"></i> {{ $t('global.floor_number') }}
+                                                                        <i class="bx bx-map"></i> الخريطة
                                                                     </label>
-                                                                    <div class="role-description fs-14 form-label">{{order?.address?.floor_number}}</div>
-                                                                </div>
-                                                                <div class="col-md-4 text-center">
-                                                                    <label class="form-label fs-13 text-info">
-                                                                        <i class="bx bx-home-alt side-menu__icon text-info"></i> {{ $t('global.apartment_number') }}
-                                                                    </label>
-                                                                    <div class="role-description fs-14 form-label">{{order?.address?.apartment_number}}</div>
+                                                                    <div class="fs-15 form-label">
+                                                                        
+                                                                        <a :href="`https://www.google.com/maps?q=${order?.address?.lat},${order?.address?.lng}`" target="_blank" class="ms-2 text-primary">
+                                                                            <i class="bx bx-link-external"></i> {{ $t("global.view_on_map") }}
+                                                                        </a>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -122,6 +121,11 @@
                                             <tr>
                                                 <th scope="col">{{$t('global.product')}}</th>
                                                 <th scope="col">{{$t('global.sku')}}</th>
+                                                <th scope="col">{{$t('global.department')}}</th>
+                                                <th scope="col">{{$t('global.condition')}}</th>
+                                                <th scope="col">{{$t('global.count_day')}}</th>
+                                                <th scope="col">{{$t('global.rental_start_date')}}</th>
+                                                <th scope="col">{{$t('global.note')}}</th>
                                                 <th scope="col">{{$t('global.Unit Price')}}</th>
                                                 <th scope="col">{{$t('global.quantity')}}</th>
                                                 <th scope="col">{{$t('global.TotalPrice')}}</th>
@@ -140,9 +144,9 @@
                                                             <div class="mb-1 fs-14 fw-semibold">
                                                                 <a href="javascript:void(0);">{{item.product}}</a>
                                                             </div>
-                                                            <div class="mb-1">
+                                                            <div class="mb-1" v-if="item.variant && item.variant !== '---'">
                                                                 <span class="me-1">{{$t('global.ProductAttributes')}} : </span>
-                                                                <span class="text-muted">{{item.variant ? item.variant : '---'}}
+                                                                <span class="text-muted">{{item.variant}}
                                                                     <span v-if="handleNumber(item.discount)" class="badge bg-info ms-3">{{handleNumber(item.discount)}} {{ setting?.translation?.title }} Off
                                                                     </span>
                                                                 </span>
@@ -158,6 +162,11 @@
                                                     </div>
                                                 </td>
                                                 <td><a href="javascript:void(0);" class="text-secondary">{{item.sku}}</a></td>
+                                                <td>{{item.department || '---'}}</td>
+                                                <td>{{getConditionLabel(item.condition)}}</td>
+                                                <td>{{item.count_day || '---'}}</td>
+                                                <td>{{item.start_date || '---'}}</td>
+                                                <td>{{item.note || '---'}}</td>
                                                 <td>
                                                     <span class="fs-15 fw-semibold">{{handleNumber(item.price)}} {{ setting?.translation?.title }}</span>
                                                 </td>
@@ -167,7 +176,7 @@
                                             
                                             
                                             <tr v-if="order.coupon_discount">
-                                                <td colspan="2"></td>
+                                                <td colspan="7"></td>
                                                 <td colspan="2">
                                                     <div class="fw-semibold">{{$t('global.coupon_discount')}} :</div>
                                                 </td>
@@ -185,7 +194,7 @@
                                                 </td>
                                             </tr> -->
                                             <tr>
-                                                <td colspan="2"></td>
+                                                <td colspan="7"></td>
                                                 <td colspan="2">
                                                     <div class="fw-semibold">{{$t('label.subTotal')}} :</div>
                                                 </td>
@@ -194,7 +203,7 @@
                                                 </td>
                                             </tr>
                                             <tr v-if="order.tax">
-                                                <td colspan="2"></td>
+                                                <td colspan="7"></td>
                                                 <td colspan="2">
                                                     <div class="fw-semibold">{{$t('global.tax')}} {{ ' ( ' + order?.tax_percentage +'%'+ ' )' }} :</div>
                                                 </td>
@@ -203,7 +212,7 @@
                                                 </td>
                                             </tr>
                                             <tr v-if="order.shipping_price">
-                                                <td colspan="2"></td>
+                                                <td colspan="7"></td>
                                                 <td colspan="2">
                                                     <div class="fw-semibold">{{$t('global.Shipping')}} :</div>
                                                 </td>
@@ -212,7 +221,7 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td colspan="2"></td>
+                                                <td colspan="7"></td>
                                                 <td colspan="2">
                                                     <div class="fw-semibold">{{$t('global.total')}} :</div>
                                                 </td>
@@ -302,6 +311,16 @@ export default {
                 : parseFloat(approxNumber).toFixed(2);
         }
 
+        function getConditionLabel(condition) {
+            if (!condition) return '---';
+            const conditionMap = {
+                'new': t('global.new'),
+                'used': t('global.used'),
+                'rent': t('global.rent')
+            };
+            return conditionMap[condition.toLowerCase()] || condition;
+        }
+
         let printData = () => {
             const appBanners = document.querySelectorAll('.data-print-headen');
             appBanners.forEach((el) => {
@@ -317,7 +336,7 @@ export default {
         };
 
 
-        return {t, id, loading,order,handleNumber,setting,product_price,printData};
+        return {t, id, loading,order,handleNumber,setting,product_price,printData,getConditionLabel};
     }
 }
 </script>

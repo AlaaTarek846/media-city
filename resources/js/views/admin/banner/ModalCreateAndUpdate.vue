@@ -49,6 +49,23 @@
                             </template>
                         </div>
 
+                        <div class="col-md-6 mt-2">
+                            <label class="form-label">{{ $t('label.type') }}</label>
+                            <select class="form-select" v-model="data.type"
+                                    :class="{'is-invalid': errors['type'], 'is-valid': !errors['type']}">
+                                <option value="">{{ $t('label.selectType') }}</option>
+                                <option value="shop">{{ $t('label.bannerType.shop') }}</option>
+                                <option value="renting">{{ $t('label.bannerType.renting') }}</option>
+                                <option value="best_sellers">{{ $t('label.bannerType.best_sellers') }}</option>
+                                <option value="home">{{ $t('label.bannerType.home') }}</option>
+                            </select>
+                            <template v-if="errors['type']">
+                                <error-message v-for="(errorMessage, index) in errors['type']" :key="index">
+                                    {{ errorMessage }}
+                                </error-message>
+                            </template>
+                        </div>
+
                         <!-- <div class="col-md-6 mt-2">
                             <div class="custom-toggle-switch d-flex align-items-center my-4 ">
                                 <input id="toggleswitchPrimary" v-model="data.status" type="checkbox">
@@ -172,6 +189,7 @@ export default {
            });
 
            submitdata.data.status = true;
+           submitdata.data.type = 'home';
            imageUpload.value = '';
            is_disabled.value = false;
            image.value=null
@@ -195,6 +213,7 @@ export default {
                             }
                         });
                         submitdata.data.status = l.status==1;
+                        submitdata.data.type = l.type || 'home';
                         imageUpload.value = l.image
                     })
                     .catch((err) => {
@@ -217,6 +236,7 @@ export default {
         let submitdata =  reactive({
             data:{
                 status: true,
+                type: 'home',
             }
         });
 
@@ -300,6 +320,7 @@ export default {
            formData.append(`translations[${el.code}][description]`, this.data[el.code].description);
        })
         formData.append('status', this.data.status ? 1 : 0);
+        formData.append('type', this.data.type);
         if (this.image) {
             formData.append('image', this.image);
         }

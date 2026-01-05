@@ -45,43 +45,43 @@
                         </div>
 
 
-                        <div class="col-md-12 mt-3 row flex-fill">
-                            <div class="btn btn-outline-light waves-effect"  style="width: 90%; height:90%">
+<!--                        <div class="col-md-12 mt-3 row flex-fill">-->
+<!--                            <div class="btn btn-outline-light waves-effect"  style="width: 90%; height:90%">-->
 
-                                <span v-if="type != 'edit' && !numberOfImage"  style="width: 90%; height: 90%; margin-top: 30%">
-                                    {{$t('global.ChooseImages')}}
-                                    <br><i class="bi bi-cloud-upload fs-40" ></i>
-                                    <i class="fas fa-cloud-upload-alt ml-3" aria-hidden="true"></i>
-                                </span>
+<!--                                <span v-if="type != 'edit' && !numberOfImage"  style="width: 90%; height: 90%; margin-top: 30%">-->
+<!--                                    {{$t('global.ChooseImages')}}-->
+<!--                                    <br><i class="bi bi-cloud-upload fs-40" ></i>-->
+<!--                                    <i class="fas fa-cloud-upload-alt ml-3" aria-hidden="true"></i>-->
+<!--                                </span>-->
 
-                                <div id="container-images" v-show="image &&numberOfImage"></div>
+<!--                                <div id="container-images" v-show="image &&numberOfImage"></div>-->
 
-                                <div  v-if="type == 'edit'" v-show="!numberOfImage">
-                                    <figure>
-                                        <figcaption>
-                                            <img class="img-fluid rounded" style="max-width: 150px; height: 150px" :src="`${imageUpload}`">
-                                        </figcaption>
-                                    </figure>
-                                </div>
-                                <input name="mediaPackage" type="file" @change="preview" id="mediaPackage" accept="image/*">
+<!--                                <div  v-if="type == 'edit'" v-show="!numberOfImage">-->
+<!--                                    <figure>-->
+<!--                                        <figcaption>-->
+<!--                                            <img class="img-fluid rounded" style="max-width: 150px; height: 150px" :src="`${imageUpload}`">-->
+<!--                                        </figcaption>-->
+<!--                                    </figure>-->
+<!--                                </div>-->
+<!--                                <input name="mediaPackage" type="file" @change="preview" id="mediaPackage" accept="image/*">-->
 
-                                <template v-if="errors['file']">
-                                    <error-message v-for="(errorMessage, index) in errors['file']" :key="index">
-                                        {{ errorMessage }}
-                                    </error-message>
-                                </template>
-                                    <template class="text-danger text-center" v-if="requiredn">
-                                        <error-message>{{$t('global.ImagesIsMustHaveAtLeast1Photos')}}<br /></error-message>
-                                    </template>
-                            </div>
-                            <p class="num-of-files">{{numberOfImage ? numberOfImage + $t('global.FilesSelected') : $t('global.NoFilesChosen') }}</p>
+<!--                                <template v-if="errors['file']">-->
+<!--                                    <error-message v-for="(errorMessage, index) in errors['file']" :key="index">-->
+<!--                                        {{ errorMessage }}-->
+<!--                                    </error-message>-->
+<!--                                </template>-->
+<!--                                    <template class="text-danger text-center" v-if="requiredn">-->
+<!--                                        <error-message>{{$t('global.ImagesIsMustHaveAtLeast1Photos')}}<br /></error-message>-->
+<!--                                    </template>-->
+<!--                            </div>-->
+<!--                            <p class="num-of-files">{{numberOfImage ? numberOfImage + $t('global.FilesSelected') : $t('global.NoFilesChosen') }}</p>-->
 
-                            <template v-if="errors[`image`]">
-                                <error-message v-for="(errorMessage, index) in errors[`image`]" :key="index">
-                                    {{ errorMessage }}
-                                </error-message>
-                            </template>
-                        </div>
+<!--                            <template v-if="errors[`image`]">-->
+<!--                                <error-message v-for="(errorMessage, index) in errors[`image`]" :key="index">-->
+<!--                                    {{ errorMessage }}-->
+<!--                                </error-message>-->
+<!--                            </template>-->
+<!--                        </div>-->
 
 
                     </div>

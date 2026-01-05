@@ -33,7 +33,7 @@
                                 <thead>
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th scope="col">{{ $t('global.image') }}</th>
+<!--                                    <th scope="col">{{ $t('global.image') }}</th>-->
                                     <th scope="col">{{ $t('label.title') }}</th>
                                     <th scope="col">{{ $t('global.status') }}</th>
                                     <th scope="col">{{ $t('global.action') }}</th>
@@ -42,15 +42,15 @@
                                 <tbody v-if="data && data.length">
                                 <tr v-for="(item,index) in data" :key="item.id">
                                    <td scope="row">{{index + 1}}</td>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="me-3">
-                                                <span class="avatar  bg-light">
-                                                    <img :src='item.image' alt="" style="width: auto; height: 100%">
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </td>
+<!--                                    <td>-->
+<!--                                        <div class="d-flex align-items-center">-->
+<!--                                            <div class="me-3">-->
+<!--                                                <span class="avatar  bg-light">-->
+<!--                                                    <img :src='item.image' alt="" style="width: auto; height: 100%">-->
+<!--                                                </span>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </td>-->
                                     <td>{{item.title}}</td>
                                     <td>
                                         <span class="badge rounded-pill bg-success-transparent" v-if="item.status">{{$t('global.activated')}}</span>

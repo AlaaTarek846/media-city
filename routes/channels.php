@@ -30,3 +30,12 @@ Broadcast::channel('Modules.Rest.Models.RestOwner.{id}', function ($user, $id) {
 Broadcast::channel('Modules.Store.Models.StrOwner.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 }, ['guards' => ['store_api']]);
+
+// Admin notifications channel - public channel (no authentication required)
+// Note: Since we're using public Channel instead of PrivateChannel, 
+// we don't need authorization here. The channel is public but only admins will listen to it.
+
+// Test channel for public testing
+Broadcast::channel('test-channel', function () {
+    return true;
+});

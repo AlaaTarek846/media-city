@@ -25,10 +25,13 @@ use App\Http\Controllers\Dashboard\NewsController;
 use App\Http\Controllers\Dashboard\NewsletterController;
 use App\Http\Controllers\Dashboard\NotificationController;
 use App\Http\Controllers\Dashboard\OrderController;
+use App\Http\Controllers\Web\CouponController;
+use App\Http\Controllers\Web\OrderController as WebOrderController;
 use App\Http\Controllers\Dashboard\ProfileController;
 use App\Http\Controllers\Dashboard\RoleController;
 use App\Http\Controllers\Dashboard\SendNotificationController;
 use App\Http\Controllers\Dashboard\SettingController;
+use App\Http\Controllers\Dashboard\SliderController;
 use App\Http\Controllers\Dashboard\TestimonialController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Dashboard\ProductAttributeController;
@@ -54,6 +57,7 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:admin_api');
 
 
+
 Route::group(['prefix' => 'web', 'middleware' => [ChangeLang::class,StartSession::class,EncryptCookies::class]], function () {
 
     Route::get('categories-of-participation',[RegisterController::class,'getCategoriesOfParticipation']);
@@ -64,12 +68,12 @@ Route::group(['prefix' => 'web', 'middleware' => [ChangeLang::class,StartSession
     Route::post('complete-register',[RegisterController::class,'completeRegister'])->middleware(['auth:user']);
     Route::post('contact-us',[HomePageController::class,'contactUsForm']);
     Route::post('login',[RegisterController::class,'loginForm'])->middleware(['guest:user','throttle:login']);
-    
+
     // Password Reset Routes
     Route::post('password/email',[RegisterController::class,'sendResetLinkEmail'])->middleware(['guest:user']);
     Route::get('password/reset',[RegisterController::class,'showResetForm'])->middleware(['guest:user'])->name('password.reset');
     Route::post('password/reset',[RegisterController::class,'reset'])->middleware(['guest:user']);
-    
+
      Route::get('/show-product/{id}', [HomePageController::class, 'showProduct']);
      Route::get('/product-modal/{id}', [HomePageController::class, 'getProductForModal']); // AJAX endpoint for quick view modal
      Route::get('/shop-products', [HomePageController::class, 'getShopProducts']); // AJAX endpoint for shop filtering
@@ -91,13 +95,17 @@ Route::group(['prefix' => 'web', 'middleware' => [ChangeLang::class,StartSession
     Route::get('/get-favorites', [FavoriteController::class, 'index'])->middleware('auth:user');
     Route::post('/add-favorites', [FavoriteController::class, 'store'])->middleware('auth:user');
     Route::delete('/delete-favorite/{id}', [FavoriteController::class, 'destroy'])->middleware('auth:user');
-    
+
     // Wishlist routes
     Route::post('/wishlist/add', [FavoriteController::class, 'addToWishlist'])->middleware('auth:user');
     Route::post('/wishlist/sync', [FavoriteController::class, 'syncWishlist'])->middleware('auth:user');
     Route::get('/wishlist/check/{productId}', [FavoriteController::class, 'checkWishlist'])->middleware('auth:user');
     Route::get('/wishlist/products', [FavoriteController::class, 'getWishlistProducts'])->middleware('auth:user');
     Route::post('/wishlist/products-by-ids', [FavoriteController::class, 'getProductsByIds']);
+
+    Route::post('/add-order', [WebOrderController::class, 'store'])->middleware('auth:user');
+    Route::post('/order/update-status/{id}', [WebOrderController::class, 'updateStatus'])->middleware('auth:user');
+    Route::post('/check-coupon-order', [CouponController::class, 'checkCoupon'])->middleware('auth:user');
 
     Route::get('/get-carts', [CartController::class, 'index'])->middleware('auth:user');
     Route::post('/add-carts', [CartController::class, 'store'])->middleware('auth:user');
@@ -197,12 +205,15 @@ Route::group(['prefix' => 'dashboard', 'middleware' => [ChangeLang::class]], fun
 
         // contact-message
         Route::apiResource('contact-message', ContactMessageController::class);
+        Route::post('contact-message/{id}/read', [ContactMessageController::class, 'markAsRead']);
 
         // newsletter
         Route::apiResource('newsletter', NewsletterController::class);
 
         // about-us
         Route::apiResource('about-us', AboutUsController::class);
+
+        Route::apiResource('sliders', SliderController::class);
 
         // vision
         Route::apiResource('vision', VisionController::class);
@@ -219,13 +230,30 @@ Route::group(['prefix' => 'dashboard', 'middleware' => [ChangeLang::class]], fun
         // order
         Route::resource('order', OrderController::class);
         Route::get('orderStatus',[OrderController::class,'orderStatus']);
+        Route::post('order/{id}/read',[OrderController::class,'markAsRead']);
+        Route::get('order/unread-count',[OrderController::class,'getUnreadCount']);
 
         Route::controller(NotificationController::class)->group(function () {
             Route::get('getAllNot', 'getAllNot');
             Route::get('getNotNotRead', 'getNotNotRead');
             Route::post('clearItem/{id}', 'clearItem');
             Route::post('getNotNotRead', 'clearAll');
+
+            // Contact Messages Notifications
+            Route::get('notifications', 'getContactMessages');
+            Route::post('notifications/{id}/read', 'markAsRead');
+            Route::get('notifications/unread-count', 'getUnreadCount');
         });
+
+        // Pusher Test Routes
+        Route::post('test-pusher', [\App\Http\Controllers\Dashboard\PusherTestController::class, 'testPusher']);
+        Route::post('test-pusher-private', [\App\Http\Controllers\Dashboard\PusherTestController::class, 'testPrivateChannel'])->middleware('auth:admin_api');
+
+        // Contact Message Test Routes
+        Route::post('test-contact-message', [\App\Http\Controllers\Dashboard\TestContactMessageController::class, 'testContactMessage'])->middleware('auth:admin_api');
+        Route::get('test-notification-flow', [\App\Http\Controllers\Dashboard\TestNotificationController::class, 'testCompleteFlow'])->middleware('auth:admin_api');
+        Route::get('test-all-messages', [\App\Http\Controllers\Dashboard\TestNotificationController::class, 'getAllMessages'])->middleware('auth:admin_api');
+        Route::post('test-event-dispatch', [\App\Http\Controllers\Dashboard\TestNotificationController::class, 'testEventDispatch'])->middleware('auth:admin_api');
 
         Route::put('update-admin-profile', [ProfileController::class,'updateAdminProfile']);
 

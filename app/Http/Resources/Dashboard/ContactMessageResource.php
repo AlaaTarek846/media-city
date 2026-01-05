@@ -22,6 +22,8 @@ class ContactMessageResource extends JsonResource
             'email'      => $this->email,
             'subject'      => $this->subject,
             'message'      => $this->message,
+            'is_read'      => $this->is_read ?? false,
+            'read_at'      => $this->read_at ? Carbon::createFromFormat('Y-m-d H:i:s', $this->read_at)->format('Y-m-d  (H:i)') : null,
             "created_at" => Carbon::createFromFormat('Y-m-d H:i:s', $this->created_at)->format('Y-m-d  (H:i)'),
         ];
     }

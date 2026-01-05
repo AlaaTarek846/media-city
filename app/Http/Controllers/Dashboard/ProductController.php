@@ -76,9 +76,18 @@ class ProductController extends Controller implements HasMiddleware
 
         // حفظ Variants
         foreach ($request->variant as $variant) {
+            $attributeValues = $variant['attribute_values'] ?? '';
+            // Convert empty string to null for JSON column
+            if ($attributeValues === '' || $attributeValues === null) {
+                $attributeValues = null;
+            } else {
+                // If it's a string, convert it to array for JSON storage
+                $attributeValues = is_string($attributeValues) ? [$attributeValues] : $attributeValues;
+            }
+            
             $variantData = [
                 'sku' => $variant['sku'] ?? '',
-                'attribute_values' => $variant['attribute_values'] ?? '',
+                'attribute_values' => $attributeValues,
                 'discount_percentage' => $variant['discount_percentage'] ?? 0,
                 'quantity' => $variant['quantity'] ?? 0,
                 'status' => $variant['status'] ?? true,
@@ -160,37 +169,71 @@ class ProductController extends Controller implements HasMiddleware
             }
         }
 
-        // حفظ Variants
+        // حفظ Variants - تعديل على القديم فقط
         foreach ($request->variant as $variant) {
-            $variantData = [
-                'sku' => $variant['sku'] ?? '',
-                'attribute_values' => $variant['attribute_values'] ?? '',
-                'discount_percentage' => $variant['discount_percentage'] ?? 0,
-                'quantity' => $variant['quantity'] ?? 0,
-                'status' => $variant['status'] ?? true,
-            ];
+            $updateProduct = $product->variants()->first();
             
-            // إضافة الحقول حسب department_id
-            if ($data['department_id'] == 1 || $data['department_id'] == 2) {
-                $price = floatval($variant['price'] ?? 0);
-                $discountPercentage = floatval($variant['discount_percentage'] ?? 0);
-                
-                // إعادة حساب السعر والسعر قبل الخصم
-                if ($discountPercentage > 0 && $discountPercentage <= 100 && $price > 0) {
-                    // حساب السعر قبل الخصم: السعر قبل الخصم = السعر + (السعر × نسبة الخصم / 100)
-                    $discountAmount = ($price * $discountPercentage) / 100;
-                    $priceBeforeDiscount = $price + $discountAmount;
+            if (!$updateProduct) {
+                // إذا لم يكن هناك variant موجود، ننشئ واحد جديد
+                $attributeValues = $variant['attribute_values'] ?? '';
+                if ($attributeValues === '' || $attributeValues === null) {
+                    $attributeValues = null;
                 } else {
-                    // إذا لم يكن هناك خصم، السعر قبل الخصم = 0
-                    $priceBeforeDiscount = 0;
+                    $attributeValues = is_string($attributeValues) ? [$attributeValues] : $attributeValues;
                 }
                 
-                $variantData['price'] = $price;
-                $variantData['price_before_discount'] = $priceBeforeDiscount;
+                $variantData = [
+                    'sku' => $variant['sku'] ?? '',
+                    'attribute_values' => $attributeValues,
+                    'discount_percentage' => $variant['discount_percentage'] ?? 0,
+                    'quantity' => $variant['quantity'] ?? 0,
+                    'status' => $variant['status'] ?? true,
+                ];
+                
+                if ($data['department_id'] == 1 || $data['department_id'] == 2) {
+                    $price = floatval($variant['price'] ?? 0);
+                    $discountPercentage = floatval($variant['discount_percentage'] ?? 0);
+                    
+                    if ($discountPercentage > 0 && $discountPercentage <= 100 && $price > 0) {
+                        $priceBeforeDiscount = ($price * $discountPercentage) / 100;
+                        $variantData['price'] = $price;
+                        $variantData['price_before_discount'] = ($data['department_id'] == 1 || $data['department_id'] == 2) && $discountPercentage > 0 ? $price + $priceBeforeDiscount : 0;
+                    } else {
+                        $variantData['price'] = $price;
+                        $variantData['price_before_discount'] = 0;
+                    }
+                }
+                
+                $product->variants()->create($variantData);
+            } else {
+                // تعديل على القديم
+                $attributeValues = $variant['attribute_values'] ?? '';
+                if ($attributeValues === '' || $attributeValues === null) {
+                    $attributeValues = null;
+                } else {
+                    $attributeValues = is_string($attributeValues) ? [$attributeValues] : $attributeValues;
+                }
+                
+                $price = floatval($variant['price'] ?? 0);
+                $discountPercentage = floatval($variant['discount_percentage'] ?? 0);
+                $priceBeforeDiscount = $price * ($discountPercentage / 100);
+                
+                $updateData = [
+                    'sku' => $variant['sku'] ?? '',
+                    'attribute_values' => $attributeValues,
+                    'discount_percentage' => $discountPercentage,
+                    'quantity' => $variant['quantity'] ?? 0,
+                    'status' => $variant['status'] ?? true,
+                ];
+                
+                // إضافة الحقول حسب department_id
+                if ($data['department_id'] == 1 || $data['department_id'] == 2) {
+                    $updateData['price'] = $price;
+                    $updateData['price_before_discount'] = ($data['department_id'] == 1 || $data['department_id'] == 2) && $discountPercentage > 0 ? $price + $priceBeforeDiscount : 0;
+                }
+                
+                $updateProduct->update($updateData);
             }
-            
-
-            $product->variant()->update($variantData);
         }
 
         return responseJson($product,'Updated Successfully',200);

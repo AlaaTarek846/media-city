@@ -16,6 +16,7 @@ class BannerResource extends JsonResource
             "description" => $this->current_translation?->description,
             "image" => $this->image.'',
             "status" => $this->status,
+            "type" => $this->type,
             "created_at" => Carbon::createFromFormat('Y-m-d H:i:s', $this->created_at)->format('Y-m-d  (H:i)'),
         ];
     }
