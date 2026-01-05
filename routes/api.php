@@ -25,6 +25,8 @@ use App\Http\Controllers\Dashboard\NewsController;
 use App\Http\Controllers\Dashboard\NewsletterController;
 use App\Http\Controllers\Dashboard\NotificationController;
 use App\Http\Controllers\Dashboard\OrderController;
+use App\Http\Controllers\Web\CouponController;
+use App\Http\Controllers\Web\OrderController as WebOrderController;
 use App\Http\Controllers\Dashboard\ProfileController;
 use App\Http\Controllers\Dashboard\RoleController;
 use App\Http\Controllers\Dashboard\SendNotificationController;
@@ -54,6 +56,9 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:admin_api');
 
+Route::post('/add-order', [WebOrderController::class, 'store']);
+Route::post('/order/update-status/{id}', [WebOrderController::class, 'updateStatus']);
+Route::post('/check-coupon-order', [CouponController::class, 'checkCoupon']);
 
 Route::group(['prefix' => 'web', 'middleware' => [ChangeLang::class,StartSession::class,EncryptCookies::class]], function () {
 
@@ -223,6 +228,8 @@ Route::group(['prefix' => 'dashboard', 'middleware' => [ChangeLang::class]], fun
         // order
         Route::resource('order', OrderController::class);
         Route::get('orderStatus',[OrderController::class,'orderStatus']);
+        Route::post('order/{id}/read',[OrderController::class,'markAsRead']);
+        Route::get('order/unread-count',[OrderController::class,'getUnreadCount']);
 
         Route::controller(NotificationController::class)->group(function () {
             Route::get('getAllNot', 'getAllNot');

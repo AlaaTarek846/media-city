@@ -147,7 +147,6 @@
                                                                                 <th>{{$t('global.applied_coupon')}}</th>
                                                                                 <th>{{$t('global.Discounts')}}</th>
                                                                                 <th>{{$t('global.sub_total')}}</th>
-                                                                                <th>{{$t('global.tax')}}</th>
                                                                                 <th>{{$t('global.Shipping')}}</th>
                                                                                 <th>{{$t('global.total')}}</th>
                                                                                 <th>{{$t('global.created_at')}}</th>
@@ -168,6 +167,12 @@
                                                                                             <li v-for="item in order.items" :key="item.id">
                                                                                                 {{ item.product }} <span> {{ item.quantity }} </span>
                                                                                                 <span v-if="item.price">x {{ item.price }} </span>
+                                                                                                <span v-if="item.condition" class="ms-2">
+                                                                                                    <span class="badge bg-info-transparent">{{ $t('global.condition') }}: {{ $t('global.' + item.condition) }}</span>
+                                                                                                </span>
+                                                                                                <span v-if="item.department" class="ms-2">
+                                                                                                    <span class="badge bg-primary-transparent">{{ $t('global.department') }}: {{ item.department }}</span>
+                                                                                                </span>
                                                                                             </li>
                                                                                         </ul>
                                                                                     </div>
@@ -183,9 +188,6 @@
                                                                                 </td>
                                                                                 <td>
                                                                                     {{ order.sub_total ? order.sub_total : '---' }}
-                                                                                </td>
-                                                                                <td>
-                                                                                    {{ order.tax ? order.tax + ' ( ' + order.tax_percentage +'%'+ ' )' : '---' }}
                                                                                 </td>
                                                                                 <td>
                                                                                     {{ order.shipping_price ? order.shipping_price : '---' }}

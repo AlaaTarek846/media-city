@@ -3,22 +3,54 @@
         <!-- Start::header-link|dropdown-toggle -->
         <a href="javascript:void(0);" class="header-link dropdown-toggle" data-bs-toggle="dropdown" data-bs-auto-close="outside" id="messageDropdown" aria-expanded="false">
             <i class="bx bx-bell header-link-icon"></i>
-            <span v-if="contactMessagesUnreadCount > 0" class="badge bg-secondary rounded-pill header-icon-badge pulse pulse-secondary" id="notification-icon-badge">{{ contactMessagesUnreadCount }}</span>
+            <span v-if="(contactMessagesUnreadCount + ordersUnreadCount) > 0" class="badge bg-secondary rounded-pill header-icon-badge pulse pulse-secondary" id="notification-icon-badge">{{ contactMessagesUnreadCount + ordersUnreadCount }}</span>
         </a>
         <!-- End::header-link|dropdown-toggle -->
         <!-- Start::main-header-dropdown -->
         <div class="main-header-dropdown dropdown-menu dropdown-menu-end" data-popper-placement="none">
             <div class="p-3">
                 <div class="d-flex align-items-center justify-content-between">
-                    <p class="mb-0 fs-17 fw-semibold">{{ $t("notification.contact_messages_notifications")}}</p>
-                    <span class="badge bg-secondary-transparent" id="notifiation-data">{{ contactMessagesUnreadCount }} {{$t('notification.unRead')}}</span>
+                    <p class="mb-0 fs-17 fw-semibold">{{ $t("notification.notifications")}}</p>
+                    <span class="badge bg-secondary-transparent" id="notifiation-data">{{ contactMessagesUnreadCount + ordersUnreadCount }} {{$t('notification.unRead')}}</span>
                 </div>
             </div>
             <div class="dropdown-divider"></div>
-            <template v-if="contactMessages.length > 0">
+            <template v-if="(contactMessages.length + orders.length) > 0">
                 <ul class="list-unstyled mb-0 overflow-scroll" id="header-notification-scroll">
-                    <li class="dropdown-item" :key="index" v-for="(message, index) in contactMessages" :class="{'opacity-50': message.is_read}">
-                        <div class="d-flex align-items-start" >
+                    <!-- Orders -->
+                    <li class="dropdown-item" :key="'order-' + index" v-for="(order, index) in orders">
+                        <div class="d-flex align-items-start">
+                            <div class="pe-2">
+                                <span class="avatar avatar-md bg-success-transparent avatar-rounded">
+                                    <i class="bx bx-shopping-bag fs-18"></i>
+                                </span>
+                            </div>
+                            <div class="flex-grow-1 d-flex align-items-center justify-content-between">
+                                <div>
+                                    <p class="mb-0 fw-semibold">
+                                        <router-link
+                                            :to="{
+                                                name: 'order',
+                                            }"
+                                            @click="ordersUnreadCount = Math.max(0, ordersUnreadCount - 1)"
+                                        >
+                                            {{ $t("notification.new_order") }} - {{ order.order_number }}
+                                        </router-link>
+                                    </p>
+                                    <p class="mb-0 text-muted fs-12">
+                                        {{ order.user_name }}
+                                    </p>
+                                    <p class="mb-0 text-muted fs-11 mt-1">
+                                        {{ $t("global.total") }}: {{ order.total }}
+                                    </p>
+                                    <span class="text-muted fw-normal fs-12 header-notification-text">{{ order.created_at }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <!-- Contact Messages -->
+                    <li class="dropdown-item" :key="'message-' + index" v-for="(message, index) in contactMessages" :class="{'opacity-50': message.is_read}">
+                        <div class="d-flex align-items-start">
                             <div class="pe-2">
                                 <span class="avatar avatar-md bg-primary-transparent avatar-rounded">
                                     <i class="bx bx-envelope fs-18"></i>
@@ -61,18 +93,26 @@
                     <span class="avatar avatar-xl avatar-rounded bg-secondary-transparent">
                         <i class="ri-notification-off-line fs-2"></i>
                     </span>
-                    <h6 class="fw-semibold mt-3">{{ $t("notification.no_new_contact_messages") }}</h6>
+                    <h6 class="fw-semibold mt-3">{{ $t("notification.NoNewNotifications") }}</h6>
                 </div>
             </div>
             <div class="p-3 empty-header-item1 border-top">
-                <div class="d-grid">
+                <div class="d-grid gap-2">
                     <router-link
                         class="btn btn-primary"
                         :to="{
                             name: 'contactMessage',
                         }"
                     >
-                        {{ $t("global.view_all_notifications") }}
+                        {{ $t("notification.view_all_contact_messages") }}
+                    </router-link>
+                    <router-link
+                        class="btn btn-success"
+                        :to="{
+                            name: 'order',
+                        }"
+                    >
+                        {{ $t("notification.view_all_orders") }}
                     </router-link>
                 </div>
             </div>
@@ -92,6 +132,8 @@ export default {
     setup() {
         let contactMessages = ref([]);
         let contactMessagesUnreadCount = ref(0);
+        let orders = ref([]);
+        let ordersUnreadCount = ref(0);
         const store = useStore();
         const { t, locale } = useI18n();
         const admin = store.state?.authAdmin?.user;
@@ -251,6 +293,50 @@ export default {
                                 positionClass: locale.value === "en" ? "topLeft" : "topRight",
                             });
                         }
+                    })
+                    .listen('.order.created', (data) => {
+                        // Log received data to console
+                        console.log('🔔 Received order notification:', data);
+
+                        // Add new order to the list
+                        const newOrder = {
+                            id: data.id,
+                            order_number: data.order_number,
+                            user_name: data.user_name,
+                            user_phone: data.user_phone,
+                            user_email: data.user_email,
+                            total: data.total,
+                            order_status: data.order_status,
+                            created_at: new Date(data.created_at).toLocaleString('ar-EG', {
+                                year: 'numeric',
+                                month: '2-digit',
+                                day: '2-digit',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            })
+                        };
+
+                        // Add to orders list
+                        orders.value.unshift(newOrder);
+
+                        // Update unread count (increment)
+                        ordersUnreadCount.value += 1;
+
+                        // Keep only last 5 orders
+                        if (orders.value.length > 5) {
+                            orders.value = orders.value.slice(0, 5);
+                        }
+
+                        // Show toast notification if available
+                        if (typeof VanillaToasts !== 'undefined') {
+                            VanillaToasts.create({
+                                title: t('notification.new_order'),
+                                text: `${data.order_number} - ${data.user_name}`,
+                                type: "success",
+                                timeout: 5000,
+                                positionClass: locale.value === "en" ? "topLeft" : "topRight",
+                            });
+                        }
                     });
 
                 console.log('✅ Successfully subscribed to admin.notifications channel');
@@ -325,6 +411,8 @@ export default {
         return {
             contactMessages,
             contactMessagesUnreadCount,
+            orders,
+            ordersUnreadCount,
             markAsRead,
             fetchUnreadCount,
             fetchRecentMessages
