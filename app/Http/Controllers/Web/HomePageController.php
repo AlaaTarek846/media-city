@@ -46,45 +46,77 @@ class HomePageController extends Controller
     public function index(Request $request)
     {
         $banners  =  Banner::latest()->get();
-        $categories = Category::whereStatus(1)
-            ->withCount('products')
-            ->latest()
-            ->get();
-        $brands = Brand::whereStatus(1)->latest()->get();
-        $shopInstagram = ShopByInstagram::all();
 
-        $newArrivals = Product::whereStatus(1)
-            ->with(['variants', 'translation'])
+        // Get 7 categories for Shop By Categories section
+        $shopByDepartment = Department::whereStatus(1)->whereId(2)->with(['translation'])
+            ->withWhereHas('categories',function ($q) {
+                $q->where('department_id',2)->with('translation')->take(7);
+            })
             ->latest()
-            ->take(8)
-            ->get();
-        $bestSellers = Product::whereStatus(1)->with(['variants', 'translation'])
-            ->latest()
-            ->take(8)
-            ->get();
+            ->first();
 
-        $trending = Product::whereStatus(1)->with(['variants', 'translation'])
-            ->latest()
-            ->take(8)
-            ->get();
-
-        $offers = Product::whereStatus(1)->with(['variants', 'translation'])
-            ->latest()
-            ->take(8)
-            ->get();
-
-        $justForYouProducts = Product::whereStatus(1)
-            ->whereHas('variants', function ($query) {
-            $query->where('discount_percentage', '>', 0);
+        // Get deal products (products with discount)
+        $dealProducts = Product::whereStatus(1)->whereHas('variants', function ($query) {
+                $query->where('discount_percentage', '>', 0);
             })
             ->with(['variants' => function ($query) {
-                $query->where('discount_percentage', '>', 0)->orderByDesc('discount_percentage')->limit(1);
-            }])
+                $query->where('discount_percentage', '>', 0)
+                      ->orderByDesc('discount_percentage')
+                      ->limit(1);
+            }, 'translation'])
             ->inRandomOrder()
-            ->take(6)
+            ->take(4)
             ->get();
 
-        return view('website.home',compact('banners','brands','categories','shopInstagram','newArrivals','bestSellers','trending','offers','justForYouProducts'));
+        // Get best seller products (products with most order items)
+        $bestSellerProducts = Product::whereStatus(1)
+            ->with(['variants' => function ($query) {
+                $query->where('status', 1)->orderBy('price')->limit(1);
+            }, 'translation', 'department', 'category'])
+            ->withCount('orderItems')
+            ->orderByDesc('order_items_count')
+            ->take(10)
+            ->get();
+
+        // If we don't have 10 best sellers, fill with latest products
+        if ($bestSellerProducts->count() < 10) {
+            $remaining = 10 - $bestSellerProducts->count();
+            $latestProducts = Product::whereStatus(1)
+                ->whereNotIn('id', $bestSellerProducts->pluck('id'))
+                ->with(['variants' => function ($query) {
+                    $query->where('status', 1)->orderBy('price')->limit(1);
+                }, 'translation', 'department', 'category'])
+                ->latest()
+                ->take($remaining)
+                ->get();
+            $bestSellerProducts = $bestSellerProducts->merge($latestProducts);
+        }
+
+        // Get most requested products (products with most carts or reviews)
+        $mostRequestedProducts = Product::whereStatus(1)
+            ->withCount(['carts as total_carts', 'reviews as total_reviews'])
+            ->with(['variants' => function ($query) {
+                $query->where('status', 1)->orderBy('price')->limit(1);
+            }, 'translation', 'department', 'category'])
+            ->orderByRaw('(total_carts + total_reviews) DESC')
+            ->take(10)
+            ->get();
+
+        // If we don't have 10 most requested, fill with latest products
+        if ($mostRequestedProducts->count() < 10) {
+            $remaining = 10 - $mostRequestedProducts->count();
+            $latestProducts = Product::whereStatus(1)
+                ->whereNotIn('id', $mostRequestedProducts->pluck('id'))
+                ->with(['variants' => function ($query) {
+                    $query->where('status', 1)->orderBy('price')->limit(1);
+                }, 'translation', 'department', 'category'])
+                ->latest()
+                ->take($remaining)
+                ->get();
+            $mostRequestedProducts = $mostRequestedProducts->merge($latestProducts);
+        }
+
+        return view('website.home',compact('banners','shopByDepartment','dealProducts','bestSellerProducts','mostRequestedProducts'));
     }
 
     public function category()
