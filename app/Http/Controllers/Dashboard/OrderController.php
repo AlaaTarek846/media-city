@@ -65,6 +65,23 @@ class OrderController extends Controller implements HasMiddleware
 
     public function update(Request $request,$id){
         $order = Order::find($id);
+
+        if ($request->order_status_id == 5){
+            if ($order->order_status_id != 5){
+                foreach ($order->orderItems as $cartItem) {
+                    $cartItem->productVariant->increment('quantity', $cartItem->quantity);
+                }
+            }
+
+        }else{
+            if ($order->order_status_id == 5){
+                foreach ($order->orderItems as $cartItem) {
+                    $cartItem->productVariant->decrement('quantity', $cartItem->quantity);
+                }
+            }
+        }
+
+
         $order->update([
             'order_status_id' => $request->order_status_id,
         ]);
@@ -89,7 +106,7 @@ class OrderController extends Controller implements HasMiddleware
     public function markAsRead($id)
     {
         $order = Order::findOrFail($id);
-        
+
         if (!$order->is_read) {
             $order->update([
                 'is_read' => true,

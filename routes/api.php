@@ -56,9 +56,7 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:admin_api');
 
-Route::post('/add-order', [WebOrderController::class, 'store']);
-Route::post('/order/update-status/{id}', [WebOrderController::class, 'updateStatus']);
-Route::post('/check-coupon-order', [CouponController::class, 'checkCoupon']);
+
 
 Route::group(['prefix' => 'web', 'middleware' => [ChangeLang::class,StartSession::class,EncryptCookies::class]], function () {
 
@@ -104,6 +102,10 @@ Route::group(['prefix' => 'web', 'middleware' => [ChangeLang::class,StartSession
     Route::get('/wishlist/check/{productId}', [FavoriteController::class, 'checkWishlist'])->middleware('auth:user');
     Route::get('/wishlist/products', [FavoriteController::class, 'getWishlistProducts'])->middleware('auth:user');
     Route::post('/wishlist/products-by-ids', [FavoriteController::class, 'getProductsByIds']);
+
+    Route::post('/add-order', [WebOrderController::class, 'store'])->middleware('auth:user');
+    Route::post('/order/update-status/{id}', [WebOrderController::class, 'updateStatus'])->middleware('auth:user');
+    Route::post('/check-coupon-order', [CouponController::class, 'checkCoupon'])->middleware('auth:user');
 
     Route::get('/get-carts', [CartController::class, 'index'])->middleware('auth:user');
     Route::post('/add-carts', [CartController::class, 'store'])->middleware('auth:user');
