@@ -63,14 +63,18 @@ class CouponController extends Controller
     {
         $totalSum = 0;
         foreach ($items as $item){
-
-            $product = Product::find($item['product_id']);
-            $variant               = $product->variants->first();
-            if ($product->department_id == 1){
-                $totalItem = ($variant->price * $item['quantity']) * $item['count_day'];
-            }
-            if ($product->department_id == 2){
-                $totalItem = $variant->price * $item['quantity'];
+            // Use cart item price (already includes discount if applicable)
+            $itemPrice = $item->price;
+            
+            // Determine if this is a rent item
+            $isRent = !is_null($item->start_date) && !is_null($item->count_day);
+            
+            if ($isRent) {
+                // For rent: price × count_day
+                $totalItem = $itemPrice * $item->count_day;
+            } else {
+                // For buy: price × quantity
+                $totalItem = $itemPrice * $item->quantity;
             }
 
             $totalSum+=$totalItem;

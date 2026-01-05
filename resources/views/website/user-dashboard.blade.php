@@ -147,8 +147,7 @@
                                                          alt="">
                                                     <div class="totle-detail">
                                                         <h5>{{ __('messages.Total Pending Order') }}</h5>
-                                                        <h3>{{  0 }}</h3>
-{{--                                                        <h3>{{ $user->orders()->where('status', 'pending')->count() ?? 0 }}</h3>--}}
+                                                        <h3>{{ $user->orders()->where('order_status_id', 1)->count() ?? 0 }}</h3>
                                                     </div>
                                                 </div>
                                             </div>
@@ -174,7 +173,7 @@
                                  aria-labelledby="pills-order-tab">
                                 <div class="dashboard-order">
                                     <div class="title">
-                                        <h2>My Orders History</h2>
+                                        <h2>{{ __('messages.My Orders History') }}</h2>
                                         <span class="title-leaf title-leaf-gray">
                                             <svg class="icon-width bg-gray">
                                                 <use xlink:href="/website/svg/leaf.svg#leaf"></use>
@@ -182,265 +181,230 @@
                                         </span>
                                     </div>
 
-                                    <div class="order-contain">
-                                        <div class="order-box dashboard-bg-box">
-                                            <div class="order-container">
-                                                <div class="order-icon">
-                                                    <i data-feather="box"></i>
-                                                </div>
+                                    <div class="order-contain" id="orders-container">
+                                        @if(isset($orders) && $orders->count() > 0)
+                                            @foreach($orders as $order)
+                                                @php
+                                                    // Safely get status translation
+                                                    $statusName = '';
+                                                    $statusId = $order->order_status_id;
 
-                                                <div class="order-detail">
-                                                    <h4>Delivere <span>Panding</span></h4>
-                                                    <h6 class="text-content">Gouda parmesan caerphilly mozzarella
-                                                        cottage cheese cauliflower cheese taleggio gouda.</h6>
-                                                </div>
-                                            </div>
+                                                    if ($order->orderStatus) {
+                                                        // Try to get translation using current_translation accessor
+                                                        try {
+                                                            $statusTranslation = $order->orderStatus->current_translation;
+                                                            if ($statusTranslation && isset($statusTranslation->title)) {
+                                                                $statusName = $statusTranslation->title;
+                                                            } else {
+                                                                // Fallback to translation relationship
+                                                                $statusTranslation = $order->orderStatus->translation;
+                                                                if ($statusTranslation && isset($statusTranslation->title)) {
+                                                                    $statusName = $statusTranslation->title;
+                                                                } else {
+                                                                    // Fallback to first translation
+                                                                    $firstTranslation = $order->orderStatus->translations->first();
+                                                                    if ($firstTranslation && isset($firstTranslation->title)) {
+                                                                        $statusName = $firstTranslation->title;
+                                                                    }
+                                                                }
+                                                            }
+                                                        } catch (\Exception $e) {
+                                                            // If all fails, use fallback translations based on status ID
+                                                            $statusName = '';
+                                                        }
+                                                    }
 
-                                            <div class="product-order-detail">
-                                                <a href="product-left-thumbnail.html" class="order-image">
-                                                    <img src="/website/images/veg-3/home/23.jpg" style="height: 150px;" alt="">
-                                                </a>
+                                                    // Fallback translations if status name is still empty
+                                                    if (empty($statusName)) {
+                                                        switch ($statusId) {
+                                                            case 1:
+                                                                $statusName = __('messages.New Order');
+                                                                break;
+                                                            case 2:
+                                                                $statusName = __('messages.Preparing Order');
+                                                                break;
+                                                            case 3:
+                                                                $statusName = __('messages.On The Way');
+                                                                break;
+                                                            case 4:
+                                                                $statusName = __('messages.delivered');
+                                                                break;
+                                                            case 5:
+                                                                $statusName = __('messages.canceled');
+                                                                break;
+                                                            default:
+                                                                $statusName = __('messages.Order Status');
+                                                                break;
+                                                        }
+                                                    }
 
-                                                <div class="order-wrap">
-                                                    <a href="product-left-thumbnail.html">
-                                                        <h3> Sony Alpha a7 IV Mirrorless Digital Camera</h3>
-                                                    </a>
-                                                    <p class="text-content">Cheddar dolcelatte gouda. Macaroni cheese
-                                                        cheese strings feta halloumi cottage cheese jarlsberg cheese
-                                                        triangles say cheese.</p>
-                                                    <ul class="product-size">
-                                                        <li>
-                                                            <div class="size-box">
-                                                                <h6 class="text-content">Price : </h6>
-                                                                <h5>EGP 20.68</h5>
+                                                    $isPending = $statusId == 1; // 1 = New Order (Pending)
+
+                                                    // Determine order type (rent or buy)
+                                                    $hasRentItems = $order->orderItems->whereNotNull('start_date')->whereNotNull('count_day')->count() > 0;
+                                                    $orderType = $hasRentItems ? 'rent' : 'buy';
+
+                                                    // Get status badge class
+                                                    $statusBadgeClass = 'badge bg-secondary';
+                                                    if ($statusId == 1) $statusBadgeClass = 'badge bg-warning text-dark'; // Pending/New Order
+                                                    elseif ($statusId == 2) $statusBadgeClass = 'badge bg-info'; // Preparing Order
+                                                    elseif ($statusId == 3) $statusBadgeClass = 'badge bg-primary'; // On The Way
+                                                    elseif ($statusId == 4) $statusBadgeClass = 'badge bg-success'; // Delivered
+                                                    elseif ($statusId == 5) $statusBadgeClass = 'badge bg-danger'; // Canceled
+                                                    else $statusBadgeClass = 'badge bg-secondary'; // Other statuses
+                                                @endphp
+
+                                                <div class="order-box dashboard-bg-box" data-order-id="{{ $order->id }}">
+                                                    <div class="order-container">
+                                                        <div class="order-icon">
+                                                            <i data-feather="box"></i>
+                                                        </div>
+
+                                                        <div class="order-detail">
+                                                            <div class="d-flex align-items-center justify-content-between flex-wrap mb-2">
+                                                                <h4 class="mb-0">
+                                                                    {{ __('messages.Order Number') }}: <strong>{{ $order->order_number }}</strong>
+                                                                </h4>
+                                                                <div class="d-flex align-items-center gap-2">
+                                                                    @if(!empty($statusName))
+                                                                        <span class="{{ $statusBadgeClass }} px-3 py-1" style="font-size: 13px; font-weight: 600; display: inline-flex; align-items: center;">
+                                                                            <i class="fa-solid fa-circle me-1" style="font-size: 8px;"></i>{{ $statusName }}
+                                                                        </span>
+                                                                    @else
+                                                                        <span class="{{ $statusBadgeClass }} px-3 py-1" style="font-size: 13px; font-weight: 600; display: inline-flex; align-items: center;">
+                                                                            <i class="fa-solid fa-circle me-1" style="font-size: 8px;"></i>{{ __('messages.Order Status') }}
+                                                                        </span>
+                                                                    @endif
+                                                                    @if($orderType == 'rent')
+                                                                        <span class="badge bg-warning text-dark px-3 py-1" style="font-size: 13px; font-weight: 600;">{{ __('messages.Rent') }}</span>
+                                                                    @else
+                                                                        <span class="badge bg-success px-3 py-1" style="font-size: 13px; font-weight: 600;">{{ __('messages.Buy') }}</span>
+                                                                    @endif
+                                                                </div>
                                                             </div>
-                                                        </li>
+                                                            <div class="order-info mb-2">
+                                                                <p class="text-content mb-1">
+                                                                    <i class="fa-solid fa-calendar me-1"></i>
+                                                                    <strong>{{ __('messages.Order Date') }}:</strong> {{ $order->created_at->format('Y-m-d H:i') }}
+                                                                </p>
+                                                                <p class="text-content mb-0">
+                                                                    <i class="fa-solid fa-money-bill me-1"></i>
+                                                                    <strong>{{ __('messages.Total') }}:</strong>
+                                                                    <span class="text-primary fw-bold">{{ $setting->translation->title ?? 'EGP' }} {{ number_format($order->total, 2) }}</span>
+                                                                </p>
+                                                            </div>
+                                                            @if($isPending)
+                                                                <button class="btn btn-sm btn-danger mt-2 cancel-order-btn" data-order-id="{{ $order->id }}">
+                                                                    <i class="fa-solid fa-times me-1"></i>{{ __('messages.Cancel Order') }}
+                                                                </button>
+                                                            @endif
+                                                        </div>
+                                                    </div>
 
-                                                        <li>
-                                                            <div class="size-box">
-                                                                <h6 class="text-content">Rate : </h6>
-                                                                <div class="product-rating ms-2">
-                                                                    <ul class="rating">
-                                                                        <li>
-                                                                            <i data-feather="star" class="fill"></i>
+                                                    <div class="product-order-detail">
+                                                        @foreach($order->orderItems as $orderItem)
+                                                            @php
+                                                                $product = $orderItem->product;
+                                                                $productTitle = '';
+                                                                $productImage = '/website/images/placeholder.jpg';
+
+                                                                if ($product) {
+                                                                    $productTranslation = $product->current_translation ?? $product->translation ?? null;
+                                                                    if (!$productTranslation && $product->translations) {
+                                                                        $productTranslation = $product->translations->first();
+                                                                    }
+                                                                    $productTitle = $productTranslation ? $productTranslation->title : '';
+                                                                    $productImage = $product->image ?? '/website/images/placeholder.jpg';
+                                                                }
+
+                                                                $isRentItem = !is_null($orderItem->start_date) && !is_null($orderItem->count_day);
+                                                            @endphp
+
+                                                            <div class="d-flex align-items-start mb-3 pb-3" style="border-bottom: 1px solid #ececec;">
+                                                                @if($product)
+                                                                    <a href="{{ route('productDetail', $product->slug) }}" class="order-image me-3">
+                                                                        <img src="{{ $productImage }}" style="height: 100px; width: 100px; object-fit: cover;" alt="{{ $productTitle ?: __('messages.Product') }}" class="rounded">
+                                                                    </a>
+
+                                                                    <div class="order-wrap flex-grow-1">
+                                                                        <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+                                                                            <a href="{{ route('productDetail', $product->id) }}">
+                                                                                <h5 class="mb-0">{{ $productTitle ?: __('messages.Product') }}</h5>
+                                                                            </a>
+                                                                            @if($isRentItem)
+                                                                                <span class="badge bg-warning text-dark px-2 py-1" style="font-size: 12px; font-weight: 600;">
+                                                                                    {{ __('messages.Rent') }}
+                                                                                    <span class="ms-1">({{ $orderItem->count_day ?? 0 }} {{ $orderItem->count_day == 1 ? __('messages.Day') : __('messages.Days') }})</span>
+                                                                                </span>
+                                                                            @else
+                                                                                <span class="badge bg-success px-2 py-1" style="font-size: 12px; font-weight: 600;">{{ __('messages.Buy') }}</span>
+                                                                            @endif
+                                                                        </div>
+                                                                @else
+                                                                    <div class="order-image me-3">
+                                                                        <img src="{{ $productImage }}" style="height: 100px; width: 100px; object-fit: cover;" alt="{{ __('messages.Product') }}" class="rounded">
+                                                                    </div>
+
+                                                                    <div class="order-wrap flex-grow-1">
+                                                                        <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+                                                                            <h5 class="mb-0">{{ __('messages.Product') }}</h5>
+                                                                            @if($isRentItem)
+                                                                                <span class="badge bg-warning text-dark px-2 py-1" style="font-size: 12px; font-weight: 600;">
+                                                                                    {{ __('messages.Rent') }}
+                                                                                    <span class="ms-1">({{ $orderItem->count_day ?? 0 }} {{ $orderItem->count_day == 1 ? __('messages.Day') : __('messages.Days') }})</span>
+                                                                                </span>
+                                                                            @else
+                                                                                <span class="badge bg-success px-2 py-1" style="font-size: 12px; font-weight: 600;">{{ __('messages.Buy') }}</span>
+                                                                            @endif
+                                                                        </div>
+                                                                @endif
+                                                                    <ul class="product-size list-unstyled mb-0">
+                                                                        <li class="mb-2">
+                                                                            <div class="size-box d-flex align-items-center">
+                                                                                <h6 class="text-content mb-0 me-2">{{ __('messages.Price') }}:</h6>
+                                                                                <h5 class="mb-0">{{ $setting->translation->title ?? 'EGP' }} {{ number_format($orderItem->price, 2) }}</h5>
+                                                                            </div>
                                                                         </li>
+                                                                        @if($isRentItem)
+                                                                            <li class="mb-2">
+                                                                                <div class="size-box d-flex align-items-center">
+                                                                                    <h6 class="text-content mb-0 me-2">{{ __('messages.Start Date') }}:</h6>
+                                                                                    <h6 class="mb-0">{{ $orderItem->start_date ? \Carbon\Carbon::parse($orderItem->start_date)->format('Y-m-d') : '-' }}</h6>
+                                                                                </div>
+                                                                            </li>
+                                                                            <li class="mb-2">
+                                                                                <div class="size-box d-flex align-items-center">
+                                                                                    <h6 class="text-content mb-0 me-2">{{ __('messages.Count Days') }}:</h6>
+                                                                                    <h6 class="mb-0">{{ $orderItem->count_day ?? 0 }} {{ __('messages.Days') }}</h6>
+                                                                                </div>
+                                                                            </li>
+                                                                        @else
+                                                                            <li class="mb-2">
+                                                                                <div class="size-box d-flex align-items-center">
+                                                                                    <h6 class="text-content mb-0 me-2">{{ __('messages.Quantity') }}:</h6>
+                                                                                    <h6 class="mb-0">{{ $orderItem->quantity ?? 1 }}</h6>
+                                                                                </div>
+                                                                            </li>
+                                                                        @endif
                                                                         <li>
-                                                                            <i data-feather="star" class="fill"></i>
-                                                                        </li>
-                                                                        <li>
-                                                                            <i data-feather="star" class="fill"></i>
-                                                                        </li>
-                                                                        <li>
-                                                                            <i data-feather="star" class="fill"></i>
-                                                                        </li>
-                                                                        <li>
-                                                                            <i data-feather="star"></i>
+                                                                            <div class="size-box d-flex align-items-center">
+                                                                                <h6 class="text-content mb-0 me-2">{{ __('messages.Total') }}:</h6>
+                                                                                <h5 class="mb-0 text-primary">{{ $setting->translation->title ?? 'EGP' }} {{ number_format($orderItem->total, 2) }}</h5>
+                                                                            </div>
                                                                         </li>
                                                                     </ul>
                                                                 </div>
                                                             </div>
-                                                        </li>
-
-
-                                                    </ul>
+                                                        @endforeach
+                                                    </div>
                                                 </div>
+                                            @endforeach
+                                        @else
+                                            <div class="text-center py-5">
+                                                <i class="fa-solid fa-box-open" style="font-size: 4rem; color: #ddd;"></i>
+                                                <p class="text-muted mt-3">{{ __('messages.No orders found') }}</p>
                                             </div>
-                                        </div>
-
-                                        <div class="order-box dashboard-bg-box">
-                                            <div class="order-container">
-                                                <div class="order-icon">
-                                                    <i data-feather="box"></i>
-                                                </div>
-
-                                                <div class="order-detail">
-                                                    <h4>Delivered <span class="success-bg">Success</span></h4>
-                                                    <h6 class="text-content">Cheese on toast cheesy grin cheesy grin
-                                                        cottage cheese caerphilly everyone loves cottage cheese the big
-                                                        cheese.</h6>
-                                                </div>
-                                            </div>
-
-                                            <div class="product-order-detail">
-                                                <a href="product-left-thumbnail.html" class="order-image">
-                                                    <img src="/website/images/veg-3/home/17.jpg" style="height: 150px;" alt=""
-                                                         class="blur-up lazyload">
-                                                </a>
-
-                                                <div class="order-wrap">
-                                                    <a href="product-left-thumbnail.html">
-                                                        <h3> Sony Alpha a7 IV Mirrorless Digital Camera</h3>
-                                                    </a>
-                                                    <p class="text-content">Pecorino paneer port-salut when the cheese
-                                                        comes out everybody's happy red leicester mascarpone blue
-                                                        castello cauliflower cheese.</p>
-                                                    <ul class="product-size">
-                                                        <li>
-                                                            <div class="size-box">
-                                                                <h6 class="text-content">Price : </h6>
-                                                                <h5>EGP 20.68</h5>
-                                                            </div>
-                                                        </li>
-
-                                                        <li>
-                                                            <div class="size-box">
-                                                                <h6 class="text-content">Rate : </h6>
-                                                                <div class="product-rating ms-2">
-                                                                    <ul class="rating">
-                                                                        <li>
-                                                                            <i data-feather="star" class="fill"></i>
-                                                                        </li>
-                                                                        <li>
-                                                                            <i data-feather="star" class="fill"></i>
-                                                                        </li>
-                                                                        <li>
-                                                                            <i data-feather="star" class="fill"></i>
-                                                                        </li>
-                                                                        <li>
-                                                                            <i data-feather="star" class="fill"></i>
-                                                                        </li>
-                                                                        <li>
-                                                                            <i data-feather="star"></i>
-                                                                        </li>
-                                                                    </ul>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-
-
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="order-box dashboard-bg-box">
-                                            <div class="order-container">
-                                                <div class="order-icon">
-                                                    <i data-feather="box"></i>
-                                                </div>
-
-                                                <div class="order-detail">
-                                                    <h4>Delivere <span>Panding</span></h4>
-                                                    <h6 class="text-content">Cheesy grin boursin cheesy grin cheesecake
-                                                        blue castello cream cheese lancashire melted cheese.</h6>
-                                                </div>
-                                            </div>
-
-                                            <div class="product-order-detail">
-                                                <a href="product-left-thumbnail.html" class="order-image">
-                                                    <img src="/website/images/veg-3/home/19.jpg" style="height: 150px;" alt=""
-                                                         class="blur-up lazyload">
-                                                </a>
-
-                                                <div class="order-wrap">
-                                                    <a href="product-left-thumbnail.html">
-                                                        <h3> Sony Alpha a7 IV Mirrorless Digital Camera</h3>
-                                                    </a>
-                                                    <p class="text-content">Cow bavarian bergkase mascarpone paneer
-                                                        squirty cheese fromage frais cheese slices when the cheese comes
-                                                        out everybody's happy.</p>
-                                                    <ul class="product-size">
-                                                        <li>
-                                                            <div class="size-box">
-                                                                <h6 class="text-content">Price : </h6>
-                                                                <h5>EGP 20.68</h5>
-                                                            </div>
-                                                        </li>
-
-                                                        <li>
-                                                            <div class="size-box">
-                                                                <h6 class="text-content">Rate : </h6>
-                                                                <div class="product-rating ms-2">
-                                                                    <ul class="rating">
-                                                                        <li>
-                                                                            <i data-feather="star" class="fill"></i>
-                                                                        </li>
-                                                                        <li>
-                                                                            <i data-feather="star" class="fill"></i>
-                                                                        </li>
-                                                                        <li>
-                                                                            <i data-feather="star" class="fill"></i>
-                                                                        </li>
-                                                                        <li>
-                                                                            <i data-feather="star" class="fill"></i>
-                                                                        </li>
-                                                                        <li>
-                                                                            <i data-feather="star"></i>
-                                                                        </li>
-                                                                    </ul>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-
-
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="order-box dashboard-bg-box">
-                                            <div class="order-container">
-                                                <div class="order-icon">
-                                                    <i data-feather="box"></i>
-                                                </div>
-
-                                                <div class="order-detail">
-                                                    <h4>Delivered <span class="success-bg">Success</span></h4>
-                                                    <h6 class="text-content">Caerphilly port-salut parmesan pecorino
-                                                        croque monsieur dolcelatte melted cheese cheese and wine.</h6>
-                                                </div>
-                                            </div>
-
-                                            <div class="product-order-detail">
-                                                <a href="product-left-thumbnail.html" class="order-image">
-                                                    <img src="/website/images/veg-3/home/16.jpg" style="height: 150px;" alt="">
-                                                </a>
-
-                                                <div class="order-wrap">
-                                                    <a href="product-left-thumbnail.html">
-                                                        <h3> Sony Alpha a7 IV Mirrorless Digital Camera</h3>
-                                                    </a>
-                                                    <p class="text-content">The big cheese cream cheese pepper jack
-                                                        cheese slices danish fontina everyone loves cheese on toast
-                                                        bavarian bergkase.</p>
-                                                    <ul class="product-size">
-                                                        <li>
-                                                            <div class="size-box">
-                                                                <h6 class="text-content">Price : </h6>
-                                                                <h5>EGP 20.68</h5>
-                                                            </div>
-                                                        </li>
-
-                                                        <li>
-                                                            <div class="size-box">
-                                                                <h6 class="text-content">Rate : </h6>
-                                                                <div class="product-rating ms-2">
-                                                                    <ul class="rating">
-                                                                        <li>
-                                                                            <i data-feather="star" class="fill"></i>
-                                                                        </li>
-                                                                        <li>
-                                                                            <i data-feather="star" class="fill"></i>
-                                                                        </li>
-                                                                        <li>
-                                                                            <i data-feather="star" class="fill"></i>
-                                                                        </li>
-                                                                        <li>
-                                                                            <i data-feather="star" class="fill"></i>
-                                                                        </li>
-                                                                        <li>
-                                                                            <i data-feather="star"></i>
-                                                                        </li>
-                                                                    </ul>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-
-
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -1862,5 +1826,98 @@
             });
 
         })();
+
+        /**
+         * Handle cancel order button click
+         */
+        $(document).on('click', '.cancel-order-btn', function(e) {
+            e.preventDefault();
+            var orderId = $(this).data('order-id');
+            var $btn = $(this);
+            var $orderBox = $btn.closest('.order-box');
+
+            // Show confirmation dialog
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    title: '{{ __("messages.Are you sure?") }}',
+                    text: '{{ __("messages.Are you sure you want to cancel this order?") }}',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: '{{ __("messages.Yes, cancel it") }}',
+                    cancelButtonText: '{{ __("messages.No, keep it") }}'
+                }).then(function(result) {
+                    if (result.isConfirmed) {
+                        cancelOrder(orderId, $orderBox);
+                    }
+                });
+            } else {
+                if (confirm('{{ __("messages.Are you sure you want to cancel this order?") }}')) {
+                    cancelOrder(orderId, $orderBox);
+                }
+            }
+        });
+
+        /**
+         * Cancel order via AJAX
+         */
+        function cancelOrder(orderId, $orderBox) {
+            var $btn = $orderBox.find('.cancel-order-btn');
+            var originalBtnText = $btn.html();
+            $btn.prop('disabled', true).html('<i class="fa-solid fa-spinner fa-spin me-1"></i>{{ __("messages.Processing") }}...');
+
+            $.ajax({
+                url: '/api/web/order/update-status/' + orderId,
+                type: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                xhrFields: {
+                    withCredentials: true
+                },
+                data: {
+                    order_status_id: 5 // 5 = Canceled
+                },
+                success: function(response) {
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '{{ __("messages.Success") }}',
+                            text: response.message || '{{ __("messages.Order canceled successfully") }}',
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                    } else {
+                        alert(response.message || '{{ __("messages.Order canceled successfully") }}');
+                    }
+
+                    // Reload page to show updated status
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 2000);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error canceling order:', error);
+                    var errorMsg = '{{ __("messages.Error canceling order") }}';
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMsg = xhr.responseJSON.message;
+                    }
+
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({
+                            icon: 'error',
+                            title: '{{ __("messages.Error") }}',
+                            text: errorMsg
+                        });
+                    } else {
+                        alert(errorMsg);
+                    }
+
+                    $btn.prop('disabled', false).html(originalBtnText);
+                }
+            });
+        }
     </script>
 @endpush

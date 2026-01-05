@@ -69,7 +69,7 @@ Route::group(['middleware' => [ChangeLangForWeb::class]], function () {
 //        ->middleware('auth:user');
     Route::get('/checkout', [HomePageController::class, 'checkout'])->name('checkout')->middleware(AuthAndCartMiddleware::class);
     Route::get('/wishlist', [HomePageController::class, 'wishlist'])->name('wishlist');
-    Route::get('/checkout-thankyou', [HomePageController::class, 'checkoutThankyou'])->middleware('auth:user');
+    Route::get('/checkout-thankyou', [HomePageController::class, 'checkoutThankyou'])->name('checkoutThankyou')->middleware('auth:user');
     Route::get('/product-detail/{id}', [HomePageController::class, 'productDetail'])->name('productDetail');
     Route::get('/rent-retail/{id}', [HomePageController::class, 'rentDetail'])->name('rentDetail');
     // Shop route with department and category slugs (SEO-friendly URLs)

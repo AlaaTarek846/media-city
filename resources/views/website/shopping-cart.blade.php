@@ -69,8 +69,8 @@
                                 <i class="fa-solid fa-cart-shopping" style="font-size: 4rem; color: #ddd;"></i>
                             </div>
                             <p class="text-muted mb-0">{{ __('messages.No buy items in cart') }}</p>
-                        </div>
-                    </div>
+                                            </div>
+                                        </div>
 
                     {{-- Rent Items Table --}}
                     <div class="cart-table cart-table-2">
@@ -80,7 +80,7 @@
                                 {{ __('messages.Rent Items') }}
                             </h4>
                             <span class="badge bg-warning" id="rent-items-count-badge" style="display: none;">0 {{ __('messages.Items') }}</span>
-                        </div>
+                                                </div>
                         <div class="table-responsive-xl">
                             <table class="table">
                                 <thead>
@@ -100,8 +100,8 @@
                                             <div class="spinner-border text-primary" role="status">
                                                 <span class="visually-hidden">{{ __('messages.Loading') }}...</span>
                                             </div>
-                                        </td>
-                                    </tr>
+                                    </td>
+                                </tr>
                                 </tbody>
                             </table>
                         </div>
