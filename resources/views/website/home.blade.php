@@ -84,12 +84,12 @@
                                     $categoryUrl = url('/shop/' . $shopByDepartment->slug . '/' . $category->slug);
                                 @endphp
                                 @if($categoryTranslation)
-                                    <div>
-                                        <div class="category-box-list">
+                        <div>
+                            <div class="category-box-list">
                                             <a href="{{ $categoryUrl }}" class="category-name">
                                                 <h4>{{ $categoryTranslation->title }}</h4>
-                                            </a>
-                                            <div class="category-box-view">
+                                </a>
+                                <div class="category-box-view">
                                                 <a href="{{ $categoryUrl }}">
                                                     @if($category->image)
                                                         <img src="{{ $category->image }}"
@@ -100,18 +100,18 @@
                                                              class="img-fluid blur-up lazyload"
                                                              alt="{{ $categoryTranslation->title }}">
                                                     @endif
-                                                </a>
+                                    </a>
                                                 <button onclick="location.href = '{{ $categoryUrl }}';" class="btn shop-button">
                                                     <span>{{ __('messages.shop now') }}</span>
                                                     @if(app()->getLocale() == 'en')
-                                                        <i class="fas fa-angle-right"></i>
+                                        <i class="fas fa-angle-right"></i>
                                                     @else
                                                         <i class="fas fa-angle-left"></i>
                                                     @endif
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                                 @endif
                             @endforeach
                         @endif
@@ -144,80 +144,80 @@
                                     $timerId = 'clockdiv-' . ($index + 1);
                                 @endphp
                                 @if($translation && $variant && $discountPercentage > 0)
-                                    <div>
+                        <div>
                                         <div class="deal-box wow fadeInUp" @if($index > 0) data-wow-delay="{{ $wowDelay }}s" @endif>
                                             <a href="{{ $productUrl }}" class="category-image order-sm-2">
                                                 <img src="{{ $product->image }}"
                                                      class="img-fluid blur-up lazyload"
                                                      alt="{{ $translation->title }}">
-                                            </a>
+                                </a>
 
-                                            <div class="deal-detail order-sm-1">
-                                                <div class="hot-deal">
+                                <div class="deal-detail order-sm-1">
+                                    <div class="hot-deal">
                                                     <span>{{ __('messages.Hot Deals') }}</span>
-                                                </div>
-                                                <ul class="rating">
+                                    </div>
+                                    <ul class="rating">
                                                     @for($i = 1; $i <= 5; $i++)
-                                                        <li>
+                                        <li>
                                                             <i data-feather="star" class="{{ $i <= $rating ? 'fill' : '' }}"></i>
-                                                        </li>
+                                        </li>
                                                     @endfor
-                                                </ul>
+                                    </ul>
                                                 <a href="{{ $productUrl }}" class="text-title">
                                                     <h5>{{ $translation->title }}</h5>
-                                                </a>
+                                    </a>
                                                 <h5 class="price">
                                                     {{ __('messages.currency') }} {{ number_format($discountPrice, 2) }}
                                                     <span>{{ __('messages.currency') }} {{ number_format($originalPrice, 2) }}</span>
                                                 </h5>
-                                                <div class="progress custom-progressbar">
+                                    <div class="progress custom-progressbar">
                                                     <div class="progress-bar"
                                                          style="width: {{ min(100, max(10, $discountPercentage)) }}%"
                                                          role="progressbar"
                                                          aria-valuenow="{{ $discountPercentage }}"
                                                          aria-valuemin="0"
                                                          aria-valuemax="100"></div>
-                                                </div>
+                                    </div>
                                                 <h4 class="offer">{{ __('messages.Hurry up offer end in') }}</h4>
                                                 <div class="timer" id="{{ $timerId }}" data-hours="24" data-minutes="0" data-seconds="0">
-                                                    <ul>
-                                                        <li>
-                                                            <div class="counter">
-                                                                <div class="days">
-                                                                    <h6></h6>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="counter">
-                                                                <div class="hours">
-                                                                    <h6></h6>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="counter">
-                                                                <div class="minutes">
-                                                                    <h6></h6>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="counter">
-                                                                <div class="seconds">
-                                                                    <h6></h6>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                    </ul>
+                                        <ul>
+                                            <li>
+                                                <div class="counter">
+                                                    <div class="days">
+                                                        <h6></h6>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>
+                                            </li>
+                                            <li>
+                                                <div class="counter">
+                                                    <div class="hours">
+                                                        <h6></h6>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="counter">
+                                                    <div class="minutes">
+                                                        <h6></h6>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="counter">
+                                                    <div class="seconds">
+                                                        <h6></h6>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
                                 @endif
                             @endforeach
                         @endif
-                    </div>
+                                    </div>
                 </div>
             </div>
         </div>
@@ -318,33 +318,33 @@
                                     $wowDelay = ($index % 4 == 0) ? 0 : ($index % 4) * 0.1;
                                 @endphp
                                 @if($translation && $variant)
-                                    <div>
+                        <div>
                                         <div class="product-box-3 wow fadeInUp" @if($wowDelay > 0) data-wow-delay="{{ $wowDelay }}s" @endif>
                                             <div class="product-header product-box">
                                                 @if($showBadge && $conditionLabel)
                                                     <div class="label-tag {{ $conditionClass }}">
                                                         <span>{{ $conditionLabel }}</span>
-                                                    </div>
+                                </div>
                                                 @endif
-                                                <div class="product-image">
+                                <div class="product-image">
                                                     <a href="{{ $productUrl }}">
                                                         <img src="{{ $product->image }}" 
                                                              class="img-fluid blur-up lazyload" 
                                                              alt="{{ $translation->title }}">
-                                                    </a>
-                                                    <ul class="product-option">
+                                    </a>
+                                    <ul class="product-option">
                                                         <li data-bs-toggle="tooltip" data-bs-placement="top" title="{{ __('messages.View') }}">
                                                             <a href="javascript:void(0)" class="view-product-btn" data-bs-toggle="modal" data-bs-target="#view" data-product-id="{{ $product->id }}">
-                                                                <i data-feather="eye"></i>
-                                                            </a>
-                                                        </li>
+                                                <i data-feather="eye"></i>
+                                            </a>
+                                        </li>
                                                         <li data-bs-toggle="tooltip" data-bs-placement="top" title="{{ __('messages.Wishlist') }}">
                                                             <a href="javascript:void(0)" class="add-to-wishlist" data-product-id="{{ $product->id }}">
-                                                                <i data-feather="heart"></i>
-                                                            </a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
+                                                <i data-feather="heart"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
                                             </div>
                                             <div class="product-footer">
                                                 <div class="product-detail">
@@ -353,17 +353,17 @@
                                                     @endif
                                                     <a href="{{ $productUrl }}">
                                                         <h5 class="name">{{ $translation->title }}</h5>
-                                                    </a>
+                                    </a>
                                                     <div class="product-rating mt-2">
                                                         <ul class="rating">
                                                             @for($i = 1; $i <= 5; $i++)
                                                                 <li>
                                                                     <i data-feather="star" class="{{ $i <= $rating ? 'fill' : '' }}"></i>
-                                                                </li>
+                                        </li>
                                                             @endfor
-                                                        </ul>
+                                    </ul>
                                                         <span>({{ number_format($product->rate ?? 0, 1) }})</span>
-                                                    </div>
+                                </div>
                                                     @if($variant->discount_price && $variant->discount_percentage > 0)
                                                         <h5 class="price">
                                                             <span class="theme-color">{{ __('messages.currency') }} {{ number_format($variant->discount_price, 2) }}</span>
@@ -382,12 +382,12 @@
                                                             <span class="add-icon bg-light-gray">
                                                                 <i class="fa-solid fa-plus"></i>
                                                             </span>
-                                                        </button>
-                                                    </div>
-                                                </div>
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
                                 @endif
                             @endforeach
                         @endif
@@ -460,33 +460,33 @@
                                     $wowDelay = ($index % 4 == 0) ? 0 : ($index % 4) * 0.1;
                                 @endphp
                                 @if($translation && $variant)
-                                    <div>
+                        <div>
                                         <div class="product-box-3 wow fadeInUp" @if($wowDelay > 0) data-wow-delay="{{ $wowDelay }}s" @endif>
                                             <div class="product-header product-box">
                                                 @if($showBadge && $conditionLabel)
                                                     <div class="label-tag {{ $conditionClass }}">
                                                         <span>{{ $conditionLabel }}</span>
-                                                    </div>
+                                </div>
                                                 @endif
-                                                <div class="product-image">
+                                <div class="product-image">
                                                     <a href="{{ $productUrl }}">
                                                         <img src="{{ $product->image }}" 
                                                              class="img-fluid blur-up lazyload" 
                                                              alt="{{ $translation->title }}">
-                                                    </a>
-                                                    <ul class="product-option">
+                                    </a>
+                                    <ul class="product-option">
                                                         <li data-bs-toggle="tooltip" data-bs-placement="top" title="{{ __('messages.View') }}">
                                                             <a href="javascript:void(0)" class="view-product-btn" data-bs-toggle="modal" data-bs-target="#view" data-product-id="{{ $product->id }}">
-                                                                <i data-feather="eye"></i>
-                                                            </a>
-                                                        </li>
+                                                <i data-feather="eye"></i>
+                                            </a>
+                                        </li>
                                                         <li data-bs-toggle="tooltip" data-bs-placement="top" title="{{ __('messages.Wishlist') }}">
                                                             <a href="javascript:void(0)" class="add-to-wishlist" data-product-id="{{ $product->id }}">
-                                                                <i data-feather="heart"></i>
-                                                            </a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
+                                                <i data-feather="heart"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
                                             </div>
                                             <div class="product-footer">
                                                 <div class="product-detail">
@@ -495,17 +495,17 @@
                                                     @endif
                                                     <a href="{{ $productUrl }}">
                                                         <h5 class="name">{{ $translation->title }}</h5>
-                                                    </a>
+                                    </a>
                                                     <div class="product-rating mt-2">
                                                         <ul class="rating">
                                                             @for($i = 1; $i <= 5; $i++)
                                                                 <li>
                                                                     <i data-feather="star" class="{{ $i <= $rating ? 'fill' : '' }}"></i>
-                                                                </li>
+                                        </li>
                                                             @endfor
-                                                        </ul>
+                                    </ul>
                                                         <span>({{ number_format($product->rate ?? 0, 1) }})</span>
-                                                    </div>
+                                </div>
                                                     @if($variant->discount_price && $variant->discount_percentage > 0)
                                                         <h5 class="price">
                                                             <span class="theme-color">{{ __('messages.currency') }} {{ number_format($variant->discount_price, 2) }}</span>
@@ -524,16 +524,16 @@
                                                             <span class="add-icon bg-light-gray">
                                                                 <i class="fa-solid fa-plus"></i>
                                                             </span>
-                                                        </button>
-                                                    </div>
-                                                </div>
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
                                 @endif
                             @endforeach
                         @endif
-                    </div>
+                        </div>
                 </div>
             </div>
         </div>

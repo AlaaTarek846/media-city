@@ -1121,4 +1121,8 @@ return [
     "Fax"=>"Fax",
     "Call us"=>"Call us",
     "Email Us"=>"Email Us",
+    "Delivery Address"=>"Delivery Address",
+    "Add Address"=>"Add Address",
+    "No addresses found"=>"No addresses found",
+    "Select this address"=>"Select this address",
 ];

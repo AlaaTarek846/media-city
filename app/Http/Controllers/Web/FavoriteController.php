@@ -86,7 +86,7 @@ class FavoriteController extends Controller
 
     /**
      * Add product to wishlist (for authenticated users)
-     *
+     * 
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
@@ -113,7 +113,7 @@ class FavoriteController extends Controller
         // Add product to favorites
         try {
             $user->favorites()->attach($productId);
-
+            
             return responseJson(
                 ['status' => 'added'],
                 __('messages.Product added to wishlist successfully'),
@@ -128,7 +128,7 @@ class FavoriteController extends Controller
                     200
                 );
             }
-
+            
             return responseJson(
                 ['status' => 'error'],
                 __('messages.Error adding product to wishlist'),
@@ -139,7 +139,7 @@ class FavoriteController extends Controller
 
     /**
      * Sync wishlist from localStorage after login
-     *
+     * 
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
@@ -158,7 +158,7 @@ class FavoriteController extends Controller
         foreach ($productIds as $productId) {
             // Check if product already exists
             $isFavorite = $user->favorites()->where('product_id', $productId)->exists();
-
+            
             if (!$isFavorite) {
                 try {
                     $user->favorites()->attach($productId);
@@ -184,7 +184,7 @@ class FavoriteController extends Controller
 
     /**
      * Check if product is in wishlist
-     *
+     * 
      * @param int $productId
      * @return \Illuminate\Http\JsonResponse
      */

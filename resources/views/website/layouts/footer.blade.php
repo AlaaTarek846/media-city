@@ -62,10 +62,6 @@
                                 <i class="fas fa-angle-right"></i>{{ __('messages.Terms & Conditions') }}</a>
                         </li>
                         <li>
-                            <a href="{{route('renting')}}" class="footer-contain-2">
-                                <i class="fas fa-angle-right"></i>{{ __('messages.Renting') }}</a>
-                        </li>
-                        <li>
                             <a href="{{route('blog')}}" class="footer-contain-2">
                                 <i class="fas fa-angle-right"></i>{{ __('messages.Latest Blog') }}</a>
                         </li>

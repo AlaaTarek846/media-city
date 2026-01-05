@@ -1131,4 +1131,8 @@ return [
     "Fax"=>"فاكس",
     "Call us"=>"اتصل بنا",
     "Email Us"=>"راسلنا",
+    "Delivery Address"=>"عنوان التوصيل",
+    "Add Address"=>"إضافة عنوان",
+    "No addresses found"=>"لا توجد عناوين",
+    "Select this address"=>"اختر هذا العنوان",
 ];

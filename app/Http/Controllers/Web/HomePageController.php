@@ -229,9 +229,12 @@ class HomePageController extends Controller
 
     public function checkout()
     {
-//        $user = auth('user')->user();
-//        $cartItems = $user->carts()->with(['productVariant', 'productVariant.product','productVariant.product.translation'])->get();
-        return view('website.checkout');
+        $user = auth('user')->user();
+        // Get user addresses with area relationship
+        $addresses = $user->addresses()->with('area')->latest()->get();
+        // Get areas for address form
+        $areas = \App\Models\Area::whereStatus(1)->latest()->get();
+        return view('website.checkout', compact('addresses', 'areas'));
     }
 
     public function proceedToCheckout(ProceedToCheckoutRequest $request)
