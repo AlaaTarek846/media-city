@@ -230,9 +230,12 @@ class HomePageController extends Controller
 
     public function checkout()
     {
-//        $user = auth('user')->user();
-//        $cartItems = $user->carts()->with(['productVariant', 'productVariant.product','productVariant.product.translation'])->get();
-        return view('website.checkout');
+        $user = auth('user')->user();
+        // Get user addresses with area relationship
+        $addresses = $user->addresses()->with('area')->latest()->get();
+        // Get areas for address form
+        $areas = \App\Models\Area::whereStatus(1)->latest()->get();
+        return view('website.checkout', compact('addresses', 'areas'));
     }
 
     public function proceedToCheckout(ProceedToCheckoutRequest $request)
@@ -795,7 +798,20 @@ class HomePageController extends Controller
         // Load user with all profile relationships
         $user->load('personProfile', 'companyProfile', 'studioProfile');
         $areas = Area::whereStatus(1)->latest()->get();
-        return view('website.user-dashboard', compact('user', 'areas'));
+        
+        // Load user orders with relationships
+        $orders = $user->orders()
+            ->with([
+                'orderStatus.translation',
+                'orderItems.product.translation',
+                'orderItems.product.images',
+                'orderItems.productVariant',
+                'address.area.translation'
+            ])
+            ->latest()
+            ->get();
+        
+        return view('website.user-dashboard', compact('user', 'areas', 'orders'));
     }
 
     /**

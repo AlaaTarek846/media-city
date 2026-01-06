@@ -30,11 +30,10 @@ class OrderController extends Controller
         $discountItem = 0;
         $data         = $request->validated();
 
+        $user = auth('user')->user();
         $discountCoupon = $this->discountCoupon($data['coupon_discount']??null);
 
-        $address = Address::with('area')->where('user_id',$user->id)->find($data['address_id']);
-
-       $user = auth('user')->user();
+        $address = Address::with('area')->where('user_id', $user->id)->find($data['address_id']);
         $order = Order::create([
             'user_id'            => $user->id,
             'address_id'         => $data['address_id'],
@@ -46,10 +45,10 @@ class OrderController extends Controller
         $orderItem =  $this->orderItem($user->carts,$order);
         if ($discountCoupon)
         {
-            if ($discountCoupon->type = "fixed"){
-                $discountItem          =  $order->discount ?? 0;
+            if ($discountCoupon->type == "fixed"){
+                $discountItem = $discountCoupon->value ?? 0;
             }else{
-                $discountItem          = $orderItem['totalSum'] *  (float) ($order->discount ?? 0) / 100;
+                $discountItem = $orderItem['totalSum'] *  (float) ($discountCoupon->value ?? 0) / 100;
             }
         }
         $finalPrice            = $orderItem['totalSum'] - $discountItem;
@@ -62,7 +61,10 @@ class OrderController extends Controller
 
         //update quantity in product
         foreach ($user->carts as $cartItem) {
-            $cartItem->productVariant->decrement('quantity', $cartItem->quantity);
+            // Only decrement quantity for buy items (rent items don't affect stock)
+            if (is_null($cartItem->start_date) && is_null($cartItem->count_day)) {
+                $cartItem->productVariant->decrement('quantity', $cartItem->quantity);
+            }
         }
 
         // Clear the user's cart
@@ -95,26 +97,34 @@ class OrderController extends Controller
         $totalSum = 0;
         foreach ($items as $item){
             $totalItem =0;
-            $product = Product::find($item['product_id']);
-            $variant               = $product->variants->first();
-            if ($product->department_id == 1){
-                $totalItem = ($variant->price * $item['quantity']) * $item['count_day'];
-            }
-            if ($product->department_id == 2){
-                $totalItem = $variant->price * $item['quantity'];
+            $product = Product::find($item->product_id);
+            $variant = $item->productVariant;
+            
+            // Use cart item price (already includes discount if applicable)
+            $itemPrice = $item->price;
+            
+            // Determine if this is a rent item
+            $isRent = !is_null($item->start_date) && !is_null($item->count_day);
+            
+            if ($isRent) {
+                // For rent: price × count_day
+                $totalItem = $itemPrice * $item->count_day;
+            } else {
+                // For buy: price × quantity
+                $totalItem = $itemPrice * $item->quantity;
             }
 
             $orderItem = OrderItem::create([
                 'order_id'           => $order->id,
                 'product_id'         => $product->id,
                 'product_variant_id' => $variant->id,
-                'quantity'           => $item['quantity'],
-                'price'              => $variant->price,
-                'discount'           => $variant->discount_percentage,
-                'total'              => round($totalItem, 2)  ,
-                'count_day'          => $item['count_day']??0,
-                'start_date'         => $item['start_date']??null,
-                'note'               => $item['note']??null,
+                'quantity'           => $item->quantity,
+                'price'              => $itemPrice,
+                'discount'           => $variant->discount_percentage ?? 0,
+                'total'              => round($totalItem, 2),
+                'count_day'          => $item->count_day ?? 0,
+                'start_date'         => $item->start_date ?? null,
+                'note'               => $item->note ?? null,
 
             ]);
             $totalSum+=$orderItem->total;

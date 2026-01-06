@@ -89,7 +89,7 @@ class CartController extends Controller
     public function destroy($id)
     {
         $user = auth('user')->user();
-
+        
         $cartItem = $user->carts()->find($id);
 
         if (!$cartItem) {
