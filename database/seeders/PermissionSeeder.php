@@ -50,11 +50,6 @@ class PermissionSeeder extends Seeder
             ['name' => 'country edit'  ,  'category' => 'Countries'],
             ['name' => 'country delete',  'category' => 'Countries'],
 
-            ['name' => 'frequently asked question read'  ,  'category' => 'Frequently Asked Question'],
-            ['name' => 'frequently asked question create',  'category' => 'Frequently Asked Question'],
-            ['name' => 'frequently asked question edit'  ,  'category' => 'Frequently Asked Question'],
-            ['name' => 'frequently asked question delete',  'category' => 'Frequently Asked Question '],
-
             ['name' => 'database backup read',  'category' => 'Database Backup'],
             ['name' => 'database backup create',  'category' => 'Database Backup'],
 
@@ -131,12 +126,12 @@ class PermissionSeeder extends Seeder
 
             ['name' => 'setting read'  ,  'category' => 'Setting'],
             ['name' => 'setting edit'  ,  'category' => 'Setting'],
-            ['name' => 'return policy read'  ,  'category' => 'Setting'],
-            ['name' => 'return policy edit'  ,  'category' => 'Setting'],
+//            ['name' => 'return policy read'  ,  'category' => 'Setting'],
+//            ['name' => 'return policy edit'  ,  'category' => 'Setting'],
             ['name' => 'terms conditions read'  ,  'category' => 'Setting'],
             ['name' => 'terms conditions edit'  ,  'category' => 'Setting'],
-            ['name' => 'shipping information read'  ,  'category' => 'Setting'],
-            ['name' => 'shipping information edit'  ,  'category' => 'Setting'],
+//            ['name' => 'shipping information read'  ,  'category' => 'Setting'],
+//            ['name' => 'shipping information edit'  ,  'category' => 'Setting'],
 
             // Article Permissions
             ['name' => 'article read',  'category' => 'Article'],

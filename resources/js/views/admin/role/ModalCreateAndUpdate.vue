@@ -6,7 +6,7 @@
                     <h6 class="modal-title" id="roleModalLgLabel">
                         {{ type == 'create' ? $t('global.add') : $t('global.update') }}
                     </h6>
-                    <a type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></a>
+                    <a type="button" class="btn-close" data-bs-dismiss="modal" :aria-label="$t('global.close')"></a>
                 </div>
                 <div class="modal-body">
                     <div class="row">
@@ -96,7 +96,6 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                .
                                             </div>
                                         </div>
                                     </div>
