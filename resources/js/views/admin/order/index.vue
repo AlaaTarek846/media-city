@@ -24,14 +24,44 @@
                             <input class="form-control py-2 me-2" v-model="search.searchKey" @input="getDataWithFilter(1)" :placeholder="$t('global.Search')">
                         </div>
                         <div class="col-md-2">
-                            <select class="form-control py-2" v-model="dateFilter" @change="handleDateFilterChange">
-                                <option value="today">{{ $t('global.today') }}</option>
-                                <option value="yesterday">{{ $t('global.yesterday') }}</option>
-                                <option value="all">{{ $t('global.all') }}</option>
-                            </select>
+                            <label class="form-label mb-1">فلتر التاريخ</label>
+                            <Select 
+                                v-model="dateFilter" 
+                                @change="handleDateFilterChange"
+                                :options="dateFilterOptions"
+                                optionLabel="label"
+                                optionValue="value"
+                                :placeholder="$t('global.today')"
+                                :class="['w-full w-100']">
+                            </Select>
                         </div>
                         <div class="col-md-3">
-                            <input type="date" class="form-control py-2" v-model="selectedDate" @change="handleDateSearch" :placeholder="$t('global.select_date')">
+                            <label class="form-label mb-1">البحث بالتاريخ</label>
+                            <Calendar 
+                                v-model="selectedDate" 
+                                @date-select="handleDateSearch"
+                                dateFormat="yy-mm-dd"
+                                :showIcon="true"
+                                inputId="date-picker"
+                                :placeholder="$t('global.select_date')"
+                                :class="['w-full w-100']"
+                                showButtonBar>
+                            </Calendar>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label mb-1">حالة الطلب</label>
+                            <MultiSelect 
+                                v-model="selectedOrderStatuses" 
+                                :options="orderStatuses" 
+                                optionLabel="title" 
+                                optionValue="id"
+                                :filter="true"
+                                placeholder="اختر حالة الطلب"
+                                display="chip"
+                                @change="handleOrderStatusChange"
+                                :class="['w-full w-100']">
+                            </MultiSelect>
+                            <small class="text-muted">يمكنك اختيار أكثر من حالة</small>
                         </div>
                     </div>
 
@@ -201,11 +231,16 @@ import Show from "./Show.vue";
 import orderStatus from "./orderStatus.vue";
 import {useI18n} from "vue-i18n";
 import adminApi from "../../../api/adminAxios";
+import MultiSelect from 'primevue/multiselect';
+import Calendar from 'primevue/calendar';
 
 export default {
     name: "index",
     components: {
-        Show,orderStatus
+        Show,
+        orderStatus,
+        MultiSelect,
+        Calendar
     },
     setup(props) {
         const emitter = inject('emitter');
@@ -218,6 +253,15 @@ export default {
         const skipWatcher = ref(true);
         const activeTab = ref('all');
         const unreadCount = ref(0);
+        const selectedOrderStatuses = ref([]);
+        const orderStatuses = ref([]);
+        
+        // Date filter options for PrimeVue Select
+        const dateFilterOptions = ref([
+            { label: t('global.today'), value: 'today' },
+            { label: t('global.yesterday'), value: 'yesterday' },
+            { label: t('global.all'), value: 'all' }
+        ]);
 
         // Set search configuration
         search.value = {
@@ -279,7 +323,11 @@ export default {
 
             // Add date filter - prioritize specific date search, otherwise use filter
             if (selectedDate.value) {
-                params.date_search = selectedDate.value;
+                // Format date for API (Calendar returns Date object)
+                const formattedDate = formatDateForAPI(selectedDate.value);
+                if (formattedDate) {
+                    params.date_search = formattedDate;
+                }
             } else if (dateFilterParam) {
                 // Apply date filter (today or yesterday)
                 params.date_filter = dateFilterParam;
@@ -289,6 +337,18 @@ export default {
             // Add search if exists
             if (search.value.searchKey) {
                 params.search = JSON.stringify(search.value);
+            }
+
+            // Add order status filter if exists
+            if (selectedOrderStatuses.value && Array.isArray(selectedOrderStatuses.value) && selectedOrderStatuses.value.length > 0) {
+                // Filter out empty values and ensure they are numbers
+                const statusIds = selectedOrderStatuses.value
+                    .filter(id => id !== '' && id !== null && id !== undefined)
+                    .map(id => parseInt(id))
+                    .filter(id => !isNaN(id));
+                if (statusIds.length > 0) {
+                    params.order_status_ids = statusIds.join(',');
+                }
             }
 
             adminApi
@@ -321,6 +381,32 @@ export default {
         const handleDateSearch = () => {
             dateFilter.value = 'all'; // Reset filter to all when searching by date
             getDataWithFilter(1);
+        };
+
+        // Format date for API (YYYY-MM-DD)
+        const formatDateForAPI = (date) => {
+            if (!date) return null;
+            if (typeof date === 'string') return date;
+            const d = new Date(date);
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        };
+
+        const handleOrderStatusChange = () => {
+            getDataWithFilter(1);
+        };
+
+        // Fetch order statuses
+        const fetchOrderStatuses = () => {
+            adminApi.get(`dashboard/orderStatus`)
+                .then((res) => {
+                    orderStatuses.value = res.data.data || [];
+                })
+                .catch((err) => {
+                    // Error handled silently
+                });
         };
 
         const changeTab = (tab) => {
@@ -379,6 +465,8 @@ export default {
             uri.value = 'order';
             // Override getData in crud so watcher uses our custom function
             overrideGetData(getDataWithFilter);
+            // Fetch order statuses
+            fetchOrderStatuses();
             // Load data immediately with date filter
             getDataWithFilter(1);
             // Fetch unread count
@@ -392,7 +480,7 @@ export default {
         }
 
 
-        return { getData: getDataWithFilter, loading, search, permission, deleteData, showEditMode, showModelCreate, data, dataPaginate, type, showData, showDataModel, dataRow, modalShow, pagePaginate,selectedUser,showOrderStatus,showOrderMode, dateFilter, selectedDate, handleDateFilterChange, handleDateSearch, activeTab, unreadCount, changeTab, markAsRead };
+        return { getData: getDataWithFilter, loading, search, permission, deleteData, showEditMode, showModelCreate, data, dataPaginate, type, showData, showDataModel, dataRow, modalShow, pagePaginate,selectedUser,showOrderStatus,showOrderMode, dateFilter, selectedDate, handleDateFilterChange, handleDateSearch, activeTab, unreadCount, changeTab, markAsRead, selectedOrderStatuses, orderStatuses, handleOrderStatusChange, dateFilterOptions };
 
     }
 }

@@ -29,11 +29,11 @@
                                 <i class="ri-add-line me-1 fw-semibold align-middle"></i>{{ $t('global.add') }}
                             </button>
 
-                            <button @click="selectedUser = 'all'" data-bs-toggle="modal"
+                            <!-- <button @click="selectedUser = 'all'" data-bs-toggle="modal"
                                 v-if="permission.includes('admin send notification')"
                                 data-bs-target="#send-notification" :title="$t('global.send_notification')"
                                 class="btn btn-sm btn-warning-light ms-3"><i class="bx bx-bell header-link-icon"></i>
-                                {{ $t('global.send_notification_to_all') }} </button>
+                                {{ $t('global.send_notification_to_all') }} </button> -->
                         </div>
                     </div>
                     <div class="card-body">

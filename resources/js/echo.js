@@ -27,11 +27,7 @@ try {
         forceTLS: true,
         encrypted: true,
     });
-
-    console.log('✅ Laravel Echo initialized successfully');
-    console.log('📡 Pusher Key:', pusherKey);
-    console.log('🌍 Pusher Cluster:', pusherCluster);
 } catch (error) {
-    console.error('❌ Error initializing Laravel Echo:', error);
+    // Error handled silently
 }
 

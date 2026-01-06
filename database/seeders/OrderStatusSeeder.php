@@ -38,6 +38,10 @@ class OrderStatusSeeder extends Seeder
                 'name' => 'إلغاء الطلب',
                 'name_e' => 'Canceled',
             ],
+            [
+                'name'   => 'رفض',
+                'name_e' => 'Rejected',
+            ]
         ];
 
 

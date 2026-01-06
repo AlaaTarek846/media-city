@@ -170,6 +170,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => [ChangeLang::class]], fun
         Route::get('statistics',[DashboardStatisticsController::class,'index']);
         Route::get('get-total-revenue-per-months',[DashboardStatisticsController::class,'getTotalRevenuePerMonths']);
         Route::get('get-total-revenue-for-each-year-per-months',[DashboardStatisticsController::class,'getTotalRevenueForEachYearPerMonths']);
+        Route::get('get-peak-periods',[DashboardStatisticsController::class,'getPeakPeriods']);
 
         Route::apiResource('frequently-asked-questions', FrequentlyAskedQuestionController::class);
 

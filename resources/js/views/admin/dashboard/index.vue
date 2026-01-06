@@ -135,16 +135,16 @@
                                             <div class="flex-fill ms-3">
                                                 <div class="d-flex align-items-center justify-content-between flex-wrap">
                                                     <div>
-                                                        <p class="text-muted mb-0">{{$t('global.invoicesCount')}}</p>
+                                                        <p class="text-muted mb-0">عدد الأوردرات</p>
                                                         <h4 class="fw-semibold mt-1">{{ statistics.orderCount }}</h4>
                                                     </div>
                                                     <div id="crm-total-customers"></div>
                                                 </div>
                                                 <div class="d-flex align-items-center justify-content-between mt-1">
                                                     <div>
-                                                        <!-- <router-link :to="{name:'invoice'}" class="text-secondary">
+                                                        <router-link :to="{name:'order'}" class="text-secondary">
                                                             {{$t('global.viewAll')}}<i class="ti ti-arrow-narrow-right ms-2 fw-semibold d-inline-block"></i>
-                                                        </router-link> -->
+                                                        </router-link>
                                                     </div>
                                                 </div>
                                             </div>
@@ -164,16 +164,16 @@
                                             <div class="flex-fill ms-3">
                                                 <div class="d-flex align-items-center justify-content-between flex-wrap">
                                                     <div>
-                                                        <p class="text-muted mb-0">{{$t('global.totalInvoiceRevenue')}}</p>
+                                                        <p class="text-muted mb-0">إجمالي متحصلات الأوردرات</p>
                                                         <h4 class="fw-semibold mt-1">{{ statistics.invoiceRevenue }} {{ statistics.setting?.translation?.title }}</h4>
                                                     </div>
                                                     <div id="crm-conversion-ratio"></div>
                                                 </div>
                                                 <div class="d-flex align-items-center justify-content-between mt-1">
                                                     <div>
-                                                        <!-- <router-link :to="{name:'invoice'}" class="text-warning">
+                                                        <router-link :to="{name:'order'}" class="text-warning">
                                                             {{$t('global.viewAll')}}<i class="ti ti-arrow-narrow-right ms-2 fw-semibold d-inline-block"></i>
-                                                        </router-link> -->
+                                                        </router-link>
                                                     </div>
                                                 </div>
                                             </div>
@@ -181,16 +181,38 @@
                                     </div>
                                 </div>
                             </div>
+                            <!-- Invoice Statistics Month (Completed Orders Only) -->
                             <div class="col-xl-12">
                                 <div class="card custom-card">
                                     <div class="card-header">
-                                        <div class="card-title">{{$t('global.invoiceStatisticsMonth')}}</div>
+                                        <div class="card-title">متحصلات الأوردرات خلال الشهر (تم التسليم فقط)</div>
                                     </div>
                                     <div class="card-body">
-                                        <div id="area-basic"></div>
+                                        <div id="invoice-statistics-month"></div>
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- Orders Statistics Month (All Orders) -->
+                            <div class="col-xl-12">
+                                <div class="card custom-card">
+                                    <div class="card-header">
+                                        <div class="card-title">متحصلات الأوردرات خلال الشهر (جميع الأوردرات)</div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="order-statistics-month"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Current Month and Last Month Divided by Weeks -->
+                            <CurrentMonthAndLastMonthDevidedWeeks 
+                                :currentMonth="currentMonthData"
+                                :lastMonth="lastMonthData"
+                                id="current-last-month-weeks"
+                                title="عدد الأوردرات المكتملة لهذا الشهر والشهر الماضي لكل اسبوع"
+                            />
+
 
                         </div>
                     </div>
@@ -220,19 +242,19 @@
 
                                             <div class="col p-0">
                                                 <div class="p-3 text-center border-end border-inline-end-dashed">
-                                                    <span class="text-muted fs-12 mb-1 crm-lead-legend mobile d-inline-block">{{$t('global.processing')}}</span>
+                                                    <span class="text-muted fs-12 mb-1 crm-lead-legend mobile d-inline-block">معلق</span>
                                                     <div><span class="fs-16 fw-semibold">{{ statistics.processing }}</span></div>
                                                 </div>
                                             </div>
                                             <div class="col p-0">
                                                 <div class="p-3 text-center">
-                                                     <span class="text-muted fs-12 mb-1 crm-lead-legend tablet d-inline-block">{{$t('global.completed')}}</span>
+                                                     <span class="text-muted fs-12 mb-1 crm-lead-legend tablet d-inline-block">تم التسليم</span>
                                                     <div><span class="fs-16 fw-semibold">{{ statistics.delivered }}</span></div>
                                                 </div>
                                             </div>
                                             <div class="col p-0">
                                                 <div class="p-3 text-center">
-                                                     <span class="text-muted fs-12 mb-1 crm-lead-legend canceled d-inline-block">{{$t('global.canceled')}}</span>
+                                                     <span class="text-muted fs-12 mb-1 crm-lead-legend canceled d-inline-block">تم الإلغاء</span>
                                                     <div><span class="fs-16 fw-semibold">{{ statistics.canceled }}</span></div>
                                                 </div>
                                             </div>
@@ -284,14 +306,10 @@ import adminApi from "../../../api/adminAxios";
 import {useI18n} from "vue-i18n";
 import Cookies from "js-cookie";
 import CurrentMonthAndLastMonthDevidedWeeks from "./CurrentMonthAndLastMonthDevidedWeeks.vue";
-import ChartForTotalAmountAndCountOfEachMonthInYear from "./ChartForTotalAmountAndCountOfEachMonthInYear.vue";
-import ChartForPeakPeriods from "./ChartForPeakPeriods.vue";
 
 export default {
     components:{
-        CurrentMonthAndLastMonthDevidedWeeks,
-        ChartForTotalAmountAndCountOfEachMonthInYear,
-        ChartForPeakPeriods
+        CurrentMonthAndLastMonthDevidedWeeks
     },
     setup(){
         const {t} = useI18n({});
@@ -299,16 +317,28 @@ export default {
         const loading = ref(false);
         const statistics = ref('');
         const bookingStatistics = ref([]);
+        const currentMonthData = ref([]);
+        const lastMonthData = ref([]);
 
         let getData = (page = 1) => {
             loading.value = true;
 
+            // Get main statistics
             adminApi.get(`dashboard/statistics`)
                 .then((res) => {
                     let l = res.data.data;
                     statistics.value = l;
                     clientStatistics(l.clientActiveCount,l.clientDeActiveCount);
-                    invoiceChart(l.invoiceStatisticsMonth);
+                    
+                    // Render charts after a short delay to ensure DOM is ready
+                    setTimeout(() => {
+                        if (l.invoiceStatisticsMonth) {
+                            invoiceChart(l.invoiceStatisticsMonth);
+                        }
+                        if (l.orderStatisticsMonth) {
+                            orderChart(l.orderStatisticsMonth);
+                        }
+                    }, 500);
 
                     let booking_statistics = [];
                     booking_statistics.push(l.processing);
@@ -324,6 +354,17 @@ export default {
                 .finally(() => {
                     loading.value = false;
                 });
+
+            // Get current and last month data divided by weeks
+            adminApi.get(`dashboard/get-total-revenue-per-months`)
+                .then((res) => {
+                    currentMonthData.value = res.data.data.current_month || [];
+                    lastMonthData.value = res.data.data.last_month || [];
+                })
+                .catch((err) => {
+                    // Error handled silently
+                });
+
         }
 
         onMounted(() => {
@@ -391,34 +432,61 @@ export default {
 
         }
 
-        /* invoice chart */
+        /* invoice chart (Completed Orders Only) */
         let invoiceChart = (invoiceStatisticsMonth = []) => {
-            let prices = [];
-            let dates = [];
-            invoiceStatisticsMonth.forEach(function(el) {
-                prices.push(el.total_amount);
-                dates.push(el.day);
-            });
+            // Clear previous chart
+            const invoiceElement = document.getElementById("invoice-statistics-month");
+            if (!invoiceElement) {
+                setTimeout(() => {
+                    invoiceChart(invoiceStatisticsMonth);
+                }, 500);
+                return;
+            }
+            
+            invoiceElement.innerHTML = '';
+
+            if (!invoiceStatisticsMonth || invoiceStatisticsMonth.length === 0) {
+                invoiceElement.innerHTML = '<div class="text-center p-4"><p class="text-muted">لا توجد بيانات متاحة</p></div>';
+                return;
+            }
+
+                let prices = [];
+                let dates = [];
+                let counts = [];
+                
+                invoiceStatisticsMonth.forEach(function(el) {
+                    prices.push(parseFloat(el.total_amount) || 0);
+                    dates.push(el.day);
+                    counts.push(parseInt(el.count) || 0);
+                });
+            
             var options = {
                 series: [{
-                    name: t('global.amount'),
+                    name: 'المبلغ',
                     data: prices
+                }, {
+                    name: 'عدد الأوردرات',
+                    data: counts
                 }],
                 chart: {
                     type: 'area',
-                    height: 320,
+                    height: 350,
                     zoom: {
                         enabled: true
+                    },
+                    toolbar: {
+                        show: true
                     }
                 },
                 dataLabels: {
                     enabled: false
                 },
                 stroke: {
-                    curve: 'straight',
+                    curve: 'smooth',
+                    width: 2
                 },
                 subtitle: {
-                    text: t('global.paymentMoves'),
+                    text: 'متحصلات الأوردرات المكتملة خلال الشهر (تم التسليم فقط)',
                     align: 'left'
                 },
                 grid: {
@@ -426,7 +494,7 @@ export default {
                 },
                 labels: dates,
                 title: {
-                    text: t('global.AnalysisOfBillCollectionsDuringTheMonth'),
+                    text: 'تحليل متحصلات الأوردرات المكتملة خلال الشهر (تم التسليم فقط)',
                     align: 'left',
                     style: {
                         fontSize: '13px',
@@ -434,7 +502,7 @@ export default {
                         color: '#8c9097'
                     },
                 },
-                colors: ['#845adf'],
+                colors: ['#845adf', '#26bf94'],
                 xaxis: {
                     type: 'datetime',
                     labels: {
@@ -447,8 +515,124 @@ export default {
                         },
                     }
                 },
-                yaxis: {
+                yaxis: [{
                     opposite: true,
+                    title: {
+                        text: 'المبلغ',
+                        style: {
+                            color: '#845adf'
+                        }
+                    },
+                    labels: {
+                        show: true,
+                        style: {
+                            colors: "#8c9097",
+                            fontSize: '11px',
+                            fontWeight: 600,
+                        },
+                    }
+                }, {
+                    opposite: false,
+                    title: {
+                        text: 'عدد الأوردرات',
+                        style: {
+                            color: '#26bf94'
+                        }
+                    },
+                    labels: {
+                        show: true,
+                        style: {
+                            colors: "#8c9097",
+                            fontSize: '11px',
+                            fontWeight: 600,
+                        },
+                    }
+                }],
+                legend: {
+                    horizontalAlign: 'left',
+                    position: 'top'
+                },
+                tooltip: {
+                    shared: true,
+                    intersect: false
+                }
+            };
+            
+            try {
+                var chart = new ApexCharts(document.querySelector("#invoice-statistics-month"), options);
+                chart.render();
+            } catch (error) {
+                // Error handled silently
+            }
+        }
+
+        /* order chart (All Orders) */
+        let orderChart = (orderStatisticsMonth = []) => {
+            if (!orderStatisticsMonth || orderStatisticsMonth.length === 0) {
+                return;
+            }
+            
+            // Clear previous chart
+            const orderElement = document.getElementById("order-statistics-month");
+            if (orderElement) {
+                orderElement.innerHTML = '';
+            }
+
+            let prices = [];
+            let dates = [];
+            let counts = [];
+            
+            orderStatisticsMonth.forEach(function(el) {
+                prices.push(parseFloat(el.total_amount) || 0);
+                dates.push(el.day);
+                counts.push(parseInt(el.count) || 0);
+            });
+            
+            var options = {
+                series: [{
+                    name: 'المبلغ',
+                    data: prices
+                }, {
+                    name: 'عدد الأوردرات',
+                    data: counts
+                }],
+                chart: {
+                    type: 'area',
+                    height: 350,
+                    zoom: {
+                        enabled: true
+                    },
+                    toolbar: {
+                        show: true
+                    }
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    curve: 'smooth',
+                    width: 2
+                },
+                subtitle: {
+                    text: 'متحصلات جميع الأوردرات خلال الشهر',
+                    align: 'left'
+                },
+                grid: {
+                    borderColor: '#f2f5f7',
+                },
+                labels: dates,
+                title: {
+                    text: 'تحليل متحصلات جميع الأوردرات خلال الشهر',
+                    align: 'left',
+                    style: {
+                        fontSize: '13px',
+                        fontWeight: 'bold',
+                        color: '#8c9097'
+                    },
+                },
+                colors: ['#f59b1b', '#e6533c'],
+                xaxis: {
+                    type: 'datetime',
                     labels: {
                         show: true,
                         style: {
@@ -459,12 +643,53 @@ export default {
                         },
                     }
                 },
+                yaxis: [{
+                    opposite: true,
+                    title: {
+                        text: 'المبلغ',
+                        style: {
+                            color: '#f59b1b'
+                        }
+                    },
+                    labels: {
+                        show: true,
+                        style: {
+                            colors: "#8c9097",
+                            fontSize: '11px',
+                            fontWeight: 600,
+                        },
+                    }
+                }, {
+                    opposite: false,
+                    title: {
+                        text: 'عدد الأوردرات',
+                        style: {
+                            color: '#e6533c'
+                        }
+                    },
+                    labels: {
+                        show: true,
+                        style: {
+                            colors: "#8c9097",
+                            fontSize: '11px',
+                            fontWeight: 600,
+                        },
+                    }
+                }],
                 legend: {
-                    horizontalAlign: 'left'
+                    horizontalAlign: 'left',
+                    position: 'top'
+                },
+                tooltip: {
+                    shared: true,
+                    intersect: false
                 }
             };
-            var chart = new ApexCharts(document.querySelector("#area-basic"), options);
-            chart.render();
+            
+            if (orderElement) {
+                var chart = new ApexCharts(document.querySelector("#order-statistics-month"), options);
+                chart.render();
+            }
         }
 
         /* client chart */
@@ -490,7 +715,12 @@ export default {
             chart.render();
         };
 
-        return {user_name,statistics};
+        return {
+            user_name,
+            statistics,
+            currentMonthData,
+            lastMonthData
+        };
     },
     data(){
       return {

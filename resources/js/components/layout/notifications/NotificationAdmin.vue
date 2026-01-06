@@ -339,8 +339,6 @@ export default {
                         }
                     });
 
-                console.log('✅ Successfully subscribed to admin.notifications channel');
-
                 // Refresh messages after successful subscription
                 setTimeout(() => {
                     fetchRecentMessages();
