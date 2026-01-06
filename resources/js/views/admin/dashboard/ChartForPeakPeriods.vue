@@ -66,22 +66,36 @@ export default {
     watch: {
         peak_periods: {
             handler(newV, old) {
+                if (!newV || !Array.isArray(newV) || newV.length === 0) {
+                    return;
+                }
                 setTimeout(() => {
+                    // Clear previous categories
+                    this.options.xaxis.categories = [];
                     let data = []
-                    this.peak_periods.forEach((element) => {
-                        this.options.xaxis.categories.push(element.period)
-                        data.push(element.count)
-
-                    })
+                    
+                    if (this.peak_periods && Array.isArray(this.peak_periods)) {
+                        this.peak_periods.forEach((element) => {
+                            if (element && element.period) {
+                                this.options.xaxis.categories.push(element.period)
+                                data.push(parseInt(element.count) || 0)
+                            }
+                        })
+                    }
                       
                     this.options.series = [
                         { name: this.$t('global.number_of_bookings'), data },
                     ]
-                    document.getElementById("peak-periods").innerHTML = '';
-                    var chart1 = new ApexCharts(document.querySelector("#peak-periods"), this.options);
-                    chart1.render();
+                    
+                    const chartElement = document.getElementById("peak-periods");
+                    if (chartElement) {
+                        chartElement.innerHTML = '';
+                        var chart1 = new ApexCharts(document.querySelector("#peak-periods"), this.options);
+                        chart1.render();
+                    }
                 }, 500)
-            }
+            },
+            immediate: true
         }
     }
 };

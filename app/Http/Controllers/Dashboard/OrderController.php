@@ -48,6 +48,17 @@ class OrderController extends Controller implements HasMiddleware
             $query->whereRaw("DATE(created_at) = ?", [$request->date_search]);
         }
 
+        // Filter by order status IDs (multiple)
+        if ($request->has('order_status_ids') && $request->order_status_ids) {
+            $statusIds = explode(',', $request->order_status_ids);
+            $statusIds = array_filter($statusIds, function($id) {
+                return !empty($id) && is_numeric($id);
+            });
+            if (!empty($statusIds)) {
+                $query->whereIn('order_status_id', $statusIds);
+            }
+        }
+
         $orders = $query->latest()->paginate(10);
 
         return responseJson(OrderResource::collection($orders->items()), 'ContactMessage', 200, getPaginates($orders));
@@ -91,12 +102,14 @@ class OrderController extends Controller implements HasMiddleware
 
     public function orderStatus()
     {
-        $orderStatuses = OrderStatus::all()->map(function ($status) {
-            return [
-            'id' => $status->id,
-            'title' => $status->current_translation?->title,
-            ];
-        });
+        $orderStatuses = OrderStatus::all()
+            ->map(function ($status) {
+                return [
+                    'id'    => $status->id,
+                    'title' => $status->current_translation?->title,
+                ];
+            });
+
         return responseJson($orderStatuses, 'Order Statuses', 200);
     }
 

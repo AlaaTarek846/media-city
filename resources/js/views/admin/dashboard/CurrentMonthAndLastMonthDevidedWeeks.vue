@@ -105,48 +105,68 @@ export default {
     },
 
 
+    methods: {
+        renderChart() {
+            setTimeout(() => {
+                let weeks = ['First Week', 'Second Week', 'Third Week', 'Fourth Week', 'Fifth Week'];
+                let current = []
+                let last = []
+                
+                weeks.forEach((week) => {
+                    let check_exists = 0
+                    
+                    // Process current month data
+                    if (this.currentMonth && Array.isArray(this.currentMonth)) {
+                        this.currentMonth.forEach(element => {
+                            if (element && element.week == week) {
+                                check_exists = 1
+                                current.push(parseInt(element.number) || 0)
+                            }
+                        });
+                    }
+                    if (check_exists == 0)
+                        current.push(0)
+                    check_exists = 0
+
+                    // Process last month data
+                    if (this.lastMonth && Array.isArray(this.lastMonth)) {
+                        this.lastMonth.forEach(element => {
+                            if (element && element.week == week) {
+                                check_exists = 1
+                                last.push(parseInt(element.number) || 0)
+                            }
+                        });
+                    }
+                    if (check_exists == 0)
+                        last.push(0)
+                })
+                
+                this.option.series = [
+                    { data: current, name: this.$t("global.current_month"), },
+                    { data: last, name: this.$t("global.last_month") }
+                ]
+
+                const chartElement = document.getElementById(this.id);
+                if (chartElement) {
+                    chartElement.innerHTML = '';
+                    var chart1 = new ApexCharts(document.querySelector("#"+this.id), this.option);
+                    chart1.render();
+                }
+            }, 500)
+        }
+    },
     watch: {
         currentMonth: {
             handler(newV, old) {
-               
-                setTimeout(() => {
-                    let weeks = ['First Week', 'Second Week', 'Third Week', 'Fourth Week', 'Fifth Week'];
-                    let current = []
-                    let last = []
-                    weeks.forEach((week) => {
-                        let check_exists = 0
-                        this.currentMonth.forEach(element => {
-                            if (element.week == week) {
-                                check_exists = 1
-                                current.push(element.number)
-                            }
-                        });
-                        if (check_exists == 0)
-                            current.push(0)
-                        check_exists = 0
-
-                        this.lastMonth.forEach(element => {
-                            if (element.week == week) {
-                                check_exists = 1
-                                last.push(element.number)
-                            }
-                        });
-                        if (check_exists == 0)
-                            last.push(0)
-
-                    })
-                    this.option.series = [
-                        { data: current, name: this.$t("global.current_month"), },
-                        { data: last, name: this.$t("global.last_month") }
-                    ]
-
-                    document.getElementById(this.id).innerHTML = '';
-                    var chart1 = new ApexCharts(document.querySelector("#"+this.id), this.option);
-                    chart1.render();
-
-
-                }, 500)
-            }
+                this.renderChart();
+            },
+            immediate: true
+        },
+        lastMonth: {
+            handler(newV, old) {
+                this.renderChart();
+            },
+            immediate: true
         }
     }
 }
