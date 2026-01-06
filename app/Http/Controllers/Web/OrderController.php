@@ -63,7 +63,7 @@ class OrderController extends Controller
         foreach ($user->carts as $cartItem) {
             // Only decrement quantity for buy items (rent items don't affect stock)
             if (is_null($cartItem->start_date) && is_null($cartItem->count_day)) {
-                $cartItem->productVariant->decrement('quantity', $cartItem->quantity);
+            $cartItem->productVariant->decrement('quantity', $cartItem->quantity);
             }
         }
 
@@ -153,6 +153,102 @@ class OrderController extends Controller
         ]);
 
         return responseJson([],'Updated Successfully',200);
+    }
+
+    public function orderDetails($id)
+    {
+        $user = auth('user')->user();
+        $order = $user->orders()
+            ->with([
+                'orderStatus.translation',
+                'orderItems.product.translation',
+                'orderItems.product.images',
+                'orderItems.productVariant',
+                'address.area.translation'
+            ])
+            ->findOrFail($id);
+
+        $setting = Setting::with('translation')->first();
+        $currency = $setting->translation->title ?? 'EGP';
+
+        // Get status name
+        $statusName = '';
+        if ($order->orderStatus) {
+            $statusTranslation = $order->orderStatus->current_translation ?? $order->orderStatus->translation ?? null;
+            if (!$statusTranslation && $order->orderStatus->translations) {
+                $statusTranslation = $order->orderStatus->translations->first();
+            }
+            $statusName = $statusTranslation ? $statusTranslation->title : '';
+        }
+
+        // Fallback translations
+        if (empty($statusName)) {
+            switch ($order->order_status_id) {
+                case 1: $statusName = __('messages.New Order'); break;
+                case 2: $statusName = __('messages.Preparing Order'); break;
+                case 3: $statusName = __('messages.On The Way'); break;
+                case 4: $statusName = __('messages.delivered'); break;
+                case 5: $statusName = __('messages.canceled'); break;
+                default: $statusName = __('messages.Order Status'); break;
+            }
+        }
+
+        // Determine order type
+        $hasRentItems = $order->orderItems->whereNotNull('start_date')->whereNotNull('count_day')->count() > 0;
+        $orderType = $hasRentItems ? 'rent' : 'buy';
+
+        // Prepare order items
+        $orderItems = [];
+        foreach ($order->orderItems as $orderItem) {
+            $product = $orderItem->product;
+            $productTitle = '';
+            $productImage = '/website/images/placeholder.jpg';
+
+            if ($product) {
+                $productTranslation = $product->current_translation ?? $product->translation ?? null;
+                if (!$productTranslation && $product->translations) {
+                    $productTranslation = $product->translations->first();
+                }
+                $productTitle = $productTranslation ? $productTranslation->title : '';
+                $productImage = $product->image ?? '/website/images/placeholder.jpg';
+            }
+
+            $isRentItem = !is_null($orderItem->start_date) && !is_null($orderItem->count_day);
+
+            $orderItems[] = [
+                'id' => $orderItem->id,
+                'product_id' => $product ? $product->id : null,
+                'product_title' => $productTitle,
+                'product_image' => $productImage,
+                'price' => $orderItem->price,
+                'quantity' => $orderItem->quantity,
+                'count_day' => $orderItem->count_day,
+                'start_date' => $orderItem->start_date ? \Carbon\Carbon::parse($orderItem->start_date)->format('Y-m-d') : null,
+                'total' => $orderItem->total,
+                'is_rent' => $isRentItem,
+            ];
+        }
+
+        $data = [
+            'id' => $order->id,
+            'order_number' => $order->order_number,
+            'order_status_id' => $order->order_status_id,
+            'status_name' => $statusName,
+            'order_type' => $orderType,
+            'created_at' => $order->created_at->format('Y-m-d H:i'),
+            'subtotal' => $order->sub_total,
+            'discount' => $order->coupon_discount ?? 0,
+            'shipping' => $order->shipping_price ?? 0,
+            'total' => $order->total,
+            'currency' => $currency,
+            'order_items' => $orderItems,
+        ];
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Order details retrieved successfully',
+            'data' => $data
+        ], 200);
     }
 }
 

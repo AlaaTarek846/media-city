@@ -352,7 +352,7 @@
                                                 </a>
 
                                                 {{-- Categories Dropdown --}}
-                                                <div class="onhover-category-box">
+                                                <div class="onhover-category-box w-100">
                                                     <div class="list-1">
                                                         <div class="category-title-box">
                                                             <h5>{{ $departmentTranslation->title }}</h5>

@@ -254,7 +254,7 @@
                                                     else $statusBadgeClass = 'badge bg-secondary'; // Other statuses
                                                 @endphp
 
-                                                <div class="order-box dashboard-bg-box" data-order-id="{{ $order->id }}">
+                                                <div class="order-box dashboard-bg-box order-box-clickable" data-order-id="{{ $order->id }}" style="width: 100%; cursor: pointer; transition: all 0.3s ease;" data-bs-toggle="modal" data-bs-target="#orderDetailsModal">
                                                     <div class="order-container">
                                                         <div class="order-icon">
                                                             <i data-feather="box"></i>
@@ -265,20 +265,15 @@
                                                                 <h4 class="mb-0">
                                                                     {{ __('messages.Order Number') }}: <strong>{{ $order->order_number }}</strong>
                                                                 </h4>
-                                                                <div class="d-flex align-items-center gap-2">
+                                                                <div class="d-flex align-items-center gap-2 mx-2">
                                                                     @if(!empty($statusName))
                                                                         <span class="{{ $statusBadgeClass }} px-3 py-1" style="font-size: 13px; font-weight: 600; display: inline-flex; align-items: center;">
-                                                                            <i class="fa-solid fa-circle me-1" style="font-size: 8px;"></i>{{ $statusName }}
+                                                                            {{ $statusName }}
                                                                         </span>
                                                                     @else
                                                                         <span class="{{ $statusBadgeClass }} px-3 py-1" style="font-size: 13px; font-weight: 600; display: inline-flex; align-items: center;">
-                                                                            <i class="fa-solid fa-circle me-1" style="font-size: 8px;"></i>{{ __('messages.Order Status') }}
+                                                                            {{ __('messages.Order Status') }}
                                                                         </span>
-                                                                    @endif
-                                                                    @if($orderType == 'rent')
-                                                                        <span class="badge bg-warning text-dark px-3 py-1" style="font-size: 13px; font-weight: 600;">{{ __('messages.Rent') }}</span>
-                                                                    @else
-                                                                        <span class="badge bg-success px-3 py-1" style="font-size: 13px; font-weight: 600;">{{ __('messages.Buy') }}</span>
                                                                     @endif
                                                                 </div>
                                                             </div>
@@ -293,109 +288,12 @@
                                                                     <span class="text-primary fw-bold">{{ $setting->translation->title ?? 'EGP' }} {{ number_format($order->total, 2) }}</span>
                                                                 </p>
                                                             </div>
-                                                            @if($isPending)
-                                                                <button class="btn btn-sm btn-danger mt-2 cancel-order-btn" data-order-id="{{ $order->id }}">
-                                                                    <i class="fa-solid fa-times me-1"></i>{{ __('messages.Cancel Order') }}
-                                                                </button>
-                                                            @endif
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="product-order-detail">
-                                                        @foreach($order->orderItems as $orderItem)
-                                                            @php
-                                                                $product = $orderItem->product;
-                                                                $productTitle = '';
-                                                                $productImage = '/website/images/placeholder.jpg';
-
-                                                                if ($product) {
-                                                                    $productTranslation = $product->current_translation ?? $product->translation ?? null;
-                                                                    if (!$productTranslation && $product->translations) {
-                                                                        $productTranslation = $product->translations->first();
-                                                                    }
-                                                                    $productTitle = $productTranslation ? $productTranslation->title : '';
-                                                                    $productImage = $product->image ?? '/website/images/placeholder.jpg';
-                                                                }
-
-                                                                $isRentItem = !is_null($orderItem->start_date) && !is_null($orderItem->count_day);
-                                                            @endphp
-
-                                                            <div class="d-flex align-items-start mb-3 pb-3" style="border-bottom: 1px solid #ececec;">
-                                                                @if($product)
-                                                                    <a href="{{ route('productDetail', $product->slug) }}" class="order-image me-3">
-                                                                        <img src="{{ $productImage }}" style="height: 100px; width: 100px; object-fit: cover;" alt="{{ $productTitle ?: __('messages.Product') }}" class="rounded">
-                                                                    </a>
-
-                                                                    <div class="order-wrap flex-grow-1">
-                                                                        <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
-                                                                            <a href="{{ route('productDetail', $product->id) }}">
-                                                                                <h5 class="mb-0">{{ $productTitle ?: __('messages.Product') }}</h5>
-                                                                            </a>
-                                                                            @if($isRentItem)
-                                                                                <span class="badge bg-warning text-dark px-2 py-1" style="font-size: 12px; font-weight: 600;">
-                                                                                    {{ __('messages.Rent') }}
-                                                                                    <span class="ms-1">({{ $orderItem->count_day ?? 0 }} {{ $orderItem->count_day == 1 ? __('messages.Day') : __('messages.Days') }})</span>
-                                                                                </span>
-                                                                            @else
-                                                                                <span class="badge bg-success px-2 py-1" style="font-size: 12px; font-weight: 600;">{{ __('messages.Buy') }}</span>
-                                                                            @endif
-                                                                        </div>
-                                                                @else
-                                                                    <div class="order-image me-3">
-                                                                        <img src="{{ $productImage }}" style="height: 100px; width: 100px; object-fit: cover;" alt="{{ __('messages.Product') }}" class="rounded">
-                                                                    </div>
-
-                                                                    <div class="order-wrap flex-grow-1">
-                                                                        <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
-                                                                            <h5 class="mb-0">{{ __('messages.Product') }}</h5>
-                                                                            @if($isRentItem)
-                                                                                <span class="badge bg-warning text-dark px-2 py-1" style="font-size: 12px; font-weight: 600;">
-                                                                                    {{ __('messages.Rent') }}
-                                                                                    <span class="ms-1">({{ $orderItem->count_day ?? 0 }} {{ $orderItem->count_day == 1 ? __('messages.Day') : __('messages.Days') }})</span>
-                                                                                </span>
-                                                                            @else
-                                                                                <span class="badge bg-success px-2 py-1" style="font-size: 12px; font-weight: 600;">{{ __('messages.Buy') }}</span>
-                                                                            @endif
-                                                                        </div>
-                                                                @endif
-                                                                    <ul class="product-size list-unstyled mb-0">
-                                                                        <li class="mb-2">
-                                                                            <div class="size-box d-flex align-items-center">
-                                                                                <h6 class="text-content mb-0 me-2">{{ __('messages.Price') }}:</h6>
-                                                                                <h5 class="mb-0">{{ $setting->translation->title ?? 'EGP' }} {{ number_format($orderItem->price, 2) }}</h5>
-                                                                            </div>
-                                                                        </li>
-                                                                        @if($isRentItem)
-                                                                            <li class="mb-2">
-                                                                                <div class="size-box d-flex align-items-center">
-                                                                                    <h6 class="text-content mb-0 me-2">{{ __('messages.Start Date') }}:</h6>
-                                                                                    <h6 class="mb-0">{{ $orderItem->start_date ? \Carbon\Carbon::parse($orderItem->start_date)->format('Y-m-d') : '-' }}</h6>
-                                                                                </div>
-                                                                            </li>
-                                                                            <li class="mb-2">
-                                                                                <div class="size-box d-flex align-items-center">
-                                                                                    <h6 class="text-content mb-0 me-2">{{ __('messages.Count Days') }}:</h6>
-                                                                                    <h6 class="mb-0">{{ $orderItem->count_day ?? 0 }} {{ __('messages.Days') }}</h6>
-                                                                                </div>
-                                                                            </li>
-                                                                        @else
-                                                                            <li class="mb-2">
-                                                                                <div class="size-box d-flex align-items-center">
-                                                                                    <h6 class="text-content mb-0 me-2">{{ __('messages.Quantity') }}:</h6>
-                                                                                    <h6 class="mb-0">{{ $orderItem->quantity ?? 1 }}</h6>
-                                                                                </div>
-                                                                            </li>
-                                                                        @endif
-                                                                        <li>
-                                                                            <div class="size-box d-flex align-items-center">
-                                                                                <h6 class="text-content mb-0 me-2">{{ __('messages.Total') }}:</h6>
-                                                                                <h5 class="mb-0 text-primary">{{ $setting->translation->title ?? 'EGP' }} {{ number_format($orderItem->total, 2) }}</h5>
-                                                                            </div>
-                                                                        </li>
-                                                                    </ul>
-                                                                </div>
+                                                            <div class="d-flex align-items-center gap-2">
+                                                                <span class="text-muted small">
+                                                                    <i class="fa-solid fa-eye me-1"></i>{{ __('messages.Click to view details') }}
+                                                                </span>
                                                             </div>
-                                                        @endforeach
+                                                        </div>
                                                     </div>
                                                 </div>
                                             @endforeach
@@ -896,7 +794,57 @@
     </div>
     <!-- Edit Password Modal End -->
 
+    <!-- Order Details Modal Start -->
+    <div class="modal fade theme-modal" id="orderDetailsModal" tabindex="-1" aria-labelledby="orderDetailsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="orderDetailsModalLabel">{{ __('messages.Order Details') }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <div class="modal-body" id="orderDetailsContent">
+                    <!-- Order details will be loaded here -->
+                    <div class="text-center py-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">{{ __('messages.Loading') }}...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Order Details Modal End -->
+
 @endsection
+
+@push('headStyle')
+    <style>
+        .order-box-clickable {
+            width: 100% !important;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        .order-box-clickable:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+        }
+        .order-contain {
+            width: 100%;
+        }
+        .order-details-container {
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        .order-items-section .card {
+            transition: all 0.3s ease;
+        }
+        .order-items-section .card:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+        }
+    </style>
+@endpush
 
 @push('headScript')
     <!-- Leaflet CSS -->
@@ -1828,6 +1776,231 @@
         })();
 
         /**
+         * Handle order box click to show details modal
+         */
+        $(document).on('click', '.order-box-clickable', function(e) {
+            // Don't trigger if clicking on cancel button or its children
+            if ($(e.target).closest('.cancel-order-btn').length) {
+                return;
+            }
+
+            var orderId = $(this).data('order-id');
+            loadOrderDetails(orderId);
+        });
+
+        /**
+         * Load order details into modal
+         */
+        function loadOrderDetails(orderId) {
+            var modalContent = $('#orderDetailsContent');
+            modalContent.html('<div class="text-center py-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">{{ __("messages.Loading") }}...</span></div></div>');
+
+            $.ajax({
+                url: '/api/web/order-details/' + orderId,
+                type: 'GET',
+                dataType: 'json',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    if (response.success && response.data) {
+                        renderOrderDetails(response.data);
+                    } else {
+                        modalContent.html('<div class="alert alert-danger">{{ __("messages.Error loading order details") }}</div>');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error loading order details:', error);
+                    modalContent.html('<div class="alert alert-danger">{{ __("messages.Error loading order details") }}</div>');
+                }
+            });
+        }
+
+        /**
+         * Render order details in modal
+         */
+        function renderOrderDetails(order) {
+            var html = '<div class="order-details-container">';
+
+            // Order Header
+            html += '<div class="order-header mb-4 pb-3 border-bottom">';
+            html += '<div class="row align-items-center">';
+            html += '<div class="col-md-6">';
+            html += '<h4 class="mb-2">{{ __("messages.Order Number") }}: <strong>' + (order.order_number || '') + '</strong></h4>';
+            html += '<p class="text-muted mb-1"><i class="fa-solid fa-calendar me-2"></i><strong>{{ __("messages.Order Date") }}:</strong> ' + (order.created_at || '') + '</p>';
+            html += '</div>';
+            html += '<div class="col-md-6 text-md-end">';
+
+            // Status Badge
+            var statusClass = 'badge bg-secondary';
+            var statusText = order.status_name || '{{ __("messages.Order Status") }}';
+            if (order.order_status_id == 1) statusClass = 'badge bg-warning text-dark';
+            else if (order.order_status_id == 2) statusClass = 'badge bg-info';
+            else if (order.order_status_id == 3) statusClass = 'badge bg-primary';
+            else if (order.order_status_id == 4) statusClass = 'badge bg-success';
+            else if (order.order_status_id == 5) statusClass = 'badge bg-danger';
+
+            html += '<span class="' + statusClass + ' px-3 py-2 mb-2 d-inline-block" style="font-size: 14px; font-weight: 600;">';
+            html +=  statusText;
+            html += '</span><br>';
+
+            // Order Type Badge
+            var orderTypeClass = order.order_type == 'rent' ? 'badge bg-warning text-dark' : 'badge bg-success';
+            html += '</div>';
+            html += '</div>';
+            html += '</div>';
+
+            // Order Items
+            html += '<div class="order-items-section mb-4">';
+            html += '<h5 class="mb-3"><i class="fa-solid fa-box me-2"></i>{{ __("messages.Order Items") }}</h5>';
+
+            if (order.order_items && order.order_items.length > 0) {
+                html += '<div class="row g-3">';
+                order.order_items.forEach(function(item) {
+                    html += '<div class="col-12">';
+                    html += '<div class="card border shadow-sm">';
+                    html += '<div class="card-body">';
+                    html += '<div class="row align-items-center">';
+
+                    // Product Image
+                    html += '<div class="col-md-2 text-center mb-3 mb-md-0">';
+                    html += '<img src="' + (item.product_image || '/website/images/placeholder.jpg') + '" class="img-fluid rounded" style="max-height: 120px; width: auto; object-fit: cover;" alt="' + (item.product_title || '{{ __("messages.Product") }}') + '">';
+                    html += '</div>';
+
+                    // Product Details
+                    html += '<div class="col-md-10">';
+                    html += '<div class="d-flex align-items-start justify-content-between flex-wrap mb-2">';
+                    html += '<div>';
+                    html += '<h5 class="mb-1">' + (item.product_title || '{{ __("messages.Product") }}') + '</h5>';
+                    if (item.is_rent) {
+                        html += '<span class="badge bg-warning text-dark px-2 py-1" style="font-size: 12px; font-weight: 600;">';
+                        html += '{{ __("messages.Rent") }} <span class="ms-1">(' + (item.count_day || 0) + ' ' + (item.count_day == 1 ? '{{ __("messages.Day") }}' : '{{ __("messages.Days") }}') + ')</span>';
+                        html += '</span>';
+                    } else {
+                        html += '<span class="badge bg-success px-2 py-1" style="font-size: 12px; font-weight: 600;">{{ __("messages.Buy") }}</span>';
+                    }
+                    html += '</div>';
+                    html += '</div>';
+
+                    html += '<div class="row g-2 mt-2">';
+                    html += '<div class="col-md-6">';
+                    html += '<p class="mb-1"><strong>{{ __("messages.Price") }}:</strong> <span class="text-primary">' + (order.currency || 'EGP') + ' ' + parseFloat(item.price || 0).toFixed(2) + '</span></p>';
+                    html += '</div>';
+
+                    if (item.is_rent) {
+                        html += '<div class="col-md-6">';
+                        html += '<p class="mb-1"><strong>{{ __("messages.Start Date") }}:</strong> ' + (item.start_date || '-') + '</p>';
+                        html += '</div>';
+                        html += '<div class="col-md-6">';
+                        html += '<p class="mb-1"><strong>{{ __("messages.Count Days") }}:</strong> ' + (item.count_day || 0) + ' {{ __("messages.Days") }}</p>';
+                        html += '</div>';
+                    } else {
+                        html += '<div class="col-md-6">';
+                        html += '<p class="mb-1"><strong>{{ __("messages.Quantity") }}:</strong> ' + (item.quantity || 1) + '</p>';
+                        html += '</div>';
+                    }
+
+                    html += '<div class="col-md-6">';
+                    html += '<p class="mb-0"><strong>{{ __("messages.Total") }}:</strong> <span class="text-primary fw-bold fs-5">' + (order.currency || 'EGP') + ' ' + parseFloat(item.total || 0).toFixed(2) + '</span></p>';
+                    html += '</div>';
+                    html += '</div>';
+                    html += '</div>';
+                    html += '</div>';
+                    html += '</div>';
+                    html += '</div>';
+                    html += '</div>';
+                });
+                html += '</div>';
+            } else {
+                html += '<div class="alert alert-info">{{ __("messages.No items found in this order") }}</div>';
+            }
+
+            html += '</div>';
+
+            // Order Summary
+            html += '<div class="order-summary-section">';
+            html += '<div class="card bg-light">';
+            html += '<div class="card-body">';
+            html += '<h5 class="mb-3"><i class="fa-solid fa-receipt me-2"></i>{{ __("messages.Order Summery") }}</h5>';
+            html += '<div class="row">';
+            html += '<div class="col-md-6 offset-md-6">';
+            html += '<div class="d-flex justify-content-between mb-2">';
+            html += '<span><strong>{{ __("messages.Subtotal") }}:</strong></span>';
+            html += '<span>' + (order.currency || 'EGP') + ' ' + parseFloat(order.subtotal || order.total || 0).toFixed(2) + '</span>';
+            html += '</div>';
+            if (order.discount && parseFloat(order.discount) > 0) {
+                html += '<div class="d-flex justify-content-between mb-2 text-success">';
+                html += '<span><strong>{{ __("messages.Discount") }}:</strong></span>';
+                html += '<span>- ' + (order.currency || 'EGP') + ' ' + parseFloat(order.discount).toFixed(2) + '</span>';
+                html += '</div>';
+            }
+            if (order.shipping && parseFloat(order.shipping) > 0) {
+                html += '<div class="d-flex justify-content-between mb-2">';
+                html += '<span><strong>{{ __("messages.Shipping") }}:</strong></span>';
+                html += '<span>' + (order.currency || 'EGP') + ' ' + parseFloat(order.shipping).toFixed(2) + '</span>';
+                html += '</div>';
+            }
+            html += '<div class="d-flex justify-content-between pt-2 border-top mt-2">';
+            html += '<span><strong class="fs-5">{{ __("messages.Total") }}:</strong></span>';
+            html += '<span class="text-primary fw-bold fs-5">' + (order.currency || 'EGP') + ' ' + parseFloat(order.total || 0).toFixed(2) + '</span>';
+            html += '</div>';
+            html += '</div>';
+            html += '</div>';
+            html += '</div>';
+            html += '</div>';
+
+            // Cancel Button (if pending)
+            if (order.order_status_id == 1) {
+                html += '<div class="text-center mt-4">';
+                html += '<button class="btn btn-danger cancel-order-btn-modal" data-order-id="' + order.id + '">';
+                html += '<i class="fa-solid fa-times me-1"></i>{{ __("messages.Cancel Order") }}';
+                html += '</button>';
+                html += '</div>';
+            }
+
+            html += '</div>';
+
+            $('#orderDetailsContent').html(html);
+
+            // Re-initialize feather icons
+            if (typeof feather !== 'undefined') {
+                feather.replace();
+            }
+        }
+
+        /**
+         * Handle cancel order button click in modal
+         */
+        $(document).on('click', '.cancel-order-btn-modal', function(e) {
+            e.preventDefault();
+            var orderId = $(this).data('order-id');
+            var $btn = $(this);
+
+            // Show confirmation dialog
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    title: '{{ __("messages.Are you sure?") }}',
+                    text: '{{ __("messages.Are you sure you want to cancel this order?") }}',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: '{{ __("messages.Yes, cancel it") }}',
+                    cancelButtonText: '{{ __("messages.No, keep it") }}'
+                }).then(function(result) {
+                    if (result.isConfirmed) {
+                        cancelOrder(orderId, null, true);
+                    }
+                });
+            } else {
+                if (confirm('{{ __("messages.Are you sure you want to cancel this order?") }}')) {
+                    cancelOrder(orderId, null, true);
+                }
+            }
+        });
+
+        /**
          * Handle cancel order button click
          */
         $(document).on('click', '.cancel-order-btn', function(e) {
@@ -1862,10 +2035,19 @@
         /**
          * Cancel order via AJAX
          */
-        function cancelOrder(orderId, $orderBox) {
-            var $btn = $orderBox.find('.cancel-order-btn');
-            var originalBtnText = $btn.html();
-            $btn.prop('disabled', true).html('<i class="fa-solid fa-spinner fa-spin me-1"></i>{{ __("messages.Processing") }}...');
+        function cancelOrder(orderId, $orderBox, fromModal = false) {
+            var $btn;
+            var originalBtnText;
+
+            if (fromModal) {
+                $btn = $('.cancel-order-btn-modal[data-order-id="' + orderId + '"]');
+                originalBtnText = $btn.html();
+                $btn.prop('disabled', true).html('<i class="fa-solid fa-spinner fa-spin me-1"></i>{{ __("messages.Processing") }}...');
+            } else {
+                $btn = $orderBox.find('.cancel-order-btn');
+                originalBtnText = $btn.html();
+                $btn.prop('disabled', true).html('<i class="fa-solid fa-spinner fa-spin me-1"></i>{{ __("messages.Processing") }}...');
+            }
 
             $.ajax({
                 url: '/api/web/order/update-status/' + orderId,
@@ -1895,6 +2077,9 @@
 
                     // Reload page to show updated status
                     setTimeout(function() {
+                        if (fromModal) {
+                            $('#orderDetailsModal').modal('hide');
+                        }
                         window.location.reload();
                     }, 2000);
                 },

@@ -86,9 +86,9 @@ class HomePageController extends Controller
                 ->with(['variants' => function ($query) {
                     $query->where('status', 1)->orderBy('price')->limit(1);
                 }, 'translation', 'department', 'category'])
-                ->latest()
+            ->latest()
                 ->take($remaining)
-                ->get();
+            ->get();
             $bestSellerProducts = $bestSellerProducts->merge($latestProducts);
         }
 
@@ -107,12 +107,12 @@ class HomePageController extends Controller
             $remaining = 10 - $mostRequestedProducts->count();
             $latestProducts = Product::whereStatus(1)
                 ->whereNotIn('id', $mostRequestedProducts->pluck('id'))
-                ->with(['variants' => function ($query) {
+            ->with(['variants' => function ($query) {
                     $query->where('status', 1)->orderBy('price')->limit(1);
                 }, 'translation', 'department', 'category'])
                 ->latest()
                 ->take($remaining)
-                ->get();
+            ->get();
             $mostRequestedProducts = $mostRequestedProducts->merge($latestProducts);
         }
 
