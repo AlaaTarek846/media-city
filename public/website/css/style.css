@@ -30409,3 +30409,7 @@ header .offcanvas-backdrop {
     background-color: #1c1f23;
     border-color: #1a1e21;
 }
+
+.item-section {
+    right: -200px;
+}

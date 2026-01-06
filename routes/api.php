@@ -105,6 +105,7 @@ Route::group(['prefix' => 'web', 'middleware' => [ChangeLang::class,StartSession
 
     Route::post('/add-order', [WebOrderController::class, 'store'])->middleware('auth:user');
     Route::post('/order/update-status/{id}', [WebOrderController::class, 'updateStatus'])->middleware('auth:user');
+    Route::get('/order-details/{id}', [WebOrderController::class, 'orderDetails'])->middleware('auth:user');
     Route::post('/check-coupon-order', [CouponController::class, 'checkCoupon'])->middleware('auth:user');
 
     Route::get('/get-carts', [CartController::class, 'index'])->middleware('auth:user');
