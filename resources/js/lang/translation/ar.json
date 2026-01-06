@@ -1418,7 +1418,13 @@
         "User":"المستخدمين",
         "user read":"عرض المستخدمين",
         "user edit":"تعديل المستخدمين",
-        "user send notification":"ارسال اشعار للمستخدمين"
+        "user send notification":"ارسال اشعار للمستخدمين",
+
+        "Departments": "الأقسام",
+        "department read": "عرض القسم",
+        "department create": "اضافة القسم",
+        "department edit": "تعديل القسم",
+        "department delete": "حذف القسم"
 
     },
     "shirt_type": {
