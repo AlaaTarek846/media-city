@@ -7,6 +7,7 @@ use App\Models\Department;
 use App\Models\Category;
 use App\Models\ContactUs;
 use App\Models\Product;
+use App\Models\HeaderOffer;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 
@@ -71,6 +72,14 @@ class ViewServiceProvider extends ServiceProvider
                 ->get();
 
             $view->with('headerDepartments', $departments);
+            
+            // Share Header Offers with status = 1
+            $headerOffers = HeaderOffer::where('status', 1)
+                ->with('translation')
+                ->latest()
+                ->get();
+            
+            $view->with('headerOffers', $headerOffers);
         });
     }
 }

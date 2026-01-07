@@ -3,80 +3,75 @@
 namespace Database\Seeders;
 
 use App\Models\Banner;
+use App\Models\HeaderOffer;
 use Illuminate\Database\Seeder;
 
-class BannerSeeder extends Seeder
+class HeaderOfferSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        // Schema::disableForeignKeyConstraints();
-        Banner::truncate();
-        $Brand = Banner::create([
-            'image'   => 'bannerHome.png',
-            "type"    => 'home',
+        HeaderOffer::truncate();
+        $HeaderOffer = HeaderOffer::create([
+            "status"    => true,
         ]);
-        $Brand->setTranslations([
+        $HeaderOffer->setTranslations([
             'ar' => [
-                'title' => 'عروض خاصة على كاميرات التصوير',
+                'title' => '',
                 'description' => 'وفر حتى 50% على أفضل الكاميرات الاحترافية'
             ],
             'en' => [
-                'title'       => 'Special Offers on Photography Cameras',
+                'title'       => '',
                 'description' => 'Save up to 50% on the best professional cameras'
             ],
 
         ]);
 
-        $Brand = Banner::create([
-            'image'   => 'bannerShop.png',
-            "type"    => 'shop',
+        $HeaderOffer = HeaderOffer::create([
+            "status"    => true,
         ]);
 
-        $Brand->setTranslations([
+        $HeaderOffer->setTranslations([
             'ar' => [
-                'title' => 'تسوق من متجرنا الإلكتروني',
+                'title' => '',
                 'description' => 'اكتشف مجموعة واسعة من معدات التصوير بأسعار مميزة'
             ],
             'en' => [
-                'title'       => 'Shop from Our Online Store',
+                'title'       => '',
                 'description' => 'Discover a wide range of photography equipment at great prices'
             ],
 
         ]);
 
-        $Brand = Banner::create([
-            'image'   => 'bannerRenting.png',
-            "type"    => 'shop',
-
+        $HeaderOffer = HeaderOffer::create([
+            "status"    => true,
         ]);
 
-        $Brand->setTranslations([
+        $HeaderOffer->setTranslations([
             'ar' => [
-                'title' => 'خدمة تأجير المعدات الاحترافية',
+                'title' => '',
                 'description' => 'أجر أفضل معدات التصوير بأسعار مناسبة لجميع المشاريع'
             ],
             'en' => [
-                'title'       => 'Professional Equipment Rental Service',
+                'title'       => '',
                 'description' => 'Rent the best photography equipment at affordable prices for all projects'
             ],
 
         ]);
 
-         $Brand = Banner::create([
-            'image'   => 'bannerBestSellers.png',
-             "type"    => 'shop',
+        $HeaderOffer = HeaderOffer::create([
+            "status"    => true,
         ]);
 
-        $Brand->setTranslations([
+        $HeaderOffer->setTranslations([
             'ar' => [
-                'title' => 'الأكثر مبيعاً هذا الشهر',
+                'title' => '',
                 'description' => 'تصفح المنتجات الأكثر طلباً من عملائنا'
             ],
             'en' => [
-                'title'       => 'Best Sellers This Month',
+                'title'       => '',
                 'description' => 'Browse the most requested products from our customers'
             ],
 

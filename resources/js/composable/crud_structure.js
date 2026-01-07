@@ -120,10 +120,22 @@ export default function crud() {
        reasonShow.value=true;
    }
    let truncateString = (str, maxLength) => {
-       if (str.length > maxLength) {
-           return str.slice(0, maxLength) + '...';
+       if (!str || str === null || str === undefined) {
+           return '-';
        }
-       return str;
+       // Convert to string if it's not already
+       const stringValue = String(str);
+       // Remove HTML tags for length calculation
+       const textContent = stringValue.replace(/<[^>]*>/g, '');
+       if (textContent.length > maxLength) {
+           // If original string has HTML, try to preserve it while truncating
+           if (stringValue !== textContent) {
+               // Has HTML tags, truncate text content and add ellipsis
+               return textContent.slice(0, maxLength) + '...';
+           }
+           return stringValue.slice(0, maxLength) + '...';
+       }
+       return stringValue;
    }
 
 

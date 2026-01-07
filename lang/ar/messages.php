@@ -1180,4 +1180,10 @@ return [
     "New Order"=>"طلب جديد",
     "Preparing Order"=>"تجهيز الطلب",
     "On The Way"=>"في الطريق",
+    "Studio Rental"=>"إيجار الاستوديو",
+    "Studio For Rent"=>"استوديو للإيجار",
+    "Available Now"=>"متاح الآن",
+    "Hourly / Daily"=>"ساعة / يوم",
+    "Rent This Studio"=>"إيجار هذا الاستوديو",
+    "Fully-equipped studio for photo & video shoots. Clean setup, pro lighting options, and flexible booking."=>"استوديو مجهز بالكامل لتصوير الصور والفيديو. إعداد نظيف، خيارات إضاءة احترافية، وحجز مرن.",
 ];

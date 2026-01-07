@@ -40,6 +40,8 @@ class DatabaseSeeder extends Seeder
         $this->call(BlogSeeder::class);
         $this->call(UserProfileSeeder::class);
         $this->call(SliderSeeder::class);
+        $this->call(HeaderOfferSeeder::class);
+        $this->call(StudioRentalSeeder::class);
 
     }
 }
