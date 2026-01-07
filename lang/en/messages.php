@@ -1138,6 +1138,7 @@ return [
     "Cash On Delivery"=>"Cash On Delivery",
     "Pay digitally with SMS Pay Link. Cash may not be accepted in COVID restricted areas."=>"Pay digitally with SMS Pay Link. Cash may not be accepted in COVID restricted areas.",
     "Know more"=>"Know more",
+    "Governorate"=>"Governorate",
     "Discount"=>"Discount",
     "Coupon Discount"=>"Coupon Discount",
     "Invalid coupon code"=>"Invalid coupon code",

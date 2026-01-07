@@ -776,10 +776,10 @@ class HomePageController extends Controller
 
     public function contactUsForm(ContactUsRequest $request){
         $contactMessage = ContactMessage::create($request->validated());
-        
+
         // Broadcast the notification event
         event(new ContactMessageNotification($contactMessage));
-        
+
         return responseJson('',__('messages.Thanks for contacting us, we will get back to you soon'),200);
     }
 
@@ -792,13 +792,13 @@ class HomePageController extends Controller
         return view('website.renting');
     }
 
-    public function userDashboard()
+    public function userDashboard(Request $request)
     {
         $user = auth('user')->user();
         // Load user with all profile relationships
         $user->load('personProfile', 'companyProfile', 'studioProfile');
         $areas = Area::whereStatus(1)->latest()->get();
-        
+
         // Load user orders with relationships
         $orders = $user->orders()
             ->with([
@@ -809,8 +809,12 @@ class HomePageController extends Controller
                 'address.area.translation'
             ])
             ->latest()
-            ->get();
-        
+            ->paginate(5);
+
+        if ($request->ajax()) {
+            return view('website.partials.dashboard-orders', compact('orders'))->render();
+        }
+
         return view('website.user-dashboard', compact('user', 'areas', 'orders'));
     }
 
@@ -822,7 +826,7 @@ class HomePageController extends Controller
     public function getUserAddresses()
     {
         $user = auth('user')->user();
-        $addresses = $user->addresses()->with('area')->latest()->get();
+        $addresses = $user->addresses()->with(['area.translation'])->latest()->get();
         return responseJson($addresses, __('messages.Addresses fetched successfully'), 200);
     }
 

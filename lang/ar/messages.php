@@ -1149,6 +1149,7 @@ return [
     "Pay digitally with SMS Pay Link. Cash may not be accepted in COVID restricted areas."=>"ادفع رقميًا عبر رابط SMS Pay. قد لا يتم قبول النقد في المناطق المقيدة بسبب COVID.",
     "Know more"=>"اعرف المزيد",
     "Discount"=>"خصم",
+    "Governorate"=>"المحافظة",
     "Coupon Discount"=>"خصم الكوبون",
     "Invalid coupon code"=>"رمز الكوبون غير صحيح",
     "Minimum amount not met for coupon"=>"المبلغ الأدنى لاستخدام الكوبون غير محقق",
