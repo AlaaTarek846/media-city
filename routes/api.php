@@ -17,6 +17,7 @@ use App\Http\Controllers\Dashboard\DashboardStatisticsController;
 use App\Http\Controllers\Dashboard\DepartmentController;
 use App\Http\Controllers\Dashboard\DiscountCouponController;
 use App\Http\Controllers\Dashboard\FrequentlyAskedQuestionController;
+use App\Http\Controllers\Dashboard\HeaderOfferController;
 use App\Http\Controllers\Dashboard\HistoryController;
 use App\Http\Controllers\Dashboard\JoinUsController;
 use App\Http\Controllers\Dashboard\LanguageController;
@@ -25,6 +26,7 @@ use App\Http\Controllers\Dashboard\NewsController;
 use App\Http\Controllers\Dashboard\NewsletterController;
 use App\Http\Controllers\Dashboard\NotificationController;
 use App\Http\Controllers\Dashboard\OrderController;
+use App\Http\Controllers\Dashboard\StudioRentalController;
 use App\Http\Controllers\Web\CouponController;
 use App\Http\Controllers\Web\OrderController as WebOrderController;
 use App\Http\Controllers\Dashboard\ProfileController;
@@ -224,6 +226,12 @@ Route::group(['prefix' => 'dashboard', 'middleware' => [ChangeLang::class]], fun
 
         // Language resource
         Route::resource('language', LanguageController::class);
+
+        // HeaderOffer resource
+        Route::resource('header-offers', HeaderOfferController::class);
+
+        // StudioRental resource
+        Route::resource('studio-rentals', StudioRentalController::class);
 
         // user
         Route::resource('user', UserController::class);

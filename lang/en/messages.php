@@ -1166,4 +1166,10 @@ return [
     "New Order"=>"New Order",
     "Preparing Order"=>"Preparing Order",
     "On The Way"=>"On The Way",
+    "Studio Rental"=>"Studio Rental",
+    "Studio For Rent"=>"Studio For Rent",
+    "Available Now"=>"Available Now",
+    "Hourly / Daily"=>"Hourly / Daily",
+    "Rent This Studio"=>"Rent This Studio",
+    "Fully-equipped studio for photo & video shoots. Clean setup, pro lighting options, and flexible booking."=>"Fully-equipped studio for photo & video shoots. Clean setup, pro lighting options, and flexible booking.",
 ];

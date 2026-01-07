@@ -39,6 +39,8 @@ import termsCondition from "./adminRoute/termsCondition.js";
 import shippingInformation from "./adminRoute/shippingInformation.js";
 import order from "./adminRoute/order.js";
 import department from "./adminRoute/department.js";
+import headerOffer from "./adminRoute/headerOffer.js";
+import studioRental from "./adminRoute/studioRental.js";
 
 
 
@@ -103,7 +105,9 @@ const routes = [
             ...order,
             ...department,
             ...article,
-            ...articleClient
+            ...headerOffer,
+            ...articleClient,
+            ...studioRental
 
         ]
     },

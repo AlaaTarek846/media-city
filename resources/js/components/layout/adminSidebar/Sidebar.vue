@@ -147,6 +147,9 @@
 <!--                        </router-link>-->
 <!--                    </li>-->
 
+
+
+
                     <li class="slide" v-show="permission.includes('banner read')">
                         <router-link :to="{name:'banner'}" class="side-menu__item">
                             <i class="bx bx-image side-menu__icon"></i>
@@ -154,14 +157,42 @@
                         </router-link>
                     </li>
 
-                    <li class="slide" v-show="permission.includes('slider read')">
-                        <router-link :to="{name:'slider'}" class="side-menu__item">
-                            <i class="bx bx-image side-menu__icon"></i>
-                            <span class="side-menu__label">{{$t('global.sliders')}}</span>
-                        </router-link>
+
+
+                    <li class="slide has-sub" v-show="(permission.includes('slider read') || permission.includes('headerOffer read')|| permission.includes('studioRental read'))"
+                        :class="[$route.name == 'slider' || $route.name == 'headerOffer' || $route.name == 'studioRental'  ? 'active open': '']"
+                    >
+                        <a href="javascript:void(0);" class="side-menu__item"
+                           :class="[$route.name == 'slider' || $route.name == 'headerOffer' || $route.name == 'studioRental'  ? 'active': '']"
+                        >
+                            <i class="bx bx-info-circle side-menu__icon"></i>
+                            <span class="side-menu__label">{{$t('global.home')}}</span>
+                            <i class="fe fe-chevron-right side-menu__angle"></i>
+                        </a>
+                        <ul class="slide-menu child1"
+                        >
+                            <li class="slide side-menu__label1">
+                                <a href="javascript:void(0)">{{$t('global.sliders')}}</a>
+                            </li>
+                            <li class="slide" v-if="permission.includes('slider read')">
+                                <router-link :to="{name:'slider'}" class="side-menu__item">{{$t('global.sliders')}}</router-link>
+                            </li>
+
+                            <li class="slide" v-if="permission.includes('headerOffer read')">
+                                <router-link :to="{name:'headerOffer'}" class="side-menu__item">{{$t('global.header_offers')}}</router-link>
+                            </li>
+
+
+                            <li class="slide" v-if="permission.includes('studioRental read')">
+                                <router-link :to="{name:'studioRental'}" class="side-menu__item">{{$t('global.studio_rentals')}}</router-link>
+                            </li>
+
+
+                        </ul>
                     </li>
 
-<!--                    <li class="slide" v-show="permission.includes('testimonial read')">-->
+
+                    <!--                    <li class="slide" v-show="permission.includes('testimonial read')">-->
 <!--                        <router-link :to="{name:'testimonial'}" class="side-menu__item">-->
 <!--                            <i class="bx bx-comment side-menu__icon"></i>-->
 <!--                            <span class="side-menu__label">{{$t('global.testimonial')}}</span>-->
@@ -257,12 +288,12 @@
 <!--                        </router-link>-->
 <!--                    </li>-->
 
-                     <li class="slide" v-show="permission.includes('setting read')">
-                        <router-link :to="{name:'setting'}" class="side-menu__item">
-                            <i class="bx bx-cog side-menu__icon" aria-hidden="true"></i>
-                            <span class="side-menu__label">{{$t('global.theSettings')}}</span>
-                        </router-link>
-                    </li>
+<!--                     <li class="slide" v-show="permission.includes('setting read')">-->
+<!--                        <router-link :to="{name:'setting'}" class="side-menu__item">-->
+<!--                            <i class="bx bx-cog side-menu__icon" aria-hidden="true"></i>-->
+<!--                            <span class="side-menu__label">{{$t('global.theSettings')}}</span>-->
+<!--                        </router-link>-->
+<!--                    </li>-->
 <!--                     <li class="slide" v-show="permission.includes('return policy read')">-->
 <!--                        <router-link :to="{name:'returnPolicy'}" class="side-menu__item">-->
 <!--                            <i class="bx bx-refresh side-menu__icon" aria-hidden="true"></i>-->

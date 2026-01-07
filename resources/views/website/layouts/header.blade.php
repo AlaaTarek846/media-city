@@ -19,17 +19,42 @@
                 <div class="col-xxl-6 col-lg-9 d-lg-block d-none">
                     <div class="header-offer">
                         <div class="notification-slider">
-                            <div>
-                                <div class="timer-notification">
-                                    <h6>{{ __('messages.Something you love is now on sale') }}!
-                                        <a href="{{route('shop')}}" class="text-white">{{ __('messages.Buy Now') }}!
-                                        </a>
-                                    </h6>
+                            @if(isset($headerOffers) && $headerOffers->count() > 0)
+                                @foreach($headerOffers as $headerOffer)
+                                    @php
+                                        $headerOfferTranslation = $headerOffer->translation ?? null;
+                                    @endphp
+                                    @if($headerOfferTranslation && $headerOfferTranslation->description)
+                                        <div>
+                                            <div class="timer-notification">
+                                                <h6>{!! $headerOfferTranslation->description !!}</h6>
+                                            </div>
+                                        </div>
+                                    @endif
+                                @endforeach
+                            @else
+                                <div>
+                                    <div class="timer-notification">
+                                        <h6><strong class="me-1">Welcome to Fastkart!</strong>Wrap new offers/gift
+                                            every signle day on Weekends.<strong class="ms-1">New Coupon Code: Fast024
+                                            </strong>
+                                        </h6>
+                                    </div>
                                 </div>
-                            </div>
+
+                                <div>
+                                    <div class="timer-notification">
+                                        <h6>Something you love is now on sale!
+                                            <a href="shop-list.html" class="text-white">Buy Now
+                                                !</a>
+                                        </h6>
+                                    </div>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>
+
 
                 <div class="col-lg-3">
                     <ul class="about-list right-nav-about">

@@ -29,7 +29,7 @@ class UserController extends Controller implements HasMiddleware
 
     public function show($id)
     {
-        $user = User::find($id);
+        $user = User::with(['personProfile', 'companyProfile', 'studioProfile', 'addresses', 'orders', 'favorites', 'reviews'])->find($id);
         if (!$user) {
             return responseJson('User not found', 'error', 404);
         }

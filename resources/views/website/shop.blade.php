@@ -10,18 +10,46 @@
             <div class="row">
                 <div class="col-12">
                     <div class="slider-1 slider-animate product-wrapper no-arrow">
-                        <div>
-                            <div class="banner-contain-2 hover-effect">
-                                <img src="{{asset('website/images/veg-3/home-bg.png')}}" class="bg-img rounded-3 blur-up lazyload" alt="">
-                                <div
-                                    class="banner-detail p-center-right position-relative shop-banner ms-auto banner-small">
-                                    <div>
-                                        <h2> {{ $selectedCategory->translation->title ?? ($selectedDepartment->translation->title ?? __('messages.Shop')) }}</h2>
-                                        <h3>{{ __('messages.Save upto 50%') }}</h3>
+                        @if(isset($bannerShops) && $bannerShops->count() > 0)
+                            @foreach($bannerShops as $bannerShop)
+                                @php
+                                    $bannerShopTranslation = $bannerShop->translation ?? null;
+                                @endphp
+                                <div>
+                                    <div class="banner-contain-2 hover-effect">
+                                        <img src="{{ $bannerShop->image }}" class="bg-img rounded-3 blur-up lazyload" alt="{{ $bannerShopTranslation->title ?? '' }}">
+                                        <div class="banner-detail p-center-right position-relative shop-banner ms-auto banner-small">
+                                            <div>
+                                                @if($bannerShopTranslation)
+                                                    <h2>{{ $bannerShopTranslation->title ?? ($selectedCategory->translation->title ?? ($selectedDepartment->translation->title ?? __('messages.Shop'))) }}</h2>
+                                                    @if($bannerShopTranslation->description)
+                                                        <h3>{!! $bannerShopTranslation->description !!}</h3>
+                                                    @else
+                                                        <h3>{{ __('messages.Save upto 50%') }}</h3>
+                                                    @endif
+                                                @else
+                                                    <h2>{{ $selectedCategory->translation->title ?? ($selectedDepartment->translation->title ?? __('messages.Shop')) }}</h2>
+                                                    <h3>{{ __('messages.Save upto 50%') }}</h3>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        @else
+                            {{-- Fallback to default banner if no shop banners found --}}
+                            <div>
+                                <div class="banner-contain-2 hover-effect">
+                                    <img src="{{asset('website/images/veg-3/home-bg.png')}}" class="bg-img rounded-3 blur-up lazyload" alt="">
+                                    <div class="banner-detail p-center-right position-relative shop-banner ms-auto banner-small">
+                                        <div>
+                                            <h2>{{ $selectedCategory->translation->title ?? ($selectedDepartment->translation->title ?? __('messages.Shop')) }}</h2>
+                                            <h3>{{ __('messages.Save upto 50%') }}</h3>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        @endif
                     </div>
                 </div>
             </div>

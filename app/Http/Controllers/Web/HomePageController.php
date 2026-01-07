@@ -19,6 +19,8 @@ use App\Models\ArticleSlugRedirect;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\ShopByInstagram;
+use App\Models\Slider;
+use App\Models\StudioRental;
 use App\Models\Team;
 use App\Models\Cart;
 use App\Models\DiscountCoupon;
@@ -46,6 +48,10 @@ class HomePageController extends Controller
     public function index(Request $request)
     {
         $banners  =  Banner::latest()->get();
+
+         $studioRental = StudioRental::whereStatus(1)->with('translation','images')->first();
+         $sliders = Slider::whereStatus(1)->get();
+         $banner = Banner::where('type','home')->whereStatus(1)->first();
 
         // Get 7 categories for Shop By Categories section
         $shopByDepartment = Department::whereStatus(1)->whereId(2)->with(['translation'])
@@ -116,7 +122,7 @@ class HomePageController extends Controller
             $mostRequestedProducts = $mostRequestedProducts->merge($latestProducts);
         }
 
-        return view('website.home',compact('banners','shopByDepartment','dealProducts','bestSellerProducts','mostRequestedProducts'));
+        return view('website.home',compact('banners','shopByDepartment','dealProducts','bestSellerProducts','mostRequestedProducts','studioRental','sliders','banner'));
     }
 
     public function category()
@@ -427,10 +433,12 @@ class HomePageController extends Controller
         $categories = $categoriesQuery->latest()->get();
 
         $brands = Brand::whereStatus(1)->latest()->get();
+         $bannerShops = Banner::whereStatus(1)->where('type','shop')->with('translation')->latest()->get();
 
         return view('website.shop', compact(
             'categories',
-            'brands'
+            'brands',
+            'bannerShops'
         ));
     }
 
@@ -776,10 +784,10 @@ class HomePageController extends Controller
 
     public function contactUsForm(ContactUsRequest $request){
         $contactMessage = ContactMessage::create($request->validated());
-        
+
         // Broadcast the notification event
         event(new ContactMessageNotification($contactMessage));
-        
+
         return responseJson('',__('messages.Thanks for contacting us, we will get back to you soon'),200);
     }
 
@@ -798,7 +806,7 @@ class HomePageController extends Controller
         // Load user with all profile relationships
         $user->load('personProfile', 'companyProfile', 'studioProfile');
         $areas = Area::whereStatus(1)->latest()->get();
-        
+
         // Load user orders with relationships
         $orders = $user->orders()
             ->with([
@@ -810,7 +818,7 @@ class HomePageController extends Controller
             ])
             ->latest()
             ->get();
-        
+
         return view('website.user-dashboard', compact('user', 'areas', 'orders'));
     }
 
