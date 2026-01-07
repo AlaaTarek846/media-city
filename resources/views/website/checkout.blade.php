@@ -60,7 +60,7 @@
                                             </div>
                                             <div id="delivery-addresses-container">
                                                 @if(isset($addresses) && $addresses->count() > 0)
-                                                    <div class="row g-4">
+                                            <div class="row g-4">
                                                         @foreach($addresses as $index => $address)
                                                             @php
                                                                 $areaTranslation = $address->area->translation ?? $address->area->translations->first() ?? null;
@@ -68,43 +68,43 @@
                                                                 $addressId = 'address-' . $address->id;
                                                                 $isChecked = $address->is_primary ? 'checked' : '';
                                                             @endphp
-                                                            <div class="col-xxl-6 col-lg-12 col-md-6">
-                                                                <div class="delivery-address-box">
-                                                                    <div>
-                                                                        <div class="form-check">
+                                                <div class="col-xxl-6 col-lg-12 col-md-6">
+                                                    <div class="delivery-address-box">
+                                                        <div>
+                                                            <div class="form-check">
                                                                             <input class="form-check-input address-radio" type="radio" name="selected_address"
                                                                                    id="{{ $addressId }}" value="{{ $address->id }}" {{ $isChecked }}>
-                                                                        </div>
+                                                            </div>
 
-                                                                        <div class="label">
+                                                            <div class="label">
                                                                             <label>{{ $address->title ?? __('messages.Address') }}</label>
-                                                                        </div>
+                                                            </div>
 
-                                                                        <ul class="delivery-address-detail">
+                                                            <ul class="delivery-address-detail">
                                                                             @if($address->name)
-                                                                            <li>
+                                                                <li>
                                                                                 <h4 class="fw-500">{{ $address->name }}</h4>
-                                                                            </li>
+                                                                </li>
                                                                             @endif
 
-                                                                            <li>
+                                                                <li>
                                                                                 <p class="text-content"><span class="text-title">{{ __('messages.Address') }}: </span>{{ $address->address }}</p>
-                                                                            </li>
+                                                                </li>
 
                                                                             @if($areaName)
-                                                                            <li>
+                                                                <li>
                                                                                 <h6 class="text-content"><span class="text-title">{{ __('messages.Area') }}:</span> {{ $areaName }}</h6>
-                                                                            </li>
+                                                                </li>
                                                                             @endif
 
                                                                             @if($user->mobile)
-                                                                            <li>
+                                                                <li>
                                                                                 <h6 class="text-content mb-0"><span class="text-title">{{ __('messages.Phone') }}:</span> <span style="direction: ltr;display: inline-block">{{ $user->mobile }}</span></h6>
-                                                                            </li>
+                                                                </li>
                                                                             @endif
-                                                                        </ul>
-                                                                    </div>
-                                                                </div>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
                                                             </div>
                                                         @endforeach
                                                     </div>
