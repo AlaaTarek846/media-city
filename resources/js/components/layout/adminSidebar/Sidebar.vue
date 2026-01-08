@@ -192,21 +192,11 @@
                     </li>
 
 
-                    <!--                    <li class="slide" v-show="permission.includes('testimonial read')">-->
-<!--                        <router-link :to="{name:'testimonial'}" class="side-menu__item">-->
-<!--                            <i class="bx bx-comment side-menu__icon"></i>-->
-<!--                            <span class="side-menu__label">{{$t('global.testimonial')}}</span>-->
-<!--                        </router-link>-->
-<!--                    </li>-->
 
 
 
-<!--                    <li class="slide" v-show="permission.includes('news read')">-->
-<!--                        <router-link :to="{name:'news'}" class="side-menu__item">-->
-<!--                            <i class="bx bx-news side-menu__icon"></i>-->
-<!--                            <span class="side-menu__label">{{$t('global.news')}}</span>-->
-<!--                        </router-link>-->
-<!--                    </li>-->
+
+
 
 
 
@@ -281,12 +271,7 @@
                         </router-link>
                     </li>
 
-<!--                    <li class="slide" v-show="permission.includes('newsletter read')">-->
-<!--                        <router-link :to="{name:'newsletter'}" class="side-menu__item">-->
-<!--                            <i class="bx bxs-news side-menu__icon"></i>-->
-<!--                            <span class="side-menu__label">{{$t('global.newsletter')}}</span>-->
-<!--                        </router-link>-->
-<!--                    </li>-->
+
 
 <!--                     <li class="slide" v-show="permission.includes('setting read')">-->
 <!--                        <router-link :to="{name:'setting'}" class="side-menu__item">-->

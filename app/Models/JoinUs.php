@@ -10,6 +10,6 @@ class JoinUs extends Model
 {
     use HasFactory,SearchFilterTrait,SearchFilterTrait;
 
-    protected $table ="join_us";
+    protected $table   = "join_us";
     protected $guarded = ['id'];
 }
