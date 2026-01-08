@@ -542,7 +542,7 @@
         products.forEach(function(product) {
             var conditionLabel = getConditionLabel(product.condition);
             var conditionClass = getConditionClass(product.condition);
-            var priceHtml = formatPrice(product.price, product.discount_price, product.discount_percentage);
+            var priceHtml = formatPrice(product.price, product.price_before_discount, product.discount_percentage);
             var productUrl = '/product-detail/' + product.slug;
             var categoryName = (product.category && product.category.name) ? product.category.name : '';
             var productTitle = product.title || '';
@@ -713,8 +713,8 @@
 
         if (discountPriceNum > 0 && discountPercentageNum > 0) {
             return '<h5 class="price">' +
-                '<span class="theme-color">EGP ' + discountPriceNum.toFixed(2) + '</span>' +
-                '<del>EGP ' + priceNum.toFixed(2) + '</del>' +
+                '<span class="theme-color">EGP ' + priceNum.toFixed(2) + '</span>' +
+                '<del>EGP ' + discountPriceNum.toFixed(2) + '</del>' +
             '</h5>';
         }
         return '<h5 class="price"><span class="theme-color">EGP ' + priceNum.toFixed(2) + '</span></h5>';

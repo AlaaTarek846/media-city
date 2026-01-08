@@ -737,7 +737,8 @@
                         '<div>' +
                         '<div class="form-check">' +
                         '<input class="form-check-input address-radio" type="radio" name="selected_address" ' +
-                        'id="' + addressId + '" value="' + address.id + '" ' + isChecked + '>' +
+                        'id="' + addressId + '" value="' + address.id + '" ' + isChecked + ' ' +
+                        'data-shipping-price="' + (address.area ? (address.area.shipping_price || 0) : 0) + '">' +
                         '</div>' +
                         '<div class="label">' +
                         '<label>' + (address.title || '{{ __("messages.Address") }}') + '</label>' +

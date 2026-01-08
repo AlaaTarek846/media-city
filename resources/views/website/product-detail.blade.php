@@ -530,9 +530,9 @@
 
                                 <div class="price-rating">
                                         @if($firstVariant)
-                                            @if($firstVariant->discount_price && $firstVariant->discount_percentage > 0)
+                                            @if($firstVariant->	price_before_discount && $firstVariant->discount_percentage > 0)
                                                 <h3 class="theme-color price">
-                                                    {{ __('messages.currency') }} {{ number_format($firstVariant->discount_price, 2) }}
+                                                    {{ __('messages.currency') }} {{ number_format($firstVariant->price, 2) }}
                                                     <del class="text-content">{{ __('messages.currency') }} {{ number_format($firstVariant->price_before_discount ?? $firstVariant->price, 2) }}</del>
                                                     <span class="offer theme-color">({{ round($firstVariant->discount_percentage) }}% {{ __('messages.Off') }})</span>
                                                 </h3>
@@ -540,21 +540,6 @@
                                                 <h3 class="theme-color price">{{ __('messages.currency') }} {{ number_format($firstVariant->price, 2) }}</h3>
                                             @endif
                                         @endif
-
-                                    <div class="product-rating custom-rate">
-                                        <ul class="rating">
-                                                @for($i = 1; $i <= 5; $i++)
-                                            <li>
-                                                        <i data-feather="star" class="{{ $i <= $averageRating ? 'fill' : '' }}"></i>
-                                            </li>
-                                                @endfor
-                                        </ul>
-                                            @if($reviewCount > 0)
-                                                <span class="review">{{ $reviewCount }} {{ $reviewCount > 1 ? __('messages.Customer Reviews') : __('messages.Customer Review') }}</span>
-                                            @else
-                                                <span class="review">{{ __('messages.No reviews yet') }}</span>
-                                            @endif
-                                    </div>
                                 </div>
 
                                 <div class="procuct-contain">
@@ -724,14 +709,14 @@
                                          aria-labelledby="description-tab">
                                         <div class="product-description">
                                             <div class="nav-desh">
-                                                    <p>{{ $translation->description ?? __('messages.No description available') }}</p>
+                                                {!! $translation->description ?? __('messages.No description available') !!}
                                             </div>
                                                 </div>
                                             </div>
 
                                         {{-- Attributes Tab --}}
                                         @if($product->attributes->count() > 0)
-                                            <div class="tab-pane fade" id="attributes" role="tabpanel" aria-labelledby="attributes-tab">
+                                    <div class="tab-pane fade" id="attributes" role="tabpanel" aria-labelledby="attributes-tab">
                                         <div class="table-responsive">
                                             <table class="table info-table">
                                                 <tbody>
@@ -763,7 +748,7 @@
                                                         <h5>{{ $featureTranslation->title }}</h5>
                                                     @endif
                                                     @if($featureTranslation->description)
-                                                        <p>{{ $featureTranslation->description }}</p>
+                                                        <p>{!! $featureTranslation->description !!}</p>
                                                     @endif
                                         </div>
                                     </div>
@@ -935,23 +920,10 @@
                                                         <a href="{{ route('productDetail', $relatedTranslation->slug) }}">
                                                             <h5 class="name">{{ $relatedTranslation->title }}</h5>
                                         </a>
-                                        <div class="product-rating mt-2">
-                                            <ul class="rating">
-                                                                @php
-                                                                    $relatedRating = round($relatedProduct->rate ?? 0);
-                                                                @endphp
-                                                                @for($i = 1; $i <= 5; $i++)
-                                                <li>
-                                                                        <i data-feather="star" class="{{ $i <= $relatedRating ? 'fill' : '' }}"></i>
-                                                </li>
-                                                                @endfor
-                                            </ul>
-                                                            <span>({{ number_format($relatedProduct->rate ?? 0, 1) }})</span>
-                                        </div>
                                                         @if($relatedVariant)
-                                                            @if($relatedVariant->discount_price && $relatedVariant->discount_percentage > 0)
+                                                            @if($relatedVariant->price_before_discount && $relatedVariant->discount_percentage > 0)
                                                                 <h5 class="price">
-                                                                    <span class="theme-color">{{ __('messages.currency') }} {{ number_format($relatedVariant->discount_price, 2) }}</span>
+                                                                    <span class="theme-color">{{ __('messages.currency') }} {{ number_format($relatedVariant->price, 2) }}</span>
                                                                     <del>{{ __('messages.currency') }} {{ number_format($relatedVariant->price_before_discount ?? $relatedVariant->price, 2) }}</del>
                                         </h5>
                                                             @else
