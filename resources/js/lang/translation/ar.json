@@ -208,6 +208,9 @@
         "admins": "المدراء",
         "banners": "العلانات",
         "sliders": "السكشن المتحرك",
+        "header_offers": "عروض الهيدر",
+        "studioRental": "إيجار الاستوديو",
+        "studio_rentals": "إيجار الاستوديو",
         "payment_methods": "طرق الدفع",
         "roles": "صلاحيات المدراء",
         "profile": "الملف الشخصى",
@@ -380,6 +383,12 @@
         "whatsapp":"واتساب",
         "how_did_you_hear_about_us":"كيف سمعت عنا",
         "assign_admin":"تعيين مسؤول",
+        "profile_documents":"مستندات الملف الشخصي",
+        "id_card_front":"صورة بطاقة الهوية - الوجه الأمامي",
+        "id_card_back":"صورة بطاقة الهوية - الوجه الخلفي",
+        "commercial_register":"السجل التجاري",
+        "tax_card":"البطاقة الضريبية",
+        "no_profile_documents":"لا توجد مستندات للملف الشخصي",
         "key":"key",
         "secert":"secret",
         "is_online":"اونلاين ؟",
@@ -1424,7 +1433,19 @@
         "department read": "عرض القسم",
         "department create": "اضافة القسم",
         "department edit": "تعديل القسم",
-        "department delete": "حذف القسم"
+        "department delete": "حذف القسم",
+
+        "Header Offers" : "عروض الهيدر",
+        "headerOffer read" : "عرض عروض الهيدر",
+        "headerOffer create" : "اضافة عروض الهيدر",
+        "headerOffer edit" : "تعديل عروض الهيدر",
+        "headerOffer delete" : "حذف عروض الهيدر",
+
+        "Studio Rentals" : "إيجار الاستوديو",
+        "studioRental read" : "عرض إيجار الاستوديو",
+        "studioRental create" : "اضافة إيجار الاستوديو",
+        "studioRental edit" : "تعديل إيجار الاستوديو",
+        "studioRental delete" : "حذف إيجار الاستوديو"
 
     },
     "shirt_type": {

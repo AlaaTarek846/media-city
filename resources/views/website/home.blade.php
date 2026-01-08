@@ -50,15 +50,24 @@
     <section class="hero-slider" style="padding-top: 0px;">
         <div class="slider" id="heroSlider">
             <div class="slides">
-                <div class="slide active">
-                    <img src="{{asset('website/images/veg-3/home-bg.png')}}" alt="Slide 1">
-                </div>
-                <div class="slide">
-                    <img src="{{asset('website/images/veg-3/shape/background.png')}}" alt="Slide 2">
-                </div>
-                <div class="slide">
-                    <img src="{{asset('website/images/veg-3/home-bg.png')}}" alt="Slide 3">
-                </div>
+                @if(isset($sliders) && $sliders->count() > 0)
+                    @foreach($sliders as $index => $slider)
+                        <div class="slide {{ $index === 0 ? 'active' : '' }}">
+                            <img src="{{ $slider->image }}" alt="Slide {{ $index + 1 }}">
+                        </div>
+                    @endforeach
+                @else
+                    {{-- Fallback to default images if no sliders found --}}
+                    <div class="slide active">
+                        <img src="{{asset('website/images/veg-3/home-bg.png')}}" alt="Slide 1">
+                    </div>
+                    <div class="slide">
+                        <img src="{{asset('website/images/veg-3/shape/background.png')}}" alt="Slide 2">
+                    </div>
+                    <div class="slide">
+                        <img src="{{asset('website/images/veg-3/home-bg.png')}}" alt="Slide 3">
+                    </div>
+                @endif
             </div>
 
             <!-- Arrows -->
@@ -225,54 +234,70 @@
     <!-- Deal Section End -->
 
     <!-- Product Sction Start -->
-    <section class="studio-rent-section">
-        <div class="container-fluid-lg">
-            <div class="title">
-                <h2>Studio Rental</h2>
-            </div>
-            <div class="row g-4 align-items-center">
-                <div class="col-xl-7">
-                    <div class="studio-rent-slider">
-                        <div>
-                            <div class="studio-rent-slide">
-                                <img src="{{asset('website/images/151.jpeg')}}" class="img-fluid blur-up lazyload" alt="Studio - Slide 1">
-                            </div>
-                        </div>
-                        <div>
-                            <div class="studio-rent-slide">
-                                <img src="{{asset('website/images/152.jpeg')}}" class="img-fluid blur-up lazyload" alt="Studio - Slide 2">
-                            </div>
-                        </div>
-                        <div>
-                            <div class="studio-rent-slide">
-                                <img src="{{asset('website/images/153.jpg')}}" class="img-fluid blur-up lazyload" alt="Studio - Slide 3">
-                            </div>
+    @if(isset($studioRental) && $studioRental)
+        @php
+            $studioTranslation = $studioRental->translation ?? null;
+        @endphp
+        <section class="studio-rent-section">
+            <div class="container-fluid-lg">
+                <div class="title">
+                    <h2>{{ __('messages.Studio Rental') }}</h2>
+                </div>
+                <div class="row g-4 align-items-center">
+                    <div class="col-xl-7">
+                        <div class="studio-rent-slider">
+                            @if($studioRental->images && $studioRental->images->count() > 0)
+                                @foreach($studioRental->images as $index => $image)
+                                    <div>
+                                        <div class="studio-rent-slide">
+                                            <img src="{{ $image->image }}" class="img-fluid blur-up lazyload" alt="Studio - Slide {{ $index + 1 }}">
+                                        </div>
+                                    </div>
+                                @endforeach
+                            @else
+                                {{-- Fallback images if no images found --}}
+                                <div>
+                                    <div class="studio-rent-slide">
+                                        <img src="{{asset('website/images/151.jpeg')}}" class="img-fluid blur-up lazyload" alt="Studio - Slide 1">
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="studio-rent-slide">
+                                        <img src="{{asset('website/images/152.jpeg')}}" class="img-fluid blur-up lazyload" alt="Studio - Slide 2">
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="studio-rent-slide">
+                                        <img src="{{asset('website/images/153.jpg')}}" class="img-fluid blur-up lazyload" alt="Studio - Slide 3">
+                                    </div>
+                                </div>
+                            @endif
                         </div>
                     </div>
-                </div>
 
-                <div class="col-xl-5">
-                    <div class="studio-rent-content">
-                        <div class="title">
-                            <h2>Studio For Rent</h2>
-                        </div>
-                        <p class="studio-rent-text">
-                            Fully-equipped studio for photo & video shoots. Clean setup, pro lighting options, and flexible booking.
-                        </p>
-                        <div class="studio-rent-meta">
-                            <span class="badge theme-bg-color text-white">Available Now</span>
-                            <span class="ms-2">Hourly / Daily</span>
-                        </div>
-                        <div class="mt-3">
-                            <a href="studio-details.html" class="btn theme-bg-color text-white btn-md">
-                                Rent This Studio
-                            </a>
+                    <div class="col-xl-5">
+                        <div class="studio-rent-content">
+                            <div class="title">
+                                <h2>{{ $studioTranslation->title ?? __('messages.Studio For Rent') }}</h2>
+                            </div>
+                            <p class="studio-rent-text">
+                                {{ $studioTranslation->description ?? __('messages.Fully-equipped studio for photo & video shoots. Clean setup, pro lighting options, and flexible booking.') }}
+                            </p>
+                            <div class="studio-rent-meta">
+                                <span class="badge theme-bg-color text-white">{{ __('messages.Available Now') }}</span>
+                                <span class="ms-2">{{ __('messages.Hourly / Daily') }}</span>
+                            </div>
+                            <div class="mt-3">
+                                <a href="{{route('contact')}}" class="btn theme-bg-color text-white btn-md">
+                                    {{ __('messages.Rent This Studio') }}
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    @endif
     <!-- Product Sction End -->
 
     <section class="section-b-space">
@@ -291,7 +316,7 @@
                                     $variant = $product->variants->first();
                                     $productUrl = route('productDetail', ['id' => $translation->slug ?? $product->id]);
                                     $categoryTranslation = $product->category->translation ?? $product->category->translations->first() ?? null;
-                                    
+
                                     // Condition badge logic
                                     $conditionLabel = '';
                                     $conditionClass = '';
@@ -313,7 +338,7 @@
                                             $showBadge = true;
                                         }
                                     }
-                                    
+
                                     $rating = round($product->rate ?? 0);
                                     $wowDelay = ($index % 4 == 0) ? 0 : ($index % 4) * 0.1;
                                 @endphp
@@ -328,8 +353,8 @@
                                                 @endif
                                 <div class="product-image">
                                                     <a href="{{ $productUrl }}">
-                                                        <img src="{{ $product->image }}" 
-                                                             class="img-fluid blur-up lazyload" 
+                                                        <img src="{{ $product->image }}"
+                                                             class="img-fluid blur-up lazyload"
                                                              alt="{{ $translation->title }}">
                                     </a>
                                     <ul class="product-option">
@@ -398,8 +423,13 @@
                             <div class="row">
                                 <div class="col-12">
                                     <div class="newsletter-box hover-effect">
-                                        <img src="{{asset('website/images/veg-3/shape/background.png')}}" class="img-fluid bg-img"
-                                             alt="">
+                                        @if(isset($banner) && $banner)
+                                            <img src="{{ $banner->image }}" class="img-fluid bg-img"
+                                                 alt="{{ $banner->translation->title ?? '' }}">
+                                        @else
+                                            <img src="{{asset('website/images/veg-3/shape/background.png')}}" class="img-fluid bg-img"
+                                                 alt="">
+                                        @endif
 
                                         <div class="row">
                                             <div class="col-xxl-8 col-xl-7">
@@ -433,7 +463,7 @@
                                     $variant = $product->variants->first();
                                     $productUrl = route('productDetail', ['id' => $translation->slug ?? $product->id]);
                                     $categoryTranslation = $product->category->translation ?? $product->category->translations->first() ?? null;
-                                    
+
                                     // Condition badge logic
                                     $conditionLabel = '';
                                     $conditionClass = '';
@@ -455,7 +485,7 @@
                                             $showBadge = true;
                                         }
                                     }
-                                    
+
                                     $rating = round($product->rate ?? 0);
                                     $wowDelay = ($index % 4 == 0) ? 0 : ($index % 4) * 0.1;
                                 @endphp
@@ -470,8 +500,8 @@
                                                 @endif
                                 <div class="product-image">
                                                     <a href="{{ $productUrl }}">
-                                                        <img src="{{ $product->image }}" 
-                                                             class="img-fluid blur-up lazyload" 
+                                                        <img src="{{ $product->image }}"
+                                                             class="img-fluid blur-up lazyload"
                                                              alt="{{ $translation->title }}">
                                     </a>
                                     <ul class="product-option">

@@ -20,12 +20,12 @@ class BannerSeeder extends Seeder
         ]);
         $Brand->setTranslations([
             'ar' => [
-                'title' => 'الأناقة المعاد تعريفها',
-                'description' => 'تسوق أحدث الصيحات الآن'
+                'title' => 'عروض خاصة على كاميرات التصوير',
+                'description' => 'وفر حتى 50% على أفضل الكاميرات الاحترافية'
             ],
             'en' => [
-                'title'       => 'Elegance Redefined',
-                'description' => 'Shop the latest trends now'
+                'title'       => 'Special Offers on Photography Cameras',
+                'description' => 'Save up to 50% on the best professional cameras'
             ],
 
         ]);
@@ -37,47 +37,47 @@ class BannerSeeder extends Seeder
 
         $Brand->setTranslations([
             'ar' => [
-                'title' => 'خزانة الأناقة',
-                'description' => 'تأنق، اشعر بالروعة'
+                'title' => 'تسوق من متجرنا الإلكتروني',
+                'description' => 'اكتشف مجموعة واسعة من معدات التصوير بأسعار مميزة'
             ],
             'en' => [
-                'title'       => 'The Chic Closet',
-                'description' => 'Dress up, feel amazing'
+                'title'       => 'Shop from Our Online Store',
+                'description' => 'Discover a wide range of photography equipment at great prices'
             ],
 
         ]);
 
         $Brand = Banner::create([
             'image'   => 'bannerRenting.png',
-            "type"    => 'renting',
+            "type"    => 'shop',
 
         ]);
 
         $Brand->setTranslations([
             'ar' => [
-                'title' => 'أسلوب الروح البوهيمية',
-                'description' => 'اكتشف قطع البيان اليوم'
+                'title' => 'خدمة تأجير المعدات الاحترافية',
+                'description' => 'أجر أفضل معدات التصوير بأسعار مناسبة لجميع المشاريع'
             ],
             'en' => [
-                'title'       => 'Gypsy Soul Styles',
-                'description' => 'Discover statement pieces today'
+                'title'       => 'Professional Equipment Rental Service',
+                'description' => 'Rent the best photography equipment at affordable prices for all projects'
             ],
 
         ]);
 
          $Brand = Banner::create([
             'image'   => 'bannerBestSellers.png',
-             "type"    => 'best_sellers',
+             "type"    => 'shop',
         ]);
 
         $Brand->setTranslations([
             'ar' => [
-                'title' => 'يوميات أسلوب الشارع',
-                'description' => 'ارتدي مثل الجمال الكلاسيكي'
+                'title' => 'الأكثر مبيعاً هذا الشهر',
+                'description' => 'تصفح المنتجات الأكثر طلباً من عملائنا'
             ],
             'en' => [
-                'title'       => 'Street Style Diaries',
-                'description' => 'Dress like a classic beauty'
+                'title'       => 'Best Sellers This Month',
+                'description' => 'Browse the most requested products from our customers'
             ],
 
         ]);

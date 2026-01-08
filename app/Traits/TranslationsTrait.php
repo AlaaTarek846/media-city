@@ -39,8 +39,13 @@ trait TranslationsTrait{
         $this->translations()->delete();
 
         foreach ($translations as $locale => $translation) {
-            if(!@$translation['title']){
+            // Allow translation if it has title OR description
+            if(!@$translation['title'] && !@$translation['description']){
                 continue;
+            }
+            // If title is not provided, set it to empty string (required by database)
+            if(!isset($translation['title']) || $translation['title'] === null){
+                $translation['title'] = '';
             }
             $this->translations()->create($translation + ['locale' => $locale]);
         }

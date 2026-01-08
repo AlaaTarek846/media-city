@@ -1222,6 +1222,16 @@
                             '</tr>';
                     }
 
+                    if (address.lat && address.lng) {
+                        var mapUrl = 'https://www.google.com/maps/search/?api=1&query=' + address.lat + ',' + address.lng;
+                        addressHtml += '<tr>' +
+                            '<td>{{ __("messages.Location") }}:</td>' +
+                            '<td><a href="' + mapUrl + '" target="_blank" class="text-primary text-decoration-underline">' +
+                            '<i class="fa-solid fa-map-location-dot me-1"></i> {{ __("messages.View on Map") }}' +
+                            '</a></td>' +
+                            '</tr>';
+                    }
+
                     addressHtml += '</tbody>' +
                         '</table>' +
                         '</div>' +

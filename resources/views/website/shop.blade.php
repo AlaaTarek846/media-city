@@ -1,6 +1,79 @@
 @extends('website.layouts.layoutPage')
 @section('pageTitle',__('messages.Shop'))
 @push("headStyle")
+<link rel="stylesheet" type="text/css" href="{{ asset('website/css/vendors/ion.rangeSlider.min.css') }}">
+<style>
+    /* Custom Theme Skin for Ion Range Slider - Matches Project Style */
+    .irs {
+        height: 55px;
+        direction: ltr; /* Keep LTR for correct calculation even in RTL */
+    }
+    .irs-line {
+        height: 10px;
+        top: 33px;
+        background-color: #f9f8f6;
+        border-radius: 50px;
+    }
+    .irs-bar {
+        height: 10px;
+        top: 33px;
+        background-color: var(--theme-color);
+        background: linear-gradient(to right, var(--theme-color) 0%, #d99f46 100%); /* Example gradient from theme */
+    }
+    .irs-bar-edge {
+        height: 10px;
+        top: 33px;
+        width: 14px;
+        background-color: var(--theme-color);
+        border-radius: 16px 0 0 16px;
+    }
+    .irs-handle {
+        top: 28px;
+        width: 20px;
+        height: 20px;
+        border: 3px solid #fff;
+        background-color: var(--theme-color);
+        border-radius: 100%;
+        box-shadow: 0px 0px 5px rgba(0,0,0,0.2);
+        cursor: pointer;
+    }
+    .irs-handle:hover {
+        transform: scale(1.1);
+        transition: all 0.3s ease;
+    }
+    .irs-from, .irs-to, .irs-single {
+        background-color: var(--theme-color);
+        color: #fff;
+        border-radius: 5px;
+        font-size: 13px;
+        padding: 4px 8px;
+        top: 0;
+    }
+    .irs-from:after, .irs-to:after, .irs-single:after {
+        border-top-color: var(--theme-color);
+    }
+    .irs-min, .irs-max {
+        top: 0;
+        padding: 4px 8px;
+        background: #f9f8f6;
+        border-radius: 5px;
+        font-size: 12px;
+        color: #666;
+    }
+
+    /* RTL Specific Overrides to fix visual mirroring */
+    html[dir="rtl"] .irs-bar-edge {
+        border-radius: 0 16px 16px 0;
+        right: 0;
+        left: auto;
+    }
+    html[dir="rtl"] .irs-from, html[dir="rtl"] .irs-to, html[dir="rtl"] .irs-single {
+        right: auto;
+        left: auto;
+    }
+    html[dir="rtl"] .irs-min { left: auto; right: 0; }
+    html[dir="rtl"] .irs-max { right: auto; left: 0; }
+</style>
 
 @endpush
 @section('body')
@@ -10,18 +83,46 @@
             <div class="row">
                 <div class="col-12">
                     <div class="slider-1 slider-animate product-wrapper no-arrow">
-                        <div>
-                            <div class="banner-contain-2 hover-effect">
-                                <img src="{{asset('website/images/veg-3/home-bg.png')}}" class="bg-img rounded-3 blur-up lazyload" alt="">
-                                <div
-                                    class="banner-detail p-center-right position-relative shop-banner ms-auto banner-small">
-                                    <div>
-                                        <h2> {{ $selectedCategory->translation->title ?? ($selectedDepartment->translation->title ?? __('messages.Shop')) }}</h2>
-                                        <h3>{{ __('messages.Save upto 50%') }}</h3>
+                        @if(isset($bannerShops) && $bannerShops->count() > 0)
+                            @foreach($bannerShops as $bannerShop)
+                                @php
+                                    $bannerShopTranslation = $bannerShop->translation ?? null;
+                                @endphp
+                                <div>
+                                    <div class="banner-contain-2 hover-effect">
+                                        <img src="{{ $bannerShop->image }}" class="bg-img rounded-3 blur-up lazyload" alt="{{ $bannerShopTranslation->title ?? '' }}">
+                                        <div class="banner-detail p-center-right position-relative shop-banner ms-auto banner-small">
+                                            <div>
+                                                @if($bannerShopTranslation)
+                                                    <h2>{{ $bannerShopTranslation->title ?? ($selectedCategory->translation->title ?? ($selectedDepartment->translation->title ?? __('messages.Shop'))) }}</h2>
+                                                    @if($bannerShopTranslation->description)
+                                                        <h3>{!! $bannerShopTranslation->description !!}</h3>
+                                                    @else
+                                                        <h3>{{ __('messages.Save upto 50%') }}</h3>
+                                                    @endif
+                                                @else
+                                                    <h2>{{ $selectedCategory->translation->title ?? ($selectedDepartment->translation->title ?? __('messages.Shop')) }}</h2>
+                                                    <h3>{{ __('messages.Save upto 50%') }}</h3>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        @else
+                            {{-- Fallback to default banner if no shop banners found --}}
+                            <div>
+                                <div class="banner-contain-2 hover-effect">
+                                    <img src="{{asset('website/images/veg-3/home-bg.png')}}" class="bg-img rounded-3 blur-up lazyload" alt="">
+                                    <div class="banner-detail p-center-right position-relative shop-banner ms-auto banner-small">
+                                        <div>
+                                            <h2>{{ $selectedCategory->translation->title ?? ($selectedDepartment->translation->title ?? __('messages.Shop')) }}</h2>
+                                            <h3>{{ __('messages.Save upto 50%') }}</h3>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -191,6 +292,29 @@
                                 </div>
                                 @endif
 
+                                {{-- Price Filter --}}
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingPrice">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                                data-bs-target="#collapsePrice" aria-expanded="false"
+                                                aria-controls="collapsePrice">
+                                            <span>{{ __('messages.Price') }}</span>
+                                        </button>
+                                    </h2>
+                                    <div id="collapsePrice" class="accordion-collapse collapse show"
+                                         aria-labelledby="headingPrice">
+                                        <div class="accordion-body">
+                                            <div class="range-slider">
+                                                <input type="text" class="js-range-slider" id="price-range" value=""
+                                                       data-min="{{ $minPrice }}"
+                                                       data-max="{{ $maxPrice }}"
+                                                       data-from="{{ $minPrice }}"
+                                                       data-to="{{ $maxPrice }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -266,6 +390,7 @@
 @endsection
 
 @push('headScript')
+<script src="{{ asset('website/js/ion.rangeSlider.min.js') }}"></script>
 <script>
 (function() {
     // Wait for jQuery to be loaded
@@ -294,7 +419,41 @@
         page: 1
     };
 
-    // Initialize price range slider (removed)
+    // Initialize price range slider
+    var $range = $("#price-range");
+    var minPrice = parseFloat($range.data('min')) || 0;
+    var maxPrice = parseFloat($range.data('max')) || 1000;
+    var fromPrice = minPrice;
+    var toPrice = maxPrice;
+
+    // RTL Detection
+    var isRTL = $('html').attr('dir') === 'rtl' || $('html').attr('lang') === 'ar';
+
+    $range.ionRangeSlider({
+        type: "double",
+        min: minPrice,
+        max: maxPrice,
+        from: minPrice,
+        to: maxPrice,
+        prefix: isRTL ? "" : "EGP ",
+        postfix: isRTL ? " {{ __('messages.Price') }}" : "",
+        grid: false,
+        prettify_separator: ",",
+        // Use native RTL support if available, or rely on our CSS patch
+        // right_to_left: isRTL, // Disable native RTL js flipping to rely on robust CSS override
+        onFinish: function (data) {
+            fromPrice = data.from;
+            toPrice = data.to;
+            loadProducts(1);
+        },
+        locale: {
+            format: {
+                format: function (value) {
+                     return value;
+                }
+            }
+        }
+    });
 
     // Load products function
     function loadProducts(page = 1) {
@@ -314,6 +473,11 @@
         if (filters.condition) params.condition = filters.condition;
         if (filters.search) params.search = filters.search;
         if (filters.sort_by) params.sort_by = filters.sort_by;
+
+        // Add price range params
+        params.min_price = fromPrice;
+        params.max_price = toPrice;
+
         params.page = filters.page;
 
         // Make AJAX request using jQuery

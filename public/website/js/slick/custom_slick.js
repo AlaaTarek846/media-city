@@ -1428,7 +1428,6 @@ $('.notification-slider').slick({
     variableWidth: false,
     autoplay: true,
     autoplaySpeed: 2500,
-    rtl: $('html').attr('lang') == 'ar' ? true : false,
     arrows: false,
 });
 

@@ -19,6 +19,8 @@ use App\Models\ArticleSlugRedirect;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\ShopByInstagram;
+use App\Models\Slider;
+use App\Models\StudioRental;
 use App\Models\Team;
 use App\Models\Cart;
 use App\Models\DiscountCoupon;
@@ -47,6 +49,10 @@ class HomePageController extends Controller
     {
         $banners  =  Banner::latest()->get();
 
+         $studioRental = StudioRental::whereStatus(1)->with('translation','images')->first();
+         $sliders = Slider::whereStatus(1)->get();
+         $banner = Banner::where('type','home')->whereStatus(1)->first();
+
         // Get 7 categories for Shop By Categories section
         $shopByDepartment = Department::whereStatus(1)->whereId(2)->with(['translation'])
             ->withWhereHas('categories',function ($q) {
@@ -57,7 +63,7 @@ class HomePageController extends Controller
 
         // Get deal products (products with discount)
         $dealProducts = Product::whereStatus(1)->whereHas('variants', function ($query) {
-                $query->where('discount_percentage', '>', 0);
+                $query->where('discount_percentage', '>', 0)->where('quantity', '>', 0);
             })
             ->with(['variants' => function ($query) {
                 $query->where('discount_percentage', '>', 0)
@@ -69,7 +75,11 @@ class HomePageController extends Controller
             ->get();
 
         // Get best seller products (products with most order items)
+        // Get best seller products (products with most order items)
         $bestSellerProducts = Product::whereStatus(1)
+            ->whereHas('variants', function ($query) {
+                $query->where('quantity', '>', 0);
+            })
             ->with(['variants' => function ($query) {
                 $query->where('status', 1)->orderBy('price')->limit(1);
             }, 'translation', 'department', 'category'])
@@ -83,6 +93,9 @@ class HomePageController extends Controller
             $remaining = 10 - $bestSellerProducts->count();
             $latestProducts = Product::whereStatus(1)
                 ->whereNotIn('id', $bestSellerProducts->pluck('id'))
+                ->whereHas('variants', function ($query) {
+                    $query->where('quantity', '>', 0);
+                })
                 ->with(['variants' => function ($query) {
                     $query->where('status', 1)->orderBy('price')->limit(1);
                 }, 'translation', 'department', 'category'])
@@ -94,6 +107,9 @@ class HomePageController extends Controller
 
         // Get most requested products (products with most carts or reviews)
         $mostRequestedProducts = Product::whereStatus(1)
+            ->whereHas('variants', function ($query) {
+                $query->where('quantity', '>', 0);
+            })
             ->withCount(['carts as total_carts', 'reviews as total_reviews'])
             ->with(['variants' => function ($query) {
                 $query->where('status', 1)->orderBy('price')->limit(1);
@@ -107,6 +123,9 @@ class HomePageController extends Controller
             $remaining = 10 - $mostRequestedProducts->count();
             $latestProducts = Product::whereStatus(1)
                 ->whereNotIn('id', $mostRequestedProducts->pluck('id'))
+                ->whereHas('variants', function ($query) {
+                    $query->where('quantity', '>', 0);
+                })
             ->with(['variants' => function ($query) {
                     $query->where('status', 1)->orderBy('price')->limit(1);
                 }, 'translation', 'department', 'category'])
@@ -116,7 +135,7 @@ class HomePageController extends Controller
             $mostRequestedProducts = $mostRequestedProducts->merge($latestProducts);
         }
 
-        return view('website.home',compact('banners','shopByDepartment','dealProducts','bestSellerProducts','mostRequestedProducts'));
+        return view('website.home',compact('banners','shopByDepartment','dealProducts','bestSellerProducts','mostRequestedProducts','studioRental','sliders','banner'));
     }
 
     public function category()
@@ -155,12 +174,14 @@ class HomePageController extends Controller
         if ($cartItem) {
             $cartItem->increment('quantity', $request->quantity);
         } else {
-            $user->carts()->create([
-                'product_id' => $request->product_id,
-                'quantity' => $request->quantity,
-                'product_variant_id' => $request->variant_id,
-                'price' => $product->price,
-            ]);
+            if ($request->quantity > 0) {
+                $user->carts()->create([
+                    'product_id' => $request->product_id,
+                    'quantity' => $request->quantity,
+                    'product_variant_id' => $request->variant_id,
+                    'price' => $product->price,
+                ]);
+            }
         }
 
         if ($cartItem && $cartItem->quantity <= 0) {
@@ -213,6 +234,19 @@ class HomePageController extends Controller
                     'department.translation'
                 ])
                 ->get();
+
+            if (count($wishlistProducts) > 0) {
+                foreach ($wishlistProducts as $wishlist)  {
+                    if ($wishlist->variants[0]->quantity == 0) {
+                        $wishlist->delete();
+                    }
+                }
+            }
+
+            $wishlistProducts = $wishlistProducts->filter(function ($wishlist) {
+                return $wishlist->variants[0]->quantity > 0;
+            });
+
         } else {
             // For guest users, products will be loaded via JavaScript from localStorage
             $wishlistProducts = collect();
@@ -253,7 +287,11 @@ class HomePageController extends Controller
 
         foreach ($data['cart'] as $item) {
             $cartItem = Cart::findOrFail($item['id']);
-            $cartItem->update(['quantity' => $item['quantity']]);
+            if ($item['quantity'] <= 0) {
+                $cartItem->delete();
+            } else {
+                $cartItem->update(['quantity' => $item['quantity']]);
+            }
         }
 
         return responseJson('', __('messages.The shopping cart has been successfully reviewed and is being transferred to payment'), 200);
@@ -427,10 +465,23 @@ class HomePageController extends Controller
         $categories = $categoriesQuery->latest()->get();
 
         $brands = Brand::whereStatus(1)->latest()->get();
+         $bannerShops = Banner::whereStatus(1)->where('type','shop')->with('translation')->latest()->get();
+
+        // Calculate min and max price from ProductVariant where product is active
+        $minPrice = ProductVariant::whereHas('product', function($q) {
+            $q->where('status', 1);
+        })->min('price') ?? 0;
+
+        $maxPrice = ProductVariant::whereHas('product', function($q) {
+            $q->where('status', 1);
+        })->max('price') ?? 0;
 
         return view('website.shop', compact(
             'categories',
-            'brands'
+            'brands',
+            'bannerShops',
+            'minPrice',
+            'maxPrice'
         ));
     }
 
@@ -443,6 +494,9 @@ class HomePageController extends Controller
     public function getProductForModal($id)
     {
         $product = Product::where('products.status', 1)
+            ->whereHas('variant', function ($query) {
+                $query->where('quantity', '>', 0);
+            })
             ->with([
                 'translation',
                 'translations',
@@ -560,6 +614,9 @@ class HomePageController extends Controller
         // Build products query
         // Use products.status explicitly to avoid ambiguity when joining with other tables
         $productsQuery = Product::where('products.status', 1)
+            ->whereHas('variant', function ($query) {
+                $query->where('quantity', '>', 0);
+            })
             ->with(['variants', 'translation', 'department', 'category', 'brand']);
 
         // Filter by department
@@ -589,6 +646,13 @@ class HomePageController extends Controller
         // Filter by brands
         if ($request->brands && is_array($request->brands)) {
             $productsQuery->whereIn('brand_id', $request->brands);
+        }
+
+        // Filter by price range
+        if ($request->min_price !== null && $request->max_price !== null) {
+            $productsQuery->whereHas('variants', function($q) use ($request) {
+                $q->whereBetween('price', [$request->min_price, $request->max_price]);
+            });
         }
 
         // Search filter

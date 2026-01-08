@@ -15,15 +15,7 @@
                                 <div class="card-body p-0">
                                     <div class="d-sm-flex align-items-top p-4 border-bottom-0 main-profile-cover">
                                         <div>
-                                            <img
-                                                v-if="user?.avatar"
-                                                :src="user.avatar"
-                                                class="rounded-circle me-3"
-                                                alt="User Avatar"
-                                                style="width: 80px; height: 80px; object-fit: cover;"
-                                            >
                                             <span
-                                                v-else
                                                 class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center me-3"
                                                 style="width: 80px; height: 80px; font-size: 2rem;"
                                             >
@@ -82,6 +74,75 @@
                                                 <span class="fw-semibold me-2">{{ $t('global.how_did_you_hear_about_us') }}:</span>
                                                 {{ user?.how_did_you_hear_about_us }}
                                             </p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Profile Documents Section -->
+                                    <div class="p-4" v-if="user?.profile">
+                                        <p class="fs-15 mb-3 me-4 fw-semibold">{{ $t('global.profile_documents') }} :</p>
+                                        
+                                        <!-- Person Profile -->
+                                        <div v-if="user?.user_type === 'person'">
+                                            <div class="row mb-3" v-if="user?.profile?.id_card_front">
+                                                <div class="col-md-12 mb-2">
+                                                    <label class="form-label fw-semibold">{{ $t('global.id_card_front') }}:</label>
+                                                    <div>
+                                                        <img :src="user.profile.id_card_front" alt="ID Card Front" class="img-fluid rounded" style="max-width: 300px; height: auto; cursor: pointer;" @click="openImageModal(user.profile.id_card_front)">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3" v-if="user?.profile?.id_card_back">
+                                                <div class="col-md-12 mb-2">
+                                                    <label class="form-label fw-semibold">{{ $t('global.id_card_back') }}:</label>
+                                                    <div>
+                                                        <img :src="user.profile.id_card_back" alt="ID Card Back" class="img-fluid rounded" style="max-width: 300px; height: auto; cursor: pointer;" @click="openImageModal(user.profile.id_card_back)">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Company Profile -->
+                                        <div v-else-if="user?.user_type === 'company'">
+                                            <div class="row mb-3" v-if="user?.profile?.commercial_register_image">
+                                                <div class="col-md-12 mb-2">
+                                                    <label class="form-label fw-semibold">{{ $t('global.commercial_register') }}:</label>
+                                                    <div>
+                                                        <img :src="user.profile.commercial_register_image" alt="Commercial Register" class="img-fluid rounded" style="max-width: 300px; height: auto; cursor: pointer;" @click="openImageModal(user.profile.commercial_register_image)">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3" v-if="user?.profile?.tax_card_image">
+                                                <div class="col-md-12 mb-2">
+                                                    <label class="form-label fw-semibold">{{ $t('global.tax_card') }}:</label>
+                                                    <div>
+                                                        <img :src="user.profile.tax_card_image" alt="Tax Card" class="img-fluid rounded" style="max-width: 300px; height: auto; cursor: pointer;" @click="openImageModal(user.profile.tax_card_image)">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Studio Profile -->
+                                        <div v-else-if="user?.user_type === 'studio'">
+                                            <div class="row mb-3" v-if="user?.profile?.id_card_front">
+                                                <div class="col-md-12 mb-2">
+                                                    <label class="form-label fw-semibold">{{ $t('global.id_card_front') }}:</label>
+                                                    <div>
+                                                        <img :src="user.profile.id_card_front" alt="ID Card Front" class="img-fluid rounded" style="max-width: 300px; height: auto; cursor: pointer;" @click="openImageModal(user.profile.id_card_front)">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3" v-if="user?.profile?.id_card_back">
+                                                <div class="col-md-12 mb-2">
+                                                    <label class="form-label fw-semibold">{{ $t('global.id_card_back') }}:</label>
+                                                    <div>
+                                                        <img :src="user.profile.id_card_back" alt="ID Card Back" class="img-fluid rounded" style="max-width: 300px; height: auto; cursor: pointer;" @click="openImageModal(user.profile.id_card_back)">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div v-if="!user?.profile || Object.keys(user.profile).length === 0" class="text-muted">
+                                            {{ $t('global.no_profile_documents') }}
                                         </div>
                                     </div>
 
@@ -395,7 +456,47 @@ export default {
 
         const days = ref(['Saturday','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday']);
 
-        return {t, id,days, loading,user};
+        function openImageModal(imageSrc) {
+            // Create modal for image preview
+            const modal = document.createElement('div');
+            modal.className = 'modal fade';
+            modal.id = 'imagePreviewModal';
+            modal.setAttribute('tabindex', '-1');
+            modal.setAttribute('aria-labelledby', 'imagePreviewModalLabel');
+            modal.setAttribute('aria-hidden', 'true');
+            
+            const modalDialog = document.createElement('div');
+            modalDialog.className = 'modal-dialog modal-lg modal-dialog-centered';
+            
+            const modalContent = document.createElement('div');
+            modalContent.className = 'modal-content';
+            
+            const modalHeader = document.createElement('div');
+            modalHeader.className = 'modal-header';
+            modalHeader.innerHTML = '<h5 class="modal-title">معاينة الصورة</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button>';
+            
+            const modalBody = document.createElement('div');
+            modalBody.className = 'modal-body text-center';
+            const img = document.createElement('img');
+            img.src = imageSrc;
+            img.alt = 'Preview';
+            img.className = 'img-fluid';
+            modalBody.appendChild(img);
+            
+            modalContent.appendChild(modalHeader);
+            modalContent.appendChild(modalBody);
+            modalDialog.appendChild(modalContent);
+            modal.appendChild(modalDialog);
+            
+            document.body.appendChild(modal);
+            const bsModal = new bootstrap.Modal(modal);
+            bsModal.show();
+            modal.addEventListener('hidden.bs.modal', () => {
+                document.body.removeChild(modal);
+            });
+        }
+
+        return {t, id,days, loading,user, openImageModal};
     }
 }
 </script>
