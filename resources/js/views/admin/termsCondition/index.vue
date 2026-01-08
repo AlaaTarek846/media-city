@@ -33,7 +33,8 @@
                     </div>
 
                     <div class="col-md-12 mt-3 mb-3 d-flex justify-content-end">
-                        <button type="submit" v-if="!loading" @click.prevent="AddSubmit" class="btn btn-primary">{{ $t('global.Submit') }}</button>
+                        <!-- Use pluralized permission name to match seeded permissions and router guard -->
+                        <button type="submit" v-if="!loading || permission.includes('terms conditions edit')" @click.prevent="AddSubmit" class="btn btn-primary">{{ $t('global.Submit') }}</button>
                         <button class="btn btn-primary btn-loader" v-else>
                             <span class="me-2">{{$t('global.Loading')}}</span>
                             <span class="loading"><i class="ri-loader-2-fill fs-16"></i></span>
@@ -52,6 +53,7 @@ import {maxLength, minLength, required,numeric} from "@vuelidate/validators";
 import useVuelidate from "@vuelidate/core";
 import adminApi from "../../../api/adminAxios";
 import Editor from 'primevue/editor';
+import {useStore} from "vuex";
 
 export default {
     name: "terms-condition",
@@ -71,6 +73,8 @@ export default {
         const languages = ref([]);
         const langValidation = ref({});
         const descRef = ref(null);
+        const store = useStore();
+        const permission = computed(() => store.getters['authAdmin/permission'] ?? []);
 
         function defaultData(){
             languages.value.forEach((el)=>{
@@ -135,7 +139,7 @@ export default {
 
         const v$ = useVuelidate(rules,submitdata.data);
 
-        return {t,id,loading,languages,resetModal,descRef,...toRefs(submitdata),v$,errors};
+        return {t,id,loading,languages,resetModal,descRef,...toRefs(submitdata),v$,errors,permission};
 
     },
     methods: {

@@ -62,6 +62,9 @@
                             </template>
                         </div>
 
+                        <div class="col-md-12 mt-3">
+                            <span class="text-secondary">{{ $t('global.image_dimensions_hint', {width: 1280, height: 853}) }}</span>
+                        </div>
                         <div class="col-md-12 mt-3 row flex-fill">
                             <div class="btn btn-outline-light waves-effect" style="width: 90%; height:90%">
                                 <span v-if="type != 'edit' && !numberOfImageUpload" style="width: 90%; height: 90%; margin-top: 30%">
@@ -148,7 +151,7 @@ export default {
         const {t} = useI18n({});
         const id = ref(null);
         const types = ref([]);
-        
+
         // Images
         const numberOfImageUpload = ref(0);
         const imagesGroup = ref([]);
@@ -185,10 +188,10 @@ export default {
                    languages.value = [];
                }
            }
-           
+
            // Reset langValidation
            langValidation.value = {};
-           
+
            if (languages.value && languages.value.length > 0) {
                languages.value.forEach((el)=>{
                    if (el && el.code) {
@@ -267,7 +270,7 @@ export default {
        function resetModalHidden()
         {
             defaultData();
-            nextTick(() => { 
+            nextTick(() => {
                 if (v$.value && typeof v$.value.$reset === 'function') {
                     v$.value.$reset();
                 }
@@ -296,7 +299,7 @@ export default {
         let previewGroup = (e) => {
             let containerImages = document.querySelector('#container-images-group');
             if (!containerImages) return;
-            
+
             // If files are selected, add them to imagesGroup
             if (e.target.files && e.target.files.length > 0) {
                 Array.from(e.target.files).forEach((file) => {
@@ -305,7 +308,7 @@ export default {
                     }
                 });
             }
-            
+
             // Rebuild preview
             containerImages.innerHTML = '';
             numberOfImageUpload.value = imagesGroup.value.length;
@@ -443,12 +446,12 @@ export default {
            });
        }
         formData.append('status', this.data.status ? 1 : 0);
-        
+
         // Add new images
         this.imagesGroup.forEach((image, index) => {
             formData.append(`images[${index}]`, image);
         });
-        
+
         // Add deleted images IDs (for edit mode)
         if (this.type === 'edit' && this.deletedImages && this.deletedImages.length > 0) {
             this.deletedImages.forEach((imageId, index) => {

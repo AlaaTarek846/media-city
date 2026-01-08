@@ -73,6 +73,9 @@
                         </div>
 
 
+                        <div class="col-md-12 mt-3">
+                            <span class="text-secondary">{{ $t('global.image_dimensions_hint', {width: 512, height: 512}) }}</span>
+                        </div>
                         <div class="col-md-12 mt-3 row flex-fill">
                             <div class="btn btn-outline-light waves-effect"  style="width: 90%; height:90%">
 

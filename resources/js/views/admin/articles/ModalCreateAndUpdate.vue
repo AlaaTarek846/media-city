@@ -233,7 +233,7 @@
                             </template>
                         </div>
 
-                        <p class="mt-3">{{$t('global.ChooseImages')}} (ع 700 * ط 500)</p>
+                        <p class="mt-3">{{$t('global.ChooseImages')}} (ع 450 * ط 350)</p>
                         <div class="col-md-12 mt-3 row flex-fill">
                             <div class="btn btn-outline-light waves-effect"  style="width: 90%; height:90%">
 

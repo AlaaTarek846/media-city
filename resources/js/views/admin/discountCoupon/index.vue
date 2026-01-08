@@ -43,7 +43,7 @@
                                     <th scope="col">{{ $t('global.start_date') }}</th>
                                     <th scope="col">{{ $t('global.expire_date') }}</th>
                                     <th scope="col">{{ $t('global.status') }}</th>
-                                    <th scope="col">{{ $t('global.action') }}</th>
+                                    <th scope="col" v-if="permission.includes('discount coupon edit') || permission.includes('discount coupon delete')">{{ $t('global.action') }}</th>
                                 </tr>
                                 </thead>
                                 <tbody v-if="data && data.length">
@@ -69,7 +69,7 @@
                                                 data-bs-toggle="modal" data-bs-target="#areas"
                                                class="btn btn-icon btn-sm btn-info-transparent rounded-pill"><i
                                                 class="ri-edit-line"></i></button>
-                                            <a href="#" @click.prevent="deleteData(item.id,index)" v-if="permission.includes('discount coupon delete')"
+                                            <a href="#" @click.prevent="deleteData(item.id,index)" v-if="permission.includes('discount coupon delete') && item.can_delete"
                                                class="btn btn-icon btn-sm btn-danger-transparent rounded-pill"><i
                                                 class="ri-delete-bin-line"></i></a>
                                         </div>

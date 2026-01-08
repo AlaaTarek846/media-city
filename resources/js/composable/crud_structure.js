@@ -27,7 +27,8 @@ export default function crud() {
     const uri = ref('');
     const pagePaginate = ref(1);
     const {t} = useI18n({});
-    let permission = computed(() => store.getters['authAdmin/permission']);
+    // Ensure permission is always an array to prevent runtime errors when used in templates
+    let permission = computed(() => store.getters['authAdmin/permission'] ?? []);
 
 
     let getData = (page =  1) => {

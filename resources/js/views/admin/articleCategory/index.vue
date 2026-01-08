@@ -22,7 +22,7 @@
                         <search-and-filters @search="(val) => search.searchKey = val" />
 
                         <div class="prism-toggle">
-                            <button v-if="permission.includes('area create')" @click="showModelCreate" class="btn btn-sm btn-primary-light" data-bs-toggle="modal" data-bs-target="#areas">
+                            <button v-if="permission.includes('articleCategory create')" @click="showModelCreate" class="btn btn-sm btn-primary-light" data-bs-toggle="modal" data-bs-target="#areas">
                                 <i class="ri-add-line me-1 fw-semibold align-middle"></i>{{ $t('global.add') }}
                             </button>
                         </div>
@@ -36,7 +36,7 @@
                                     <th scope="col">{{ $t('label.title') }}</th>
                                     <th scope="col">{{ $t('label.status') }}</th>
                                     <th scope="col">{{ $t('global.created_at') }}</th>
-                                    <th scope="col">{{ $t('global.action') }}</th>
+                                    <th scope="col" v-if="permission.includes('articleCategory edit') || permission.includes('articleCategory delete')">{{ $t('global.action') }}</th>
                                 </tr>
                                 </thead>
                                 <tbody v-if="data && data.length">
@@ -50,12 +50,12 @@
                                     <td>{{item.created_at}}</td>
                                     <td>
                                         <div class="hstack gap-2 fs-15">
-                                            <button v-if="permission.includes('area edit')"
+                                            <button v-if="permission.includes('articleCategory edit')"
                                                     @click.prevent="showEditMode(item)"
                                                     data-bs-toggle="modal" data-bs-target="#areas"
                                                     class="btn btn-icon btn-sm btn-info-transparent rounded-pill"><i
                                                 class="ri-edit-line"></i></button>
-                                            <a href="#" @click.prevent="deleteData(item.id,index)" v-if="permission.includes('area delete')"
+                                            <a href="#" @click.prevent="deleteData(item.id,index)" v-if="permission.includes('articleCategory delete')"
                                                class="btn btn-icon btn-sm btn-danger-transparent rounded-pill"><i
                                                 class="ri-delete-bin-line"></i></a>
                                         </div>

@@ -31,6 +31,7 @@ class ProductController extends Controller implements HasMiddleware
     public function index(Request $request)
     {
         $products = Product::with(['department', 'category', 'brand', 'variants'])
+            ->withCount(['orderItems', 'carts'])
             ->searchAndFilter()
             ->latest()
             ->paginate(10);
@@ -241,6 +242,10 @@ class ProductController extends Controller implements HasMiddleware
 
     public function destroy(Product $product)
     {
+        $product->loadCount(['orderItems', 'carts']);
+        if ($product->order_items_count > 0 || $product->carts_count > 0) {
+            return responseJson([], 'Cannot delete this product because it is in orders or carts', 422);
+        }
         unlink_image_by_path($product->getAttributes()['image']);
         $product->delete();
         return responseJson([],'Deleted Successfully',200);

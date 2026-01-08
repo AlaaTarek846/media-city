@@ -37,7 +37,7 @@
                                     <th scope="col">{{ $t('label.title') }}</th>
                                     <th scope="col">{{ $t('global.categories') }}</th>
                                     <th scope="col">{{ $t('global.status') }}</th>
-                                    <th scope="col">{{ $t('global.action') }}</th>
+                                    <th scope="col" v-if="permission.includes('department edit') || permission.includes('department delete')">{{ $t('global.action') }}</th>
                                 </tr>
                                 </thead>
                                 <tbody v-if="data && data.length">
@@ -67,9 +67,9 @@
                                                 data-bs-toggle="modal" data-bs-target="#banner-modal"
                                                class="btn btn-icon btn-sm btn-info-transparent rounded-pill"><i
                                                 class="ri-edit-line"></i></button>
-<!--                                            <a href="#" @click.prevent="deleteData(item.id,index)" v-if="permission.includes('department delete')"-->
-<!--                                               class="btn btn-icon btn-sm btn-danger-transparent rounded-pill"><i-->
-<!--                                                class="ri-delete-bin-line"></i></a>-->
+                                            <a href="#" @click.prevent="deleteData(item.id,index)" v-if="permission.includes('department delete') && item.can_delete"
+                                               class="btn btn-icon btn-sm btn-danger-transparent rounded-pill"><i
+                                                class="ri-delete-bin-line"></i></a>
                                         </div>
                                     </td>
                                 </tr>

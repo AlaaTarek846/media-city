@@ -151,6 +151,9 @@
                         </div>
 
                         <div class="row">
+                            <div class="col-md-12 mt-3">
+                                <span class="text-secondary">{{ $t('global.image_dimensions_hint', {width: 450, height: 350}) }}</span>
+                            </div>
 
                              <div class="col-md-6 mt-3">
 
@@ -318,14 +321,14 @@
                                                        class="form-control">
                                             </td>
                                             <td v-if="showPriceDay || showPriceFields">
-                                                <input type="number" step="any" min="0" max="100" v-model.number="v$.variant[index].discount_percentage.$model" 
+                                                <input type="number" step="any" min="0" max="100" v-model.number="v$.variant[index].discount_percentage.$model"
                                                        @input="(showPriceDay || showPriceFields) ? calculatePriceBeforeDiscount(index) : ''"
                                                        :class="{'is-invalid': v$.variant[index].discount_percentage.$error || errors[`variant.${index}.discount_percentage`],
                                                        'is-valid': !v$.variant[index].discount_percentage.$invalid && !errors[`variant.${index}.discount_percentage`] }"
                                                        class="form-control">
                                             </td>
                                             <td v-if="showPriceDay || showPriceFields">
-                                                <input type="number" step="any" v-model.number="v$.variant[index].price_before_discount.$model" 
+                                                <input type="number" step="any" v-model.number="v$.variant[index].price_before_discount.$model"
                                                        disabled
                                                        :class="{'is-invalid': v$.variant[index].price_before_discount.$error || errors[`variant.${index}.price_before_discount`],
                                                        'is-valid': !v$.variant[index].price_before_discount.$invalid && !errors[`variant.${index}.price_before_discount`] }"
@@ -409,7 +412,7 @@ export default {
                price_before_discount: {
                    required: requiredIf(function (model, index) {
                        const variant = submitdata.data.variant[index];
-                       return (submitdata.data.department_id == 1 || submitdata.data.department_id == 2) 
+                       return (submitdata.data.department_id == 1 || submitdata.data.department_id == 2)
                            && variant && variant.discount_percentage > 0;
                    }),
                    numeric
@@ -437,23 +440,23 @@ export default {
         let attributes = ref([]);
         let attribute = ref(null);
         const descRef = ref(null);
-        
+
         // Condition options - مترجمة
         const conditionOptions = computed(() => [
             { value: 'new', label: t('global.new') },
             { value: 'used', label: t('global.used') }
         ]);
-        
+
         // Computed property لإظهار/إخفاء select condition
         const showConditionSelect = computed(() => {
             return submitdata.data.department_id == 2;
         });
-        
+
         // Computed property لإظهار/إخفاء price_day (للإيجار)
         const showPriceDay = computed(() => {
             return submitdata.data.department_id == 1;
         });
-        
+
         // Computed property لإظهار/إخفاء price fields (للمبيعات)
         const showPriceFields = computed(() => {
             return submitdata.data.department_id == 2;
@@ -605,17 +608,17 @@ export default {
                         submitdata.data.status = l.status==1;
                         submitdata.data.category_id = l.category_id; // تعيين category_id أولاً
                         submitdata.data.brand_id = l.brand_id;
-                        
+
                         // تعيين flag للتحميل الأولي
                         isInitialLoad.value = true;
-                        
+
                         submitdata.data.department_id = l.department_id || ''; // تعيين department_id بعد category_id
-                        
+
                         // جلب الفئات المرتبطة بالقسم مع الحفاظ على الفئة المختارة
                         if (l.department_id) {
                             getCategories(l.department_id, true);
                         }
-                        
+
                         // إعادة تعيين flag بعد التحميل
                         setTimeout(() => {
                             isInitialLoad.value = false;
@@ -652,7 +655,7 @@ export default {
                             sku: { required },
                             price_before_discount: {
                                 required: requiredIf(() => {
-                                    return (submitdata.data.department_id == 1 || submitdata.data.department_id == 2) 
+                                    return (submitdata.data.department_id == 1 || submitdata.data.department_id == 2)
                                         && variant && variant.discount_percentage > 0;
                                 }),
                                 numeric
@@ -817,9 +820,9 @@ export default {
                 if (isInitialLoad.value) {
                     return;
                 }
-                
+
                 getCategories(newDepartmentId);
-                
+
                 // إذا كان القسم id=1، ضبط condition = 'rent'
                 if (newDepartmentId == 1) {
                     submitdata.data.condition = 'rent';
@@ -828,7 +831,7 @@ export default {
                 else if (newDepartmentId == 2) {
                     submitdata.data.condition = '';
                 }
-                
+
                 // تحديث validation للـ variants
                 if (submitdata.data.variant && submitdata.data.variant.length > 0) {
                     variantValidation.value = submitdata.data.variant.map((variant, index) => ({
@@ -838,7 +841,7 @@ export default {
                         sku: { required },
                         price_before_discount: {
                             required: requiredIf(() => {
-                                return (submitdata.data.department_id == 1 || submitdata.data.department_id == 2) 
+                                return (submitdata.data.department_id == 1 || submitdata.data.department_id == 2)
                                     && variant && variant.discount_percentage > 0;
                             }),
                             numeric
@@ -878,7 +881,7 @@ export default {
                     price_before_discount: {
                         required: requiredIf(function (model, index) {
                             const variant = submitdata.data.variant[index];
-                            return (submitdata.data.department_id == 1 || submitdata.data.department_id == 2) 
+                            return (submitdata.data.department_id == 1 || submitdata.data.department_id == 2)
                                 && variant && variant.discount_percentage > 0;
                         }),
                         numeric
@@ -1034,7 +1037,7 @@ export default {
                 sku: { required },
                 price_before_discount: {
                     required: requiredIf(() => {
-                        return (submitdata.data.department_id == 1 || submitdata.data.department_id == 2) 
+                        return (submitdata.data.department_id == 1 || submitdata.data.department_id == 2)
                             && variant && variant.discount_percentage > 0;
                     }),
                     numeric
@@ -1078,19 +1081,19 @@ export default {
         const calculatePriceBeforeDiscount = (index) => {
             // التحقق من وجود v$.variant[index]
             if (!v$.variant || !v$.variant[index]) return;
-            
+
             // يجب أن يكون department_id == 1 أو 2
             if (!showPriceDay.value && !showPriceFields.value) return;
-            
+
             // قراءة القيم من v$ model
             const price = parseFloat(v$.variant[index].price?.$model) || 0;
             const discountPercentage = parseFloat(v$.variant[index].discount_percentage?.$model) || 0;
-            
+
             // التحقق من وجود submitdata.data.variant[index]
             if (!submitdata.data.variant || !submitdata.data.variant[index]) return;
-            
+
             let priceBeforeDiscount = 0;
-            
+
             // إذا كان هناك خصم (discount_percentage > 0)
             if (discountPercentage > 0 && discountPercentage <= 100 && price > 0) {
                 // حساب السعر قبل الخصم: السعر قبل الخصم = السعر + (السعر × نسبة الخصم / 100)
@@ -1102,7 +1105,7 @@ export default {
                 // إذا لم يكن هناك خصم (discount_percentage = 0 أو null)
                 priceBeforeDiscount = 0;
             }
-            
+
             // تحديث القيمة في v$ model و submitdata.data
             if (v$.variant[index].price_before_discount) {
                 v$.variant[index].price_before_discount.$model = priceBeforeDiscount;
@@ -1153,7 +1156,7 @@ export default {
         this.data.variant.forEach((variant, index) => {
             formData.append(`variant[${index}][attribute_values]`, variant.attribute_values || '');
             formData.append(`variant[${index}][sku]`, variant.sku || '');
-            
+
             // إرسال الحقول حسب department_id
             if (this.data.department_id == 1 || this.data.department_id == 2) {
                 // للإيجار والمبيعات: price_before_discount و discount_percentage و price مطلوبان
@@ -1163,7 +1166,7 @@ export default {
                 formData.append(`variant[${index}][discount_percentage]`, variant.discount_percentage ?? 0);
                 formData.append(`variant[${index}][price]`, calculatedPrice);
             }
-            
+
             formData.append(`variant[${index}][quantity]`, variant.quantity ?? 0);
             formData.append(`variant[${index}][status]`, variant.status ? 1 : 0);
         });

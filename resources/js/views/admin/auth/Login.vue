@@ -7,8 +7,8 @@
                 <div class="p-5">
                     <div class="mb-3">
                         <a href="#">
-                            <img src="/assets/images/brand-logos/desktop-logo.png" alt="" class="authentication-brand desktop-logo">
-                            <img src="/assets/images/brand-logos/desktop-dark.png" alt="" class="authentication-brand desktop-dark">
+                            <img src="/website/images/logo.png" alt="" class="authentication-brand desktop-logo">
+                            <img src="/website/images/logo.png" alt="" class="authentication-brand desktop-dark">
                         </a>
                     </div>
                     <form @submit.prevent="adminLogin(loginData.data)">
@@ -44,7 +44,7 @@
                             <div class="text-fixed-white text-center p-5 d-flex align-items-center justify-content-center">
                                 <div>
                                     <div class="mb-5">
-                                        <img src="/assets/images/authentication/logo.png" class="authentication-image" alt="">
+                                        <img src="/website/images/logo2.png" class="authentication-image" alt="">
                                     </div>
                                     <h6 class="fw-semibold text-fixed-white">{{$t('auth.signIn')}}</h6>
                                     <p class="fw-normal fs-14 op-7">لوحة التحكم الخاصة بالموقع</p>

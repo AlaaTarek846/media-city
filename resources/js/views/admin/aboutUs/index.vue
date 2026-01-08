@@ -20,7 +20,7 @@
                 <div class="table-responsive">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <div class="d-flex gap-2">
-                            <button v-if="permission.includes('about us create')"
+                            <button v-if="permission.includes('about us create') && dataPaginate && dataPaginate.total !== 1"
                                     @click="showModelCreate"
                                     class="btn btn-primary">
                                 <i class="ri-add-line me-1"></i>
@@ -43,7 +43,7 @@
                                 <th>#</th>
                                 <th>{{ $t('label.image') }}</th>
                                 <th>{{ $t('label.title') }}</th>
-                                <th>{{ $t('global.action') }}</th>
+                                <th v-if="permission.includes('about us edit') || permission.includes('about us delete')">{{ $t('global.action') }}</th>
                             </tr>
                         </thead>
                         <tbody v-if="loading">
@@ -71,7 +71,7 @@
                                     <span v-else class="text-muted">-</span>
                                 </td>
                                 <td>{{ item.title || '-' }}</td>
-                                <td>
+                                <td v-if="permission.includes('about us edit') || permission.includes('about us delete')">
                                     <div class="d-flex gap-2">
                                         <button v-if="permission.includes('about us edit')"
                                                 @click="showEditMode(item)"
@@ -80,7 +80,12 @@
                                                 :title="$t('global.edit')">
                                             <i class="ri-pencil-line"></i>
                                         </button>
-
+                                        <button v-if="permission.includes('about us delete') && dataPaginate && dataPaginate.total !== 1"
+                                                @click.prevent="deleteData(item.id, index)"
+                                                class="btn btn-sm btn-danger"
+                                                :title="$t('global.delete')">
+                                            <i class="ri-delete-bin-line"></i>
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
