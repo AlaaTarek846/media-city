@@ -16,14 +16,14 @@ use App\Http\Controllers\Dashboard\CountryController;
 use App\Http\Controllers\Dashboard\DashboardStatisticsController;
 use App\Http\Controllers\Dashboard\DepartmentController;
 use App\Http\Controllers\Dashboard\DiscountCouponController;
-use App\Http\Controllers\Dashboard\FrequentlyAskedQuestionController;
+
 use App\Http\Controllers\Dashboard\HeaderOfferController;
 use App\Http\Controllers\Dashboard\HistoryController;
 use App\Http\Controllers\Dashboard\JoinUsController;
 use App\Http\Controllers\Dashboard\LanguageController;
 use App\Http\Controllers\Dashboard\MissionController;
-use App\Http\Controllers\Dashboard\NewsController;
-use App\Http\Controllers\Dashboard\NewsletterController;
+
+
 use App\Http\Controllers\Dashboard\NotificationController;
 use App\Http\Controllers\Dashboard\OrderController;
 use App\Http\Controllers\Dashboard\StudioRentalController;
@@ -34,7 +34,7 @@ use App\Http\Controllers\Dashboard\RoleController;
 use App\Http\Controllers\Dashboard\SendNotificationController;
 use App\Http\Controllers\Dashboard\SettingController;
 use App\Http\Controllers\Dashboard\SliderController;
-use App\Http\Controllers\Dashboard\TestimonialController;
+
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Dashboard\ProductAttributeController;
 use App\Http\Controllers\Dashboard\ProductController;
@@ -42,8 +42,8 @@ use App\Http\Controllers\Dashboard\ReturnPolicyController;
 use App\Http\Controllers\Dashboard\TermsConditionController;
 use App\Http\Controllers\Dashboard\ShippingInformationController;
 use App\Http\Controllers\Dashboard\ShopByInstagramController;
-use App\Http\Controllers\Dashboard\TeamController;
-use App\Http\Controllers\Dashboard\VisionController;
+
+
 use App\Http\Controllers\Web\CartController;
 use App\Http\Controllers\Web\FavoriteController;
 use App\Http\Controllers\Web\HomePageController;
@@ -175,7 +175,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => [ChangeLang::class]], fun
         Route::get('get-total-revenue-for-each-year-per-months',[DashboardStatisticsController::class,'getTotalRevenueForEachYearPerMonths']);
         Route::get('get-peak-periods',[DashboardStatisticsController::class,'getPeakPeriods']);
 
-        Route::apiResource('frequently-asked-questions', FrequentlyAskedQuestionController::class);
+
 
         // Category
         Route::get('categories-dropdown',[CategoryController::class,'dropdown']);
@@ -192,7 +192,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => [ChangeLang::class]], fun
         Route::apiResource('shop-by-instagram', ShopByInstagramController::class);
 
         // testimonial
-        Route::apiResource('testimonial', TestimonialController::class);
+
 
         // brand
          Route::get('brands-dropdown',[BrandController::class,'dropdown']);
@@ -201,8 +201,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => [ChangeLang::class]], fun
         // product
         Route::apiResource('products', ProductController::class);
 
-        // news
-        Route::apiResource('news', NewsController::class);
+
 
         // contact-us
         Route::apiResource('contact-us', ContactUsController::class);
@@ -211,19 +210,16 @@ Route::group(['prefix' => 'dashboard', 'middleware' => [ChangeLang::class]], fun
         Route::apiResource('contact-message', ContactMessageController::class);
         Route::post('contact-message/{id}/read', [ContactMessageController::class, 'markAsRead']);
 
-        // newsletter
-        Route::apiResource('newsletter', NewsletterController::class);
+
 
         // about-us
         Route::apiResource('about-us', AboutUsController::class);
 
         Route::apiResource('sliders', SliderController::class);
 
-        // vision
-        Route::apiResource('vision', VisionController::class);
 
-        // team
-        Route::apiResource('team', TeamController::class);
+
+
 
         // Language resource
         Route::resource('language', LanguageController::class);

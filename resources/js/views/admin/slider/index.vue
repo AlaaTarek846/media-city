@@ -35,7 +35,7 @@
                                     <th scope="col">#</th>
                                     <th scope="col">{{ $t('global.image') }}</th>
                                     <th scope="col">{{ $t('global.status') }}</th>
-                                    <th scope="col">{{ $t('global.action') }}</th>
+                                    <th scope="col" v-if="permission.includes('slider edit') || permission.includes('slider delete')">{{ $t('global.action') }}</th>
                                 </tr>
                                 </thead>
                                 <tbody v-if="data && data.length">

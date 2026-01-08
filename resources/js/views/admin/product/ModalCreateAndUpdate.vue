@@ -151,6 +151,9 @@
                         </div>
 
                         <div class="row">
+                            <div class="col-md-12 mt-3">
+                                <span class="text-secondary">{{ $t('global.image_dimensions_hint', {width: 450, height: 350}) }}</span>
+                            </div>
 
                              <div class="col-md-6 mt-3">
 
@@ -282,9 +285,9 @@
                                             <th v-if="data.type == 'variant'">{{ $t('label.status') }}</th>
                                             <th v-if="data.type == 'variant'">{{ $t('global.attribute_values') }}</th>
                                             <th>{{ $t('global.sku') }}</th>
-                                            <th v-if="showPriceDay || showPriceFields">{{ data.department_id == 1 ? $t('global.rent_price_day') : $t('global.price') }}</th>
-                                            <th v-if="showPriceDay || showPriceFields">{{ $t('global.discount_percentage') }}</th>
                                             <th v-if="showPriceDay || showPriceFields">{{ $t('global.price_before_discount') }}</th>
+                                            <th v-if="showPriceDay || showPriceFields">{{ $t('global.discount_percentage') }}</th>
+                                            <th v-if="showPriceDay || showPriceFields">{{ data.department_id == 1 ? $t('global.rent_price_day') : $t('global.price') }}</th>
                                             <th>{{ $t('global.quantity') }}</th>
 
                                         </tr>
@@ -311,24 +314,24 @@
                                                        class="form-control">
                                             </td>
                                             <td v-if="showPriceDay || showPriceFields">
-                                                <input type="number" step="any" v-model.number="v$.variant[index].price.$model"
-                                                       @input="(showPriceDay || showPriceFields) ? calculatePriceBeforeDiscount(index) : ''"
-                                                       :class="{'is-invalid': v$.variant[index].price.$error || errors[`variant.${index}.price`],
-                                                       'is-valid': !v$.variant[index].price.$invalid && !errors[`variant.${index}.price`] }"
+                                                <input type="number" step="any" v-model.number="v$.variant[index].price_before_discount.$model"
+                                                       @input="v$.variant[index].price.$model = v$.variant[index].price_before_discount.$model - (v$.variant[index].price_before_discount.$model * v$.variant[index].discount_percentage.$model / 100)"
+                                                       :class="{'is-invalid': v$.variant[index].price_before_discount.$error || errors[`variant.${index}.price_before_discount`],
+                                                       'is-valid': !v$.variant[index].price_before_discount.$invalid && !errors[`variant.${index}.price_before_discount`] }"
                                                        class="form-control">
                                             </td>
+
                                             <td v-if="showPriceDay || showPriceFields">
                                                 <input type="number" step="any" min="0" max="100" v-model.number="v$.variant[index].discount_percentage.$model"
-                                                       @input="(showPriceDay || showPriceFields) ? calculatePriceBeforeDiscount(index) : ''"
+                                                       @input="v$.variant[index].price.$model = v$.variant[index].price_before_discount.$model - (v$.variant[index].price_before_discount.$model * v$.variant[index].discount_percentage.$model / 100)"
                                                        :class="{'is-invalid': v$.variant[index].discount_percentage.$error || errors[`variant.${index}.discount_percentage`],
                                                        'is-valid': !v$.variant[index].discount_percentage.$invalid && !errors[`variant.${index}.discount_percentage`] }"
                                                        class="form-control">
                                             </td>
                                             <td v-if="showPriceDay || showPriceFields">
-                                                <input type="number" step="any" v-model.number="v$.variant[index].price_before_discount.$model"
-                                                       disabled
-                                                       :class="{'is-invalid': v$.variant[index].price_before_discount.$error || errors[`variant.${index}.price_before_discount`],
-                                                       'is-valid': !v$.variant[index].price_before_discount.$invalid && !errors[`variant.${index}.price_before_discount`] }"
+                                                <input type="number" step="any" v-model.number="v$.variant[index].price.$model" disabled
+                                                       :class="{'is-invalid': v$.variant[index].price.$error || errors[`variant.${index}.price`],
+                                                       'is-valid': !v$.variant[index].price.$invalid && !errors[`variant.${index}.price`] }"
                                                        class="form-control">
                                             </td>
                                             <td>
@@ -1099,11 +1102,19 @@ export default {
 
             // إذا كان هناك خصم (discount_percentage > 0)
             if (discountPercentage > 0 && discountPercentage <= 100 && price > 0) {
-                // حساب السعر قبل الخصم: السعر قبل الخصم = السعر + (السعر × نسبة الخصم / 100)
-                // أو بشكل أدق: السعر قبل الخصم = السعر / (1 - نسبة الخصم / 100)
-                // لكن حسب المتطلبات: السعر قبل الخصم = السعر + (السعر × نسبة الخصم / 100)
-                const discountAmount = (price * discountPercentage) / 100;
-                priceBeforeDiscount = price + discountAmount;
+                // Calculate Price Before Discount: Price / (1 - Discount / 100)
+                if (discountPercentage < 100) {
+                    let rawPrice = price / (1 - (discountPercentage / 100));
+                    // Check if result is valid
+                    if (isFinite(rawPrice)) {
+                        // Round to 2 decimal places
+                        priceBeforeDiscount = Math.round(rawPrice * 100) / 100;
+                    } else {
+                        priceBeforeDiscount = 0;
+                    }
+                } else {
+                    priceBeforeDiscount = 0;
+                }
             } else {
                 // إذا لم يكن هناك خصم (discount_percentage = 0 أو null)
                 priceBeforeDiscount = 0;

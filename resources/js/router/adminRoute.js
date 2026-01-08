@@ -1,4 +1,4 @@
-import {createRouter, createWebHistory} from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router';
 import middlewarePipeline from "./middlewarePipeline";
 import AuthLayout from "../layouts/Auth.vue";
 import DashboardLayout from "../layouts/Dashboard.vue";
@@ -14,16 +14,16 @@ import country from "./adminRoute/country.js";
 import joinUs from "./adminRoute/joinUs.js";
 import language from "./adminRoute/language.js";
 import backup from "./adminRoute/backup.js";
-import frequentlyAskedQuestion from "./adminRoute/frequentlyAskedQuestion.js";
-import testimonial from "./adminRoute/testimonial.js";
+
+
 import brand from "./adminRoute/brand.js";
 import slider from "./adminRoute/slider.js";
-import news from "./adminRoute/news.js";
+
 import contactUs from "./adminRoute/contactUs.js";
 import contactMessage from "./adminRoute/contactMessage.js";
-import newsletter from "./adminRoute/newsletter.js";
+
 import aboutUs from "./adminRoute/aboutUs.js";
-import vision from "./adminRoute/vision.js";
+
 import user from "./adminRoute/user.js";
 import setting from "./adminRoute/setting.js";
 import article from "./adminRoute/articale.js";
@@ -32,7 +32,7 @@ import category from "./adminRoute/category.js";
 import productAttribute from "./adminRoute/productAttribute.js";
 import product from "./adminRoute/product.js";
 import shopByInstagram from "./adminRoute/shopByInstagram.js";
-import team from "./adminRoute/team.js";
+
 import discountCoupon from "./adminRoute/discountCoupon.js";
 import returnPolicy from "./adminRoute/returnPolicy.js";
 import termsCondition from "./adminRoute/termsCondition.js";
@@ -57,12 +57,12 @@ const routes = [
         path: '/admin',
         component: DashboardLayout,
         meta: { middleware: [auth] },
-        children:[
+        children: [
             {
                 path: '',
                 redirect: { name: 'Page404' },
             },
-            {path: `dashboard`, name: `dashboard`, component: () => import('../views/admin/dashboard/index.vue')},
+            { path: `dashboard`, name: `dashboard`, component: () => import('../views/admin/dashboard/index.vue') },
             {
                 path: 'notifications',
                 name: 'notifications',
@@ -81,22 +81,22 @@ const routes = [
             ...joinUs,
             ...language,
             ...backup,
-            ...frequentlyAskedQuestion,
-            ...testimonial,
+
+
             ...brand,
             ...slider,
-            ...news,
+
             ...contactUs,
             ...contactMessage,
-            ...newsletter,
+
             ...aboutUs,
-            ...vision,
+
             ...user,
             ...category,
             ...productAttribute,
             ...product,
             ...shopByInstagram,
-            ...team,
+
             ...discountCoupon,
             ...setting,
             ...returnPolicy,
@@ -114,12 +114,12 @@ const routes = [
     {
         path: '/admin/login',
         component: AuthLayout,
-        children:[
+        children: [
             {
                 path: '',
                 name: 'login',
                 component: Login,
-                meta: {middleware: [guest]}
+                meta: { middleware: [guest] }
             },
         ]
     },

@@ -755,7 +755,7 @@ class HomePageController extends Controller
                     'name' => $brand->translation->title ?? ($brand->translations->first()->title ?? ''),
                 ] : null,
                 'price' => $variant->price ?? 0,
-                'discount_price' => $variant->discount_price ?? null,
+                'price_before_discount' => $variant->price_before_discount ?? null,
                 'discount_percentage' => $variant->discount_percentage ?? 0,
                 'is_favorite' => $product->is_favorite,
                 'rate' => $product->rate,

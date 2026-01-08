@@ -102,7 +102,7 @@ class OrderController extends Controller implements HasMiddleware
 
     public function orderStatus()
     {
-        $orderStatuses = OrderStatus::all()
+        $orderStatuses = OrderStatus::whereIn('id',[1,2,3,4,6])->get()
             ->map(function ($status) {
                 return [
                     'id'    => $status->id,

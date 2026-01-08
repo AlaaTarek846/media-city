@@ -495,11 +495,11 @@ class CartController extends Controller
             $discountPercentage = 0;
             $priceBeforeDiscount = $price;
 
-            if ($variant && $variant->discount_price && $variant->discount_percentage > 0) {
-                $discountPrice = $variant->discount_price;
+            if ($variant && $variant->price_before_discount && $variant->discount_percentage > 0) {
+                $discountPrice = $variant->price_before_discount;
                 $discountPercentage = $variant->discount_percentage;
                 $priceBeforeDiscount = $variant->price_before_discount ?? $variant->price;
-                $price = $discountPrice; // Use discount price
+                $price = $variant->price; // Use discount price
             }
 
             // Calculate total based on type

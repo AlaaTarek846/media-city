@@ -163,9 +163,9 @@
                                             <h5 class="name">{{ $translation->title ?? '' }}</h5>
                                         </a>
                                         @if($variant)
-                                            @if($variant->discount_price && $variant->discount_percentage > 0)
+                                            @if($variant->price_before_discount && $variant->discount_percentage > 0)
                                                 <h5 class="price">
-                                                    <span class="theme-color">{{ __('messages.currency') }} {{ number_format($variant->discount_price, 2) }}</span>
+                                                    <span class="theme-color">{{ __('messages.currency') }} {{ number_format($variant->price, 2) }}</span>
                                                     <del>{{ __('messages.currency') }} {{ number_format($variant->price_before_discount ?? $variant->price, 2) }}</del>
                                                 </h5>
                                             @else

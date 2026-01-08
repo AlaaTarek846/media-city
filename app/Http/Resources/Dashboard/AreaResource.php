@@ -12,6 +12,7 @@ class AreaResource extends JsonResource
     {
         return [
             "id"  => $this->id,
+            "can_delete"  => $this->addresses_count == 0,
             "title"     => $this->current_translation?->title,
             "status" => $this->status,
             "shipping_price" => $this->shipping_price,

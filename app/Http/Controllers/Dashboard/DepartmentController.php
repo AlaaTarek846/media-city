@@ -25,7 +25,7 @@ class DepartmentController extends Controller implements HasMiddleware
 
     public function index(Request $request)
     {
-        $departments = Department::withCount('categories')->searchAndFilter()->latest()->paginate(10);
+        $departments = Department::withCount(['categories', 'products'])->searchAndFilter()->latest()->paginate(10);
         return responseJson(DepartmentResource::collection($departments->items()),'',200,getPaginates($departments));
     }
 
@@ -102,6 +102,10 @@ class DepartmentController extends Controller implements HasMiddleware
 
     public function destroy(Department $department)
     {
+        $department->loadCount(['categories', 'products']);
+        if ($department->categories_count > 0 || $department->products_count > 0) {
+             return responseJson([], 'Cannot delete this department because it has related categories or products', 422);
+        }
         unlink_image_by_path($department->getAttributes()['image']);
         $department->delete();
         return responseJson([],'Deleted Successfully',200);

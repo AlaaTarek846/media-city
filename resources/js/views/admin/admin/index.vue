@@ -48,7 +48,7 @@
                                         <th scope="col">{{ $t('global.email') }}</th>
                                         <th scope="col">{{ $t('global.role_name') }}</th>
                                         <th scope="col">{{ $t('global.status') }}</th>
-                                        <th scope="col">{{ $t('global.action') }}</th>
+                                        <th scope="col" v-if="permission.includes('admin edit') || permission.includes('admin delete')">{{ $t('global.action') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody v-if="data && data.length">

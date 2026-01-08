@@ -72,8 +72,11 @@
                         <div class="col-lg-8">
                             <div class="card">
                                 <div class="card-body pt-0">
-                                    <div class="card-header mb-4">
-                                        <h5 class="card-title">{{ $t('global.permissions') }}</h5>
+                                    <div class="card-header mb-4 d-flex justify-content-between align-items-center">
+                                        <h5 class="card-title mb-0">{{ $t('global.permissions') }}</h5>
+                                        <button type="button" @click="toggleSelectAll" class="btn btn-sm btn-outline-primary">
+                                            {{ isAllSelected ? $t('global.deselect_all') : $t('global.select_all') }}
+                                        </button>
                                     </div>
                                 </div>
                                 <template v-for="(role_permission, name) in allPermissions">
@@ -245,11 +248,48 @@ export default {
 
         const v$ = useVuelidate(rules, submitdata.data);
 
+        // Get all permission names from allPermissions
+        const getAllPermissionNames = computed(() => {
+            let allNames = [];
+            if (allPermissions.value && typeof allPermissions.value === 'object') {
+                Object.values(allPermissions.value).forEach((role_permission) => {
+                    if (Array.isArray(role_permission)) {
+                        role_permission.forEach((permission) => {
+                            if (permission && permission.name) {
+                                allNames.push(permission.name);
+                            }
+                        });
+                    }
+                });
+            }
+            return allNames;
+        });
+
+        // Check if all permissions are selected
+        const isAllSelected = computed(() => {
+            const allNames = getAllPermissionNames.value;
+            if (allNames.length === 0) return false;
+            return allNames.every(name => submitdata.data.permission.includes(name));
+        });
+
+        // Toggle select all permissions
+        function toggleSelectAll() {
+            const allNames = getAllPermissionNames.value;
+            if (isAllSelected.value) {
+                // Deselect all
+                submitdata.data.permission = [];
+            } else {
+                // Select all
+                submitdata.data.permission = [...allNames];
+            }
+        }
+
         return {
             t, id,
             loading, is_disabled,permissions,
             resetModal, resetModalHidden, ...toRefs(submitdata),
-            v$, requiredn, errors,allPermissions
+            v$, requiredn, errors,allPermissions,
+            toggleSelectAll, isAllSelected, getAllPermissionNames
         };
     },
     methods: {

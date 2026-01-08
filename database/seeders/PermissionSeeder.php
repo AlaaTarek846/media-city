@@ -95,7 +95,7 @@ class PermissionSeeder extends Seeder
 
             ['name' => 'user read'  ,  'category' => 'User'],
             ['name' => 'user edit'  ,  'category' => 'User'],
-            ['name' => 'user send notification'  ,  'category' => 'User'],
+//            ['name' => 'user send notification'  ,  'category' => 'User'],
 
 //            ['name' => 'product attribute read'  ,  'category' => 'Product Attributes'],
 //            ['name' => 'product attribute create',  'category' => 'Product Attributes'],
@@ -126,8 +126,8 @@ class PermissionSeeder extends Seeder
             ['name' => 'order edit'  ,  'category' => 'Orders'],
 
 
-            ['name' => 'setting read'  ,  'category' => 'Setting'],
-            ['name' => 'setting edit'  ,  'category' => 'Setting'],
+//            ['name' => 'setting read'  ,  'category' => 'Setting'],
+//            ['name' => 'setting edit'  ,  'category' => 'Setting'],
 //            ['name' => 'return policy read'  ,  'category' => 'Setting'],
 //            ['name' => 'return policy edit'  ,  'category' => 'Setting'],
             ['name' => 'terms conditions read'  ,  'category' => 'Setting'],

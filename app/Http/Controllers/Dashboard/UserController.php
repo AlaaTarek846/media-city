@@ -17,12 +17,13 @@ class UserController extends Controller implements HasMiddleware
         // return [];
         return [
             new Middleware('can:user read', only: ['index']),
+            new Middleware('can:user delete', only: ['destroy']),
         ];
     }
 
     public function index(Request $request)
     {
-        $users = User::searchAndFilter()->latest()->paginate(10);
+        $users = User::searchAndFilter()->withCount(['orders', 'addresses', 'carts'])->latest()->paginate(10);
 
         return responseJson(UserResource::collection($users->items()), 'ContactMessage', 200, getPaginates($users));
     }
@@ -43,6 +44,16 @@ class UserController extends Controller implements HasMiddleware
         ]);
 
         return responseJson([],'Created Successfully',200);
+    }
+
+    public function destroy($id)
+    {
+        $user = User::withCount(['orders', 'addresses', 'carts'])->find($id);
+        if ($user->orders_count > 0 || $user->addresses_count > 0 || $user->carts_count > 0) {
+            return responseJson([], 'Cannot delete this user because they have related data', 422);
+        }
+        $user->delete();
+        return responseJson([],'Deleted Successfully',200);
     }
 
 }

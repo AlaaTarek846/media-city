@@ -85,6 +85,12 @@
                                                 class="btn btn-icon btn-sm btn-success-transparent rounded-pill" :title="$t('global.activation')"><i
                                                     class="ri-check-line"></i>
                                                 </a>
+                                                <a href="#" @click.prevent="deleteData(item.id, index)"
+                                                   v-if="permission.includes('user delete') && item.can_delete"
+                                                   class="btn btn-icon btn-sm btn-danger-transparent rounded-pill"
+                                                   :title="$t('global.delete')">
+                                                    <i class="ri-delete-bin-line"></i>
+                                                </a>
                                                 <a href="#" @click.prevent="reject(item.id, item.name)"
                                                 v-if="permission.includes('user edit') && parseInt(item.status)  != 0"
                                                 class="btn btn-icon btn-sm btn-danger-transparent rounded-pill" :title="$t('global.deactivate')"><i

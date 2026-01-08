@@ -36,7 +36,7 @@
                                     <th scope="col">{{ $t('label.description') }}</th>
                                     <th scope="col">{{ $t('label.status') }}</th>
                                     <th scope="col">{{ $t('global.created_at') }}</th>
-                                    <th scope="col">{{ $t('global.action') }}</th>
+                                    <th scope="col" v-if="permission.includes('headerOffer edit') || permission.includes('headerOffer delete')">{{ $t('global.action') }}</th>
                                 </tr>
                                 </thead>
                                 <tbody v-if="data && data.length">

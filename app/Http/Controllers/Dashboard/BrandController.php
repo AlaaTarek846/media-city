@@ -26,7 +26,7 @@ class BrandController extends Controller implements HasMiddleware
 
     public function index(Request $request)
     {
-        $brand = Brand::searchAndFilter()->latest()->paginate(10);
+        $brand = Brand::searchAndFilter()->withCount('products')->latest()->paginate(10);
 
         return responseJson(BrandResource::collection($brand->items()),'',200,getPaginates($brand));
     }
@@ -64,6 +64,10 @@ class BrandController extends Controller implements HasMiddleware
 
     public function destroy(Brand $brand)
     {
+        $brand->loadCount('products');
+        if ($brand->products_count > 0) {
+            return responseJson([], 'Cannot delete this brand because it has related products', 422);
+        }
         unlink_image_by_path($brand->getAttributes()['image']);
         $brand->delete();
         return responseJson([],'Deleted Successfully',200);

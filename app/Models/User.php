@@ -77,7 +77,7 @@ class User extends Authenticatable
 
     /**
      * Send the password reset notification.
-     * 
+     *
      * Override default notification to customize reset link URL
      * Uses custom notification to send reset link with proper route
      */

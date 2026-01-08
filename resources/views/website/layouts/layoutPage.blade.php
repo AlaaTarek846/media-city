@@ -292,8 +292,8 @@
             var priceHtml = '';
             if (product.discount_price && product.discount_percentage > 0) {
                 priceHtml = '<h4 class="price">' +
-                    '<span class="theme-color">EGP ' + parseFloat(product.discount_price).toFixed(2) + '</span>' +
-                    '<del>EGP ' + parseFloat(product.price_before_discount).toFixed(2) + '</del>' +
+                    '<span class="theme-color">EGP ' + parseFloat(product.price).toFixed(2) + '</span>' +
+                    '<del>EGP ' + parseFloat(product.discount_price).toFixed(2) + '</del>' +
                     '</h4>';
             } else {
                 priceHtml = '<h4 class="price"><span class="theme-color">EGP ' + parseFloat(product.price).toFixed(2) + '</span></h4>';
@@ -1036,7 +1036,7 @@
 
                 // Format price
                 if (product.discount_price && product.discount_percentage > 0) {
-                    priceHtml = '<span class="theme-color">{{ __("messages.currency") }} ' + parseFloat(product.discount_price).toFixed(2) + '</span>' +
+                    priceHtml = '<span class="theme-color">{{ __("messages.currency") }} ' + parseFloat(product.price).toFixed(2) + '</span>' +
                                 '<del>{{ __("messages.currency") }} ' + parseFloat(product.price_before_discount || product.price).toFixed(2) + '</del>';
                 } else {
                     priceHtml = '<span class="theme-color">{{ __("messages.currency") }} ' + parseFloat(product.price).toFixed(2) + '</span>';
@@ -1759,9 +1759,7 @@
                                 });
                                 if (product) {
                                     // Use discount price if available, otherwise use regular price
-                                    var itemPrice = product.discount_price && product.discount_percentage > 0
-                                        ? product.discount_price
-                                        : product.price;
+                                    var itemPrice = product.price;
 
                                     return {
                                         product_id: cartItem.product_id,
@@ -2322,9 +2320,7 @@
                                     return p.id == cartItem.product_id;
                                 });
                                 if (product) {
-                                    var itemPrice = product.discount_price && product.discount_percentage > 0
-                                        ? product.discount_price
-                                        : product.price;
+                                    var itemPrice = product.price;
 
                                     return {
                                         id: cartItem.product_id,
@@ -2421,7 +2417,7 @@
 
                 // Calculate price display
                 if (item.discount_price && item.discount_percentage > 0) {
-                    priceHtml = '<span class="theme-color">{{ __("messages.currency") }} ' + parseFloat(item.discount_price).toFixed(2) + '</span>' +
+                    priceHtml = '<span class="theme-color">{{ __("messages.currency") }} ' + parseFloat(item.price).toFixed(2) + '</span>' +
                                 '<del class="text-content">{{ __("messages.currency") }} ' + parseFloat(item.price_before_discount || item.price).toFixed(2) + '</del>';
                     var saving = (item.price_before_discount || item.price) - item.discount_price;
                     savingHtml = '<h6 class="theme-color">{{ __("messages.You Save") }} : {{ __("messages.currency") }} ' + parseFloat(saving).toFixed(2) + '</h6>';
@@ -2581,7 +2577,7 @@
             var displayPrice = item.price;
 
             if (item.discount_price && item.discount_percentage > 0) {
-                priceHtml = '<span class="theme-color">{{ __("messages.currency") }} ' + parseFloat(item.discount_price).toFixed(2) + '</span>' +
+                priceHtml = '<span class="theme-color">{{ __("messages.currency") }} ' + parseFloat(item.price).toFixed(2) + '</span>' +
                             '<del class="text-content">{{ __("messages.currency") }} ' + parseFloat(item.price_before_discount || item.price).toFixed(2) + '</del>';
                 var saving = (item.price_before_discount || item.price) - item.discount_price;
                 savingHtml = '<h6 class="theme-color">{{ __("messages.You Save") }} : {{ __("messages.currency") }} ' + parseFloat(saving).toFixed(2) + '</h6>';
@@ -2656,7 +2652,7 @@
             var displayPrice = item.price;
 
             if (item.discount_price && item.discount_percentage > 0) {
-                priceHtml = '<span class="theme-color">{{ __("messages.currency") }} ' + parseFloat(item.discount_price).toFixed(2) + '</span>' +
+                priceHtml = '<span class="theme-color">{{ __("messages.currency") }} ' + parseFloat(item.price).toFixed(2) + '</span>' +
                             '<del class="text-content">{{ __("messages.currency") }} ' + parseFloat(item.price_before_discount || item.price).toFixed(2) + '</del>';
                 var saving = (item.price_before_discount || item.price) - item.discount_price;
                 savingHtml = '<h6 class="theme-color">{{ __("messages.You Save") }} : {{ __("messages.currency") }} ' + parseFloat(saving).toFixed(2) + '</h6>';

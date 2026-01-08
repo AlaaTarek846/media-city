@@ -25,7 +25,7 @@ class CategoryController extends Controller implements HasMiddleware
 
     public function index(Request $request)
     {
-        $categories = Category::searchAndFilter()->latest()->paginate(10);
+        $categories = Category::searchAndFilter()->withCount('products')->latest()->paginate(10);
 
         return responseJson(CategoryResource::collection($categories->items()),'',200,getPaginates($categories));
     }
@@ -86,6 +86,10 @@ class CategoryController extends Controller implements HasMiddleware
 
     public function destroy(Category $category)
     {
+        $category->loadCount('products');
+        if ($category->products_count > 0) {
+           return responseJson([], 'Cannot delete this category because it has related products', 422);
+        }
         unlink_image_by_path($category->getAttributes()['image']);
         $category->delete();
         return responseJson([],'Deleted Successfully',200);

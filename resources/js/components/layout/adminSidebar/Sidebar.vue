@@ -6,12 +6,12 @@
         <!-- Start::main-sidebar-header -->
         <div class="main-sidebar-header">
             <router-link :to="{name:`dashboard`}" class="header-logo">
-                <img src="/assets/images/brand-logos/desktop-logo.png" alt="logo" class="desktop-logo">
-                <img src="/assets/images/brand-logos/toggle-logo.png" alt="logo" class="toggle-logo">
-                <img src="/assets/images/brand-logos/desktop-dark.png" alt="logo" class="desktop-dark">
-                <img src="/assets/images/brand-logos/toggle-dark.png" alt="logo" class="toggle-dark">
-                <img src="/assets/images/brand-logos/desktop-white.png" alt="logo" class="desktop-white">
-                <img src="/assets/images/brand-logos/toggle-white.png" alt="logo" class="toggle-white">
+                <img src="/website/images/logo.png" alt="logo" class="desktop-logo">
+                <img src="/website/images/logo.png" alt="logo" class="toggle-logo">
+                <img src="/website/images/logo.png" alt="logo" class="desktop-dark">
+                <img src="/website/images/logo.png" alt="logo" class="toggle-dark">
+                <img src="/website/images/logo.png" alt="logo" class="desktop-white">
+                <img src="/website/images/logo.png" alt="logo" class="toggle-white">
             </router-link>
         </div>
         <!-- End::main-sidebar-header -->
@@ -192,21 +192,11 @@
                     </li>
 
 
-                    <!--                    <li class="slide" v-show="permission.includes('testimonial read')">-->
-<!--                        <router-link :to="{name:'testimonial'}" class="side-menu__item">-->
-<!--                            <i class="bx bx-comment side-menu__icon"></i>-->
-<!--                            <span class="side-menu__label">{{$t('global.testimonial')}}</span>-->
-<!--                        </router-link>-->
-<!--                    </li>-->
 
 
 
-<!--                    <li class="slide" v-show="permission.includes('news read')">-->
-<!--                        <router-link :to="{name:'news'}" class="side-menu__item">-->
-<!--                            <i class="bx bx-news side-menu__icon"></i>-->
-<!--                            <span class="side-menu__label">{{$t('global.news')}}</span>-->
-<!--                        </router-link>-->
-<!--                    </li>-->
+
+
 
 
 
@@ -281,12 +271,7 @@
                         </router-link>
                     </li>
 
-<!--                    <li class="slide" v-show="permission.includes('newsletter read')">-->
-<!--                        <router-link :to="{name:'newsletter'}" class="side-menu__item">-->
-<!--                            <i class="bx bxs-news side-menu__icon"></i>-->
-<!--                            <span class="side-menu__label">{{$t('global.newsletter')}}</span>-->
-<!--                        </router-link>-->
-<!--                    </li>-->
+
 
 <!--                     <li class="slide" v-show="permission.includes('setting read')">-->
 <!--                        <router-link :to="{name:'setting'}" class="side-menu__item">-->
@@ -342,7 +327,8 @@ let store = useStore();
 let path = ref('');
 let { menu } = defaultrmenu();
 
-let permission = computed(() => store.getters['authAdmin/permission']);
+// Ensure permission is always an array to avoid runtime errors when templates call .includes()
+let permission = computed(() => store.getters['authAdmin/permission'] ?? []);
 
 
 onMounted(()=>{
