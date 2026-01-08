@@ -73,7 +73,8 @@
                                                         <div>
                                                             <div class="form-check">
                                                                             <input class="form-check-input address-radio" type="radio" name="selected_address"
-                                                                                   id="{{ $addressId }}" value="{{ $address->id }}" {{ $isChecked }}>
+                                                                                   id="{{ $addressId }}" value="{{ $address->id }}" {{ $isChecked }}
+                                                                                   data-shipping-price="{{ $address->area->shipping_price ?? 0 }}">
                                                             </div>
 
                                                             <div class="label">
@@ -903,45 +904,23 @@
                     return;
                 }
 
-                // Get address data from the selected radio button
+                // Get selected radio button
                 var selectedRadio = $('input[name="selected_address"]:checked');
-                if (selectedRadio.length === 0) {
-                    cartData.shipping = 0;
-                    calculateTotals();
-                    return;
+
+                // If the passed addressId doesn't match checked (shouldn't happen on change, but maybe on load), find by value
+                if (selectedRadio.val() != addressId) {
+                    selectedRadio = $('input[name="selected_address"][value="' + addressId + '"]');
                 }
 
-                // Get area_id from addresses data (we need to fetch it)
-                $.ajax({
-                    url: '/api/web/user-addresses',
-                    type: 'GET',
-                    headers: {
-                        'Accept': 'application/json',
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    xhrFields: {
-                        withCredentials: true
-                    },
-                    success: function(response) {
-                        var address = response.data.find(function(addr) {
-                            return addr.id == addressId;
-                        });
-
-                        if (address && address.area && address.area.shipping_price !== undefined) {
-                            cartData.shipping = parseFloat(address.area.shipping_price) || 0;
-                            cartData.selectedAddressId = addressId;
-                            calculateTotals();
-                        } else {
-                            cartData.shipping = 0;
-                            calculateTotals();
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error loading address:', error);
-                        cartData.shipping = 0;
-                        calculateTotals();
-                    }
-                });
+                if (selectedRadio.length > 0) {
+                    var shippingPrice = parseFloat(selectedRadio.data('shipping-price')) || 0;
+                    cartData.shipping = shippingPrice;
+                    cartData.selectedAddressId = addressId;
+                    calculateTotals();
+                } else {
+                    cartData.shipping = 0;
+                    calculateTotals();
+                }
             }
 
             /**

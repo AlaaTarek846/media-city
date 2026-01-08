@@ -314,9 +314,9 @@ $(".notifi-wishlist").on("click", function () {
    14. Loader Js
    ==========================*/
 const loaderEl = document.getElementsByClassName("fullpage-loader")[0];
-document.addEventListener("load", (event) => {
+document.addEventListener("readystatechange", (event) => {
     const readyState = "complete";
-    if (document.readyState == readyState) {
+    if (document.readyState == readyState && loaderEl) {
         loaderEl.classList.add("fullpage-loader--invisible");
 
         setTimeout(() => {

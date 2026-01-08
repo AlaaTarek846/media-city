@@ -76,7 +76,7 @@ class OrderController extends Controller
         // Broadcast order notification
         event(new \App\Events\OrderNotification($order));
 
-        return responseJson($order, __('messages.Favorite list changed successfully'), 200);
+        return responseJson($order, __('messages.The request was successfully submitted'), 200);
 
     }
 
@@ -99,13 +99,13 @@ class OrderController extends Controller
             $totalItem =0;
             $product = Product::find($item->product_id);
             $variant = $item->productVariant;
-            
+
             // Use cart item price (already includes discount if applicable)
             $itemPrice = $item->price;
-            
+
             // Determine if this is a rent item
             $isRent = !is_null($item->start_date) && !is_null($item->count_day);
-            
+
             if ($isRent) {
                 // For rent: price × count_day
                 $totalItem = $itemPrice * $item->count_day;

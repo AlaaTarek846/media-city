@@ -706,11 +706,10 @@
                 success: function(response) {
                     $button.prop('disabled', false);
                     $button.html(originalHtml);
-
-                    if (response.status === 'already_exists') {
+                    if (response.data?.status == 'already_exists') {
                         showNotification(response.message || '{{ __("messages.Product already in wishlist") }}', 'info');
                         updateHeartIcon($button, true);
-                    } else if (response.status === 'added') {
+                    } else if (response.data?.status == 'added') {
                         showNotification(response.message || '{{ __("messages.Product added to wishlist successfully") }}', 'success');
                         updateHeartIcon($button, true);
                     }
