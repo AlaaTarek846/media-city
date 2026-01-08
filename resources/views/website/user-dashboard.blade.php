@@ -181,128 +181,8 @@
                                         </span>
                                     </div>
 
-                                    <div class="order-contain" id="orders-container">
-                                        @if(isset($orders) && $orders->count() > 0)
-                                            @foreach($orders as $order)
-                                                @php
-                                                    // Safely get status translation
-                                                    $statusName = '';
-                                                    $statusId = $order->order_status_id;
-
-                                                    if ($order->orderStatus) {
-                                                        // Try to get translation using current_translation accessor
-                                                        try {
-                                                            $statusTranslation = $order->orderStatus->current_translation;
-                                                            if ($statusTranslation && isset($statusTranslation->title)) {
-                                                                $statusName = $statusTranslation->title;
-                                                            } else {
-                                                                // Fallback to translation relationship
-                                                                $statusTranslation = $order->orderStatus->translation;
-                                                                if ($statusTranslation && isset($statusTranslation->title)) {
-                                                                    $statusName = $statusTranslation->title;
-                                                                } else {
-                                                                    // Fallback to first translation
-                                                                    $firstTranslation = $order->orderStatus->translations->first();
-                                                                    if ($firstTranslation && isset($firstTranslation->title)) {
-                                                                        $statusName = $firstTranslation->title;
-                                                                    }
-                                                                }
-                                                            }
-                                                        } catch (\Exception $e) {
-                                                            // If all fails, use fallback translations based on status ID
-                                                            $statusName = '';
-                                                        }
-                                                    }
-
-                                                    // Fallback translations if status name is still empty
-                                                    if (empty($statusName)) {
-                                                        switch ($statusId) {
-                                                            case 1:
-                                                                $statusName = __('messages.New Order');
-                                                                break;
-                                                            case 2:
-                                                                $statusName = __('messages.Preparing Order');
-                                                                break;
-                                                            case 3:
-                                                                $statusName = __('messages.On The Way');
-                                                                break;
-                                                            case 4:
-                                                                $statusName = __('messages.delivered');
-                                                                break;
-                                                            case 5:
-                                                                $statusName = __('messages.canceled');
-                                                                break;
-                                                            default:
-                                                                $statusName = __('messages.Order Status');
-                                                                break;
-                                                        }
-                                                    }
-
-                                                    $isPending = $statusId == 1; // 1 = New Order (Pending)
-
-                                                    // Determine order type (rent or buy)
-                                                    $hasRentItems = $order->orderItems->whereNotNull('start_date')->whereNotNull('count_day')->count() > 0;
-                                                    $orderType = $hasRentItems ? 'rent' : 'buy';
-
-                                                    // Get status badge class
-                                                    $statusBadgeClass = 'badge bg-secondary';
-                                                    if ($statusId == 1) $statusBadgeClass = 'badge bg-warning text-dark'; // Pending/New Order
-                                                    elseif ($statusId == 2) $statusBadgeClass = 'badge bg-info'; // Preparing Order
-                                                    elseif ($statusId == 3) $statusBadgeClass = 'badge bg-primary'; // On The Way
-                                                    elseif ($statusId == 4) $statusBadgeClass = 'badge bg-success'; // Delivered
-                                                    elseif ($statusId == 5) $statusBadgeClass = 'badge bg-danger'; // Canceled
-                                                    else $statusBadgeClass = 'badge bg-secondary'; // Other statuses
-                                                @endphp
-
-                                                <div class="order-box dashboard-bg-box order-box-clickable" data-order-id="{{ $order->id }}" style="width: 100%; cursor: pointer; transition: all 0.3s ease;" data-bs-toggle="modal" data-bs-target="#orderDetailsModal">
-                                                    <div class="order-container">
-                                                        <div class="order-icon">
-                                                            <i data-feather="box"></i>
-                                                        </div>
-
-                                                        <div class="order-detail">
-                                                            <div class="d-flex align-items-center justify-content-between flex-wrap mb-2">
-                                                                <h4 class="mb-0">
-                                                                    {{ __('messages.Order Number') }}: <strong>{{ $order->order_number }}</strong>
-                                                                </h4>
-                                                                <div class="d-flex align-items-center gap-2 mx-2">
-                                                                    @if(!empty($statusName))
-                                                                        <span class="{{ $statusBadgeClass }} px-3 py-1" style="font-size: 13px; font-weight: 600; display: inline-flex; align-items: center;">
-                                                                            {{ $statusName }}
-                                                                        </span>
-                                                                    @else
-                                                                        <span class="{{ $statusBadgeClass }} px-3 py-1" style="font-size: 13px; font-weight: 600; display: inline-flex; align-items: center;">
-                                                                            {{ __('messages.Order Status') }}
-                                                                        </span>
-                                                                    @endif
-                                                                </div>
-                                                            </div>
-                                                            <div class="order-info mb-2">
-                                                                <p class="text-content mb-1">
-                                                                    <i class="fa-solid fa-calendar me-1"></i>
-                                                                    <strong>{{ __('messages.Order Date') }}:</strong> {{ $order->created_at->format('Y-m-d H:i') }}
-                                                                </p>
-                                                                <p class="text-content mb-0">
-                                                                    <i class="fa-solid fa-money-bill me-1"></i>
-                                                                    <strong>{{ __('messages.Total') }}:</strong>
-                                                                    <span class="text-primary fw-bold">{{ $setting->translation->title ?? 'EGP' }} {{ number_format($order->total, 2) }}</span>
-                                                                </p>
-                                                            </div>
-                                                            <div class="d-flex align-items-center gap-2">
-                                                                <span class="text-muted small">
-                                                                    <i class="fa-solid fa-eye me-1"></i>{{ __('messages.Click to view details') }}
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            @endforeach
-                                        @else
-                                            <div class="text-center py-5">
-                                                <i class="fa-solid fa-box-open" style="font-size: 4rem; color: #ddd;"></i>
-                                                <p class="text-muted mt-3">{{ __('messages.No orders found') }}</p>
-                                            </div>
-                                        @endif
+                                    <div id="dashboard-orders-wrapper">
+                                        @include('website.partials.dashboard-orders')
                                     </div>
                                 </div>
                             </div>
@@ -547,14 +427,14 @@
                             <div class="col-md-6">
                                 <div class="form-floating theme-form-floating">
                                     <select class="form-select" id="addressArea" name="area_id" required>
-                                        <option value="" selected disabled>{{ __('messages.Select Area') }}</option>
+                                        <option value="" selected disabled>{{ __('messages.Governorate') }}</option>
                                         @if(isset($areas))
                                             @foreach($areas as $area)
                                                 <option value="{{ $area->id }}">{{  $area->current_translation?->title ?? '' }}</option>
                                             @endforeach
                                         @endif
                                     </select>
-                                    <label for="addressArea">{{ __('messages.Area') }} <span class="text-danger">*</span></label>
+                                    <label for="addressArea">{{ __('messages.Governorate') }} <span class="text-danger">*</span></label>
                                     <div class="invalid-feedback">{{ __('messages.Please select an area') }}</div>
                                 </div>
                             </div>
@@ -1337,8 +1217,18 @@
 
                     if (areaName) {
                         addressHtml += '<tr>' +
-                            '<td>{{ __("messages.Area") }}:</td>' +
+                            '<td>{{ __("messages.Governorate") }}:</td>' +
                             '<td>' + areaName + '</td>' +
+                            '</tr>';
+                    }
+
+                    if (address.lat && address.lng) {
+                        var mapUrl = 'https://www.google.com/maps/search/?api=1&query=' + address.lat + ',' + address.lng;
+                        addressHtml += '<tr>' +
+                            '<td>{{ __("messages.Location") }}:</td>' +
+                            '<td><a href="' + mapUrl + '" target="_blank" class="text-primary text-decoration-underline">' +
+                            '<i class="fa-solid fa-map-location-dot me-1"></i> {{ __("messages.View on Map") }}' +
+                            '</a></td>' +
                             '</tr>';
                     }
 
@@ -2104,5 +1994,43 @@
                 }
             });
         }
+
+        /**
+         * Handle AJAX Pagination for Orders
+         */
+        $(document).on('click', '.custome-pagination .pagination a', function(e) {
+            e.preventDefault();
+            var url = $(this).attr('href');
+
+            if (url && url !== '#') {
+                // Show loading state
+                var wrapper = $('#dashboard-orders-wrapper');
+                wrapper.css('opacity', '0.5');
+
+                $.ajax({
+                    url: url,
+                    type: "GET",
+                    success: function(response) {
+                        // Update content
+                        wrapper.html(response);
+                        wrapper.css('opacity', '1');
+
+                        // Scroll to top of orders section
+                        $('html, body').animate({
+                            scrollTop: $("#dashboard-orders-wrapper").offset().top - 100
+                        }, 500);
+                        
+                        // Re-initialize feather icons for the new content
+                        if (typeof feather !== 'undefined') {
+                            feather.replace();
+                        }
+                    },
+                    error: function(xhr) {
+                        console.error('Pagination error:', xhr);
+                        wrapper.css('opacity', '1');
+                    }
+                });
+            }
+        });
     </script>
 @endpush

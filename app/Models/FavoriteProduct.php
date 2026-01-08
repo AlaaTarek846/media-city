@@ -16,7 +16,7 @@ class FavoriteProduct extends Model
 
     protected $table = "favorite_products";
 
-    
+
     public function products()
     {
         return $this->hasMany(Product::class, 'category_id');
@@ -25,6 +25,11 @@ class FavoriteProduct extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function productVariant()
+    {
+        return $this->belongsTo(ProductVariant::class);
     }
 
 }

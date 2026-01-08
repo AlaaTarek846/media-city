@@ -56,6 +56,14 @@ class CartController extends Controller
                 ->where('product_id', $productId)
                 ->first();
 
+            if ($quantity <= 0) {
+                // If quantity is 0, delete the item if it exists
+                if ($existingCartItem) {
+                    $existingCartItem->delete();
+                }
+                continue;
+            }
+
             if ($existingCartItem) {
                 // Update existing cart item quantity
                 $existingCartItem->update([
@@ -89,7 +97,7 @@ class CartController extends Controller
     public function destroy($id)
     {
         $user = auth('user')->user();
-        
+
         $cartItem = $user->carts()->find($id);
 
         if (!$cartItem) {
@@ -127,7 +135,7 @@ class CartController extends Controller
         $rules = [
             'product_id' => 'required|exists:products,id',
             'variant_id' => 'nullable|exists:product_variants,id',
-            'quantity' => 'nullable|integer|min:1',
+            'quantity' => 'nullable|integer|min:0',
             'type' => 'nullable|in:buy,rent'
         ];
 
@@ -221,27 +229,64 @@ class CartController extends Controller
                 ->whereNull('count_day')
                 ->first();
 
-            if ($cartItem) {
-                // Update quantity
-                $newQuantity = $cartItem->quantity + $quantity;
-                if ($newQuantity > $variant->quantity) {
-                    return responseJson(
-                        null,
-                        __('messages.Quantity exceeds available stock'),
-                        400
-                    );
+                if ($quantity <= 0) {
+                    if ($cartItem) {
+                        $cartItem->delete();
+                        return responseJson(
+                            null,
+                            __('messages.Product removed from cart successfully'),
+                            200
+                        );
+                    } else {
+                        // If quantity is 0 and item doesn't exist, we just return success (nothing to do)
+                         return responseJson(
+                            null,
+                            __('messages.Product not added (quantity 0)'),
+                            200
+                        );
+                    }
                 }
-                $cartItem->increment('quantity', $quantity);
-                $cartItem->update(['price' => $variant->price]);
-            } else {
-                // Create new cart item
-                $user->carts()->create([
-                    'product_id' => $productId,
-                    'quantity' => $quantity,
-                    'product_variant_id' => $variant->id,
-                    'price' => $variant->price,
-                ]);
-            }
+
+                if ($cartItem) {
+                    // Update quantity
+                    $newQuantity = $cartItem->quantity + $quantity;
+
+                    // If result is <= 0, remove check
+                     if ($newQuantity <= 0) {
+                        $cartItem->delete();
+                        return responseJson(
+                            null,
+                            __('messages.Product removed from cart successfully'),
+                            200
+                        );
+                    }
+
+                    if ($newQuantity > $variant->quantity) {
+                        return responseJson(
+                            null,
+                            __('messages.Quantity exceeds available stock'),
+                            400
+                        );
+                    }
+                    $cartItem->increment('quantity', $quantity);
+                    $cartItem->update(['price' => $variant->price]);
+                } else {
+                    // Create new cart item
+                    if ($quantity <= 0) {
+                         return responseJson(
+                            null,
+                            __('messages.Product not added (quantity 0)'),
+                            200
+                        );
+                    }
+
+                    $user->carts()->create([
+                        'product_id' => $productId,
+                        'quantity' => $quantity,
+                        'product_variant_id' => $variant->id,
+                        'price' => $variant->price,
+                    ]);
+                }
         }
 
         return responseJson(
@@ -270,7 +315,7 @@ class CartController extends Controller
             'products' => 'required|array',
             'products.*.product_id' => 'required|exists:products,id',
             'products.*.variant_id' => 'nullable|exists:product_variants,id',
-            'products.*.quantity' => 'required|integer|min:1',
+            'products.*.quantity' => 'required|integer|min:0',
             'products.*.type' => 'nullable|in:buy,rent'
         ];
 
@@ -354,6 +399,17 @@ class CartController extends Controller
                     ->first();
 
                 if ($cartItem) {
+                    // If quantity is 0 from sync, it implies we might want to set it to 0 or it's a mistake?
+                    // Typically sync merges. If input is 0, we should probably ignore it or delete?
+                    // Assuming sync overwrites/updates. If 0 is sent, let's delete.
+
+                    if ($quantity <= 0) {
+                        $cartItem->delete();
+                        // We count this as "handled" but not "added"
+                        $added++;
+                        continue;
+                    }
+
                     // Update quantity if needed
                     $newQuantity = max($cartItem->quantity, $quantity);
                     if ($newQuantity <= $variant->quantity) {
@@ -366,6 +422,11 @@ class CartController extends Controller
                         $skipped++;
                     }
                 } else {
+                    if ($quantity <= 0) {
+                        $skipped++;
+                        continue;
+                    }
+
                     // Create new cart item
                     if ($quantity <= $variant->quantity) {
                         $user->carts()->create([
@@ -405,11 +466,21 @@ class CartController extends Controller
             ->with([
                 'product.translation',
                 'product.images',
-                'productVariant'
+                'productVariant',
             ])
             ->get();
 
-        $formattedItems = $cartItems->map(function($item) {
+        if (count($cartItems) > 0) {
+            foreach ($cartItems as $cartItem)  {
+                if ($cartItem->productVariant?->quantity == 0) {
+                    $cartItem->delete();
+                }
+            }
+        }
+
+        $formattedItems = $cartItems->filter(function ($item) {
+            return $item->productVariant?->quantity > 0;
+        })->map(function($item) {
             $translation = $item->product->translation ?? $item->product->translations->first();
             $variant = $item->productVariant;
             $category = $item->product->category;

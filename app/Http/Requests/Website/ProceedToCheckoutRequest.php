@@ -27,7 +27,7 @@ class ProceedToCheckoutRequest extends FormRequest
             'status' => 'required',
             'cart' => 'required|array',
             'cart.*.id' => 'required|exists:carts,id',
-            'cart.*.quantity' => 'required|min:1',
+            'cart.*.quantity' => 'required|min:0',
         ];
     }
 }

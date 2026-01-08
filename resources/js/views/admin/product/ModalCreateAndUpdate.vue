@@ -577,6 +577,12 @@ export default {
            imagesGroup.value = [];
            errors.value = [];
            empty();
+           let containerImages = document.querySelector(
+               "#container-images-group",
+           );
+           if(containerImages) {
+               containerImages.innerHTML = "";
+           }
         }
        function resetModal() {
             defaultData();
