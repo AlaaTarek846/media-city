@@ -20,6 +20,7 @@ class ProductResource extends JsonResource
             "type" => $this->type,
             "price" => $this->variants->first()?->price,
             "quantity" => $this->variants->sum('quantity'),
+            "can_delete" => ($this->order_items_count == 0 && $this->carts_count == 0),
             "image" => $this->image.'',
             "status" => $this->status,
         ];

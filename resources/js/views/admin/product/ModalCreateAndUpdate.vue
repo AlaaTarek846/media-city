@@ -151,6 +151,9 @@
                         </div>
 
                         <div class="row">
+                            <div class="col-md-12 mt-3">
+                                <span class="text-secondary">{{ $t('global.image_dimensions_hint', {width: 450, height: 350}) }}</span>
+                            </div>
 
                              <div class="col-md-6 mt-3">
 

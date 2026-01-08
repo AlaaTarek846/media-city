@@ -16,6 +16,7 @@ class DepartmentResource extends JsonResource
             "image"            => $this->image.'',
             "status"           => $this->status,
             "categories_count" => $this->categories_count ?? 0,
+            "can_delete" => ($this->categories_count == 0 && $this->products_count == 0),
             "slug"             => $this->slug,
 
         ];

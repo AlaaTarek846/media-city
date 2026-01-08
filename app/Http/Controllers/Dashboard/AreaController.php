@@ -26,7 +26,7 @@ class AreaController extends Controller implements HasMiddleware
 
     public function index(Request $request)
     {
-        $areas = Area::searchAndFilter()->latest()->paginate(10);
+        $areas = Area::searchAndFilter()->withCount('addresses')->latest()->paginate(10);
 
         return responseJson(AreaResource::collection($areas->items()),'',200,getPaginates($areas));
     }
@@ -59,7 +59,10 @@ class AreaController extends Controller implements HasMiddleware
 
     public function destroy($id)
     {
-        $area = Area::find($id);
+        $area = Area::withCount('addresses')->find($id);
+        if ($area->addresses_count > 0) {
+            return responseJson([], 'Cannot delete this area because it has related addresses', 422); // Using 422 Unprocessable Entity or 409 Conflict
+        }
         $area->delete();
         return responseJson([],'Deleted Successfully',200);
     }

@@ -26,7 +26,7 @@ class DiscountCouponController extends Controller implements HasMiddleware
 
     public function index(Request $request)
     {
-        $coupons = DiscountCoupon::searchAndFilter()->latest()->paginate(10);
+        $coupons = DiscountCoupon::searchAndFilter()->withCount('orders')->latest()->paginate(10);
 
         return responseJson(DiscountCouponResource::collection($coupons->items()),'',200,getPaginates($coupons));
     }
@@ -59,7 +59,10 @@ class DiscountCouponController extends Controller implements HasMiddleware
 
     public function destroy($id)
     {
-        $coupon = DiscountCoupon::find($id);
+        $coupon = DiscountCoupon::withCount('orders')->find($id);
+        if ($coupon->orders_count > 0) {
+            return responseJson([], 'Cannot delete this coupon because it has related orders', 422);
+        }
         $coupon->delete();
         return responseJson([],'Deleted Successfully',200);
     }

@@ -15,7 +15,6 @@ class Area extends Model
     protected $guarded = ['id'];
 
     protected $table = "areas";
-
     public function addresses()
     {
         return $this->hasMany(Address::class);

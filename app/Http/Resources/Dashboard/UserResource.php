@@ -17,6 +17,7 @@ class UserResource extends JsonResource
     {
         return [
             'id'              => $this->id,
+            'can_delete'      => $this->orders_count == 0 && $this->addresses_count == 0 && $this->carts_count == 0,
             'name'            => $this->name,
             'mobile'          => $this->mobile,
             'whatsapp'        => $this->whatsapp,

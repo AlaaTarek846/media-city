@@ -169,7 +169,7 @@
                     </div>
 
                     <div class="col-md-12 mt-3 mb-3 d-flex justify-content-end">
-                        <button type="submit" v-if="!loading" @click.prevent="AddSubmit" class="btn btn-primary">{{ $t('global.Submit') }}</button>
+                        <button type="submit" v-if="!loading || permission.includes('contact us edit')" @click.prevent="AddSubmit" class="btn btn-primary">{{ $t('global.Submit') }}</button>
                         <button class="btn btn-primary btn-loader" v-else>
                             <span class="me-2">{{$t('global.Loading')}}</span>
                             <span class="loading"><i class="ri-loader-2-fill fs-16"></i></span>
@@ -198,6 +198,8 @@ let loading = ref(false);
 let is_disabled = ref(false);
 const { t } = useI18n({});
 const store = useStore();
+// Ensure permission is always an array to avoid runtime errors when used in template
+const permission = computed(() => store.getters['authAdmin/permission'] ?? []);
 const id = ref(null);
 const imageUpload = ref('');
 

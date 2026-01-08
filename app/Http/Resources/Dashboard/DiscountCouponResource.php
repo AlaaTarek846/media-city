@@ -12,6 +12,7 @@ class DiscountCouponResource extends JsonResource
     {
         return [
             "id"  => $this->id,
+            "can_delete" => $this->orders_count == 0,
             "title"     => $this->current_translation?->title,
             "description" => $this->current_translation?->description,
             "code"      => $this->code,

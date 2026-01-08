@@ -42,7 +42,7 @@
                                     <th scope="col">{{ $t('global.price') }}</th>
                                     <th scope="col">{{ $t('global.quantity') }}</th>
                                     <th scope="col">{{ $t('label.status') }}</th>
-                                    <th scope="col">{{ $t('global.action') }}</th>
+                                    <th scope="col" v-if="permission.includes('product edit') || permission.includes('product delete')">{{ $t('global.action') }}</th>
                                 </tr>
                                 </thead>
                                 <tbody v-if="data && data.length">
@@ -78,9 +78,9 @@
                                                 <i class="ri-edit-line"></i>
                                             </button>
 
-                                            <!-- <a href="#" @click.prevent="deleteData(item.id,index)" v-if="permission.includes('product delete')"
+                                            <a href="#" @click.prevent="deleteData(item.id,index)" v-if="permission.includes('product delete') && item.can_delete"
                                                class="btn btn-icon btn-sm btn-danger-transparent rounded-pill"><i
-                                                class="ri-delete-bin-line"></i></a> -->
+                                                class="ri-delete-bin-line"></i></a>
                                         </div>
                                     </td>
                                 </tr>
