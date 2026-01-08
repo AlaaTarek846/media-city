@@ -22,12 +22,10 @@ class DatabaseSeeder extends Seeder
         $this->call(CountrySeeder::class);
         $this->call(ContactUsSeeder::class);
         $this->call(AboutUsSeeder::class);
-        $this->call(VisionSeeder::class);
         $this->call(ProductAttributeSeeder::class);
         $this->call(CategorySeeder::class);
         $this->call(BrandSeeder::class);
         $this->call(ShopByInstagramSeeder::class);
-        $this->call(TeamSeeder::class);
         $this->call(BannerSeeder::class);
         $this->call(DepartmentSeeder::class);
         $this->call(ProductSeeder::class);
